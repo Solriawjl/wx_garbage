@@ -1,2 +1,41 @@
 <!--pages/challenge/result.wxml-->
-<text>pages/challenge/result.wxml</text>
+<view class="result-page">
+
+<view class="header-section">
+  <view class="title-text">{{title}}！！</view>
+  <view class="score-container">
+    <text class="score-label">积分</text>
+    <text class="score-value">+{{currentScore}}</text>
+  </view>
+</view>
+
+<view class="review-card">
+  <view class="card-title">答题复盘</view>
+  
+  <block wx:if="{{wrongList.length > 0}}">
+    <block wx:for="{{wrongList}}" wx:key="index">
+      <view class="review-item">
+        <view class="item-name">{{item.name}}</view>
+        
+        <view class="item-answers">
+          <text class="wrong-ans">{{item.userSelect}}</text>
+          <text class="correct-ans">{{item.correctAnswer}}</text>
+        </view>
+      </view>
+    </block>
+  </block>
+  
+  <view class="perfect-state" wx:else>
+    <icon type="success" size="60" color="#4CAF50"></icon>
+    <view class="perfect-text">太棒了！全部答对！</view>
+  </view>
+</view>
+
+<view class="action-group">
+    <view class="btn retry-btn" bindtap="handleLeftBtn">
+      {{isFromHistory ? '返回记录' : '重新挑战'}}
+    </view>
+    <button class="btn share-btn" open-type="share">分享</button>
+  </view>
+
+</view>

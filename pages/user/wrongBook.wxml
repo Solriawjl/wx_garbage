@@ -1,0 +1,46 @@
+<!--pages/user/wrongBook.wxml-->
+<view class="wrong-book-page">
+
+<view class="header-bar" wx:if="{{wrongList.length > 0}}">
+  <text class="count-text">累计错题：{{wrongList.length}} 道</text>
+  <view class="clear-btn" bindtap="clearAll">
+    <text class="icon-trash">🗑️</text> 一键清空
+  </view>
+</view>
+
+<scroll-view scroll-y="true" class="list-container">
+  
+  <block wx:if="{{wrongList.length > 0}}">
+    <block wx:for="{{wrongList}}" wx:key="name">
+      <view class="wrong-card">
+        
+        <view class="item-header">
+          <text class="item-name">{{item.name}}</text>
+          <view class="remove-btn" bindtap="removeItem" data-index="{{index}}">✕</view>
+        </view>
+        
+        <view class="card-divider"></view>
+        
+        <view class="item-answers">
+          <view class="answer-row">
+            <text class="label">你的选择</text>
+            <text class="wrong-ans">{{item.userSelect}}</text>
+          </view>
+          <view class="answer-row">
+            <text class="label">正确答案</text>
+            <text class="correct-ans">{{item.correctAnswer}}</text>
+          </view>
+        </view>
+        
+      </view>
+    </block>
+  </block>
+
+  <view class="empty-state" wx:else>
+    <icon type="success" size="70" color="#4CAF50"></icon>
+    <text class="empty-text">太棒了！错题已经被你全部消灭啦~</text>
+  </view>
+
+</scroll-view>
+
+</view>

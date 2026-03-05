@@ -1,2 +1,36 @@
 <!--pages/challenge/quiz.wxml-->
-<text>pages/challenge/quiz.wxml</text>
+<view class="quiz-page">
+
+<view class="progress-section">
+  <view class="progress-text">
+    <text class="current">{{currentIndex + 1}}</text>
+    <text class="total"> / {{totalQuestions}}</text>
+  </view>
+  <view class="progress-bar-bg">
+    <view class="progress-bar-fill" style="width: {{((currentIndex + 1) / totalQuestions) * 100}}%;"></view>
+  </view>
+</view>
+
+<view class="question-section">
+  <view class="question-item">{{currentQuestion.name}}</view>
+  <view class="question-desc">属于下面哪种垃圾分类？</view>
+</view>
+
+<view class="options-grid">
+  <block wx:for="{{options}}" wx:key="id">
+    <view 
+      class="option-card {{item.id === selectedId ? (isCorrect ? 'correct' : 'wrong') : ''}} {{item.id === currentQuestion.category && showAnswer ? 'correct' : ''}} {{isAnswering ? 'disabled' : ''}}" 
+      bindtap="onSelectOption" 
+      data-id="{{item.id}}">
+      
+      <image class="option-icon" src="{{item.icon}}" mode="aspectFit"></image>
+      <text class="option-name">{{item.name}}</text>
+
+      <view class="status-icon" wx:if="{{showAnswer && item.id === selectedId}}">
+        <icon type="{{isCorrect ? 'success' : 'cancel'}}" size="24" color="{{isCorrect ? '#4CAF50' : '#F44336'}}"></icon>
+      </view>
+    </view>
+  </block>
+</view>
+
+</view>

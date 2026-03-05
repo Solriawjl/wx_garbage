@@ -1,1 +1,152 @@
 /* pages/challenge/result.wxss */
+.result-page {
+  min-height: 100vh;
+  background-color: #f8f9fa; /* 浅灰底色突出白色卡片 */
+  padding: 60rpx 40rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --- 顶部光荣榜 --- */
+.header-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50rpx;
+}
+
+.title-text {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #ffb300; /* 原型图中的橙黄色 */
+  margin-bottom: 20rpx;
+  letter-spacing: 4rpx;
+  text-shadow: 0 4rpx 10rpx rgba(255, 179, 0, 0.2);
+}
+
+.score-container {
+  align-self: flex-end; /* 让积分像原型图一样靠右 */
+  font-size: 40rpx;
+  color: #333;
+}
+
+.score-label {
+  font-size: 32rpx;
+  margin-right: 10rpx;
+}
+
+.score-value {
+  font-weight: bold;
+}
+
+/* --- 错题复盘卡片 --- */
+.review-card {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.04);
+  margin-bottom: 60rpx;
+  min-height: 400rpx; /* 保证卡片有一定高度 */
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx dashed #eee;
+}
+
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #f9f9f9;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.item-name {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  width: 35%; /* 限制宽度防止文字过长挤压右侧 */
+}
+
+.item-answers {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* 划掉错的，突出对的 */
+.wrong-ans {
+  font-size: 28rpx;
+  color: #b2b2b2;
+  text-decoration: line-through; /* 中划线 */
+  margin-right: 30rpx;
+}
+
+.correct-ans {
+  font-size: 32rpx;
+  color: #4c84ff; /* 知识库原型中代表可回收的蓝色，这里做高亮色 */
+  font-weight: bold;
+}
+
+/* 全对时的奖励画面 */
+.perfect-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 0;
+}
+
+.perfect-text {
+  margin-top: 30rpx;
+  font-size: 34rpx;
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+/* --- 底部按钮组 --- */
+.action-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.btn {
+  width: 46%;
+  height: 96rpx;
+  border-radius: 16rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 34rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.retry-btn {
+  background-color: #7ab8f5; /* 浅蓝色 */
+}
+
+.share-btn {
+  background-color: #ffb300; /* 橙色 */
+  margin: 0; /* 清除微信自带的 margin */
+}
+
+.share-btn::after {
+  border: none; /* 清除微信自带的 button 边框 */
+}

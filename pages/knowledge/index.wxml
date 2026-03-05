@@ -1,2 +1,67 @@
 <!--pages/knowledge/index.wxml-->
-<text>pages/knowledge/index.wxml</text>
+<view class="knowledge-page">
+
+<view class="tab-header">
+  <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">分类图谱</view>
+  <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">环保小知识</view>
+  <view class="tab-indicator" style="left: {{currentTab === 0 ? '15%' : '65%'}};"></view>
+</view>
+
+<view class="tab-content" wx:if="{{currentTab === 0}}">
+  
+  <view class="category-nav">
+    <block wx:for="{{categories}}" wx:key="id">
+      <view class="nav-item {{currentCategory.id === item.id ? 'nav-active' : ''}}" bindtap="selectCategory" data-id="{{item.id}}">
+        <image class="bin-icon" src="{{item.icon}}" mode="aspectFit"></image>
+        <text>{{item.name}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="desc-card" style="background-color: {{currentCategory.bgColor}};">
+    <view class="desc-title">{{currentCategory.name}}</view>
+    <view class="desc-text">{{currentCategory.description}}</view>
+    
+    <view class="desc-divider" style="background-color: {{currentCategory.color}};"></view>
+    
+    <view class="tip-title">💡 投放指导</view>
+    <view class="desc-text">{{currentCategory.guidance}}</view>
+  </view>
+
+  <view class="dict-container">
+    <block wx:for="{{currentCategory.subGroups}}" wx:key="title" wx:for-item="group">
+      <view class="dict-group">
+        <view class="dict-group-title">
+          <view class="title-line" style="background-color: {{currentCategory.color}};"></view>
+          <text>{{group.title}}</text>
+        </view>
+        
+        <view class="dict-item-list">
+          <block wx:for="{{group.items}}" wx:key="*this" wx:for-item="subItem">
+            <view class="dict-item" bindtap="onItemTap" data-name="{{subItem}}">
+              <text class="dot" style="background-color: {{currentCategory.color}};"></text>
+              <text class="item-name">{{subItem}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>
+
+<view class="tab-content" wx:if="{{currentTab === 1}}">
+  <scroll-view scroll-y="true" class="article-list">
+    <block wx:for="{{articles}}" wx:key="index">
+      <view class="article-card" bindtap="goToArticleDetail" data-id="{{item.id}}">
+        <view class="article-info">
+          <text class="article-title">{{item.title}}</text>
+          <text class="article-desc">{{item.summary}}</text>
+          <text class="article-date">{{item.date}}</text>
+        </view>
+        <image class="article-img" src="{{item.image}}" mode="aspectFill"></image>
+      </view>
+    </block>
+  </scroll-view>
+</view>
+
+</view>

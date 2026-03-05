@@ -1,2 +1,42 @@
 <!--pages/challenge/index.wxml-->
-<text>pages/challenge/index.wxml</text>
+<view class="challenge-index">
+
+<view class="banner-section">
+  <image class="banner-img" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/knowledge/knowledge1.jpg" mode="widthFix"></image>
+  <view class="banner-title">环保知识大挑战</view>
+  <view class="banner-subtitle">测一测你的垃圾分类段位</view>
+</view>
+
+<view class="stats-card">
+  <view class="stats-item">
+    <text class="stats-label">当前称号</text>
+    <text class="stats-value {{titleClass}}">{{userTitle}}</text>
+  </view>
+  <view class="divider"></view>
+  <view class="stats-item">
+    <text class="stats-label">累计积分</text>
+    <text class="stats-value score-highlight">{{userScore}}</text>
+  </view>
+</view>
+
+<view class="rules-card">
+  <view class="rules-title">📜 挑战规则</view>
+  <view class="rule-line">
+    <text class="rule-dot"></text>
+    <text>系统将从题库中随机抽取 10 道选择题。</text>
+  </view>
+  <view class="rule-line">
+    <text class="rule-dot"></text>
+    <text>答对 8 道及以上，即可通关并获得“环保小达人”称号！</text>
+  </view>
+  <view class="rule-line">
+    <text class="rule-dot"></text>
+    <text>每答对 1 题可获得 1 积分，累计积分可升级你的环保段位。</text>
+  </view>
+</view>
+
+<view class="action-section">
+  <view class="start-btn" bindtap="goToQuiz">开始挑战</view>
+</view>
+
+</view>

@@ -1,0 +1,51 @@
+<!--pages/user/challengeHistory.wxml-->
+<view class="history-page">
+
+<view class="filter-bar">
+  <text class="filter-text">全部挑战 ({{historyList.length}})</text>
+  <view class="filter-btn" bindtap="onFilter">
+    <text>按得分筛选</text>
+    <text class="icon-filter"> ▾</text>
+  </view>
+</view>
+
+<scroll-view scroll-y="true" class="list-container">
+  
+  <block wx:if="{{historyList.length > 0}}">
+    <block wx:for="{{historyList}}" wx:key="id">
+      <view class="challenge-card" bindtap="goToDetail" data-item="{{item}}">
+        
+        <view class="card-header">
+          <view class="score-box">
+            <text class="score-label">获得积分</text>
+            <text class="score-num">+{{item.score}}</text>
+          </view>
+          <view class="title-tag {{item.titleClass}}">{{item.title}}</view>
+        </view>
+        
+        <view class="card-divider"></view>
+        
+        <view class="card-footer">
+          <view class="stat-box">
+            <text class="stat-label">答题正确率：</text>
+            <text class="stat-val {{item.correctCount === 10 ? 'perfect' : ''}}">{{item.correctCount}} / 10</text>
+          </view>
+          
+          <view class="date-box">
+            <text class="date-text">{{item.date}}</text>
+            <text class="arrow">></text>
+          </view>
+        </view>
+        
+      </view>
+    </block>
+  </block>
+
+  <view class="empty-state" wx:else>
+    <icon type="info" size="64" color="#ccc"></icon>
+    <text class="empty-text">暂无挑战记录，快去证明你的实力吧！</text>
+  </view>
+
+</scroll-view>
+
+</view>

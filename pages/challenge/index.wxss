@@ -1,1 +1,156 @@
 /* pages/challenge/index.wxss */
+.challenge-index {
+  min-height: 100vh;
+  background-color: #f8f9fa; /* 极浅的灰色底，衬托白色卡片 */
+  padding: 40rpx 30rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 顶部氛围区 --- */
+.banner-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20rpx;
+  margin-top: 5rpx;
+}
+
+.banner-img {
+  width: 95%;
+  margin-bottom: 15rpx;
+  border-radius: 16rpx;
+}
+
+.banner-title {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.banner-subtitle {
+  font-size: 28rpx;
+  color: #888;
+}
+
+/* --- 战绩卡片 --- */
+.stats-card {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 25rpx 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.04);
+  margin-bottom: 20rpx;
+}
+
+.stats-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+}
+
+.stats-label {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 15rpx;
+}
+
+.stats-value {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+/* --- 游戏化称号动态变色 --- */
+/* 1. 环保新手 (0-19分) - 稳重的大地色/青铜感 */
+.title-level-1 { 
+  color: #8D6E63; 
+}
+/* 2. 环保卫士 (20-49分) - 生机勃勃的绿色 */
+.title-level-2 { 
+  color: #4CAF50; 
+}
+/* 3. 环保达人 (50-99分) - 高级感的亮蓝色 */
+.title-level-3 { 
+  color: #2196F3; 
+}
+/* 4. 环保王者 (100分以上) - 尊贵的橙金发光效果 */
+.title-level-4 { 
+  color: #FF9800; 
+  font-weight: 900; 
+  text-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.35); /* 王者专属发光特效 */
+}
+/* 积分使用绿色高亮 */
+.score-highlight { color: #4CAF50; font-size: 44rpx;}
+
+.divider {
+  width: 2rpx;
+  height: 80rpx;
+  background-color: #f0f0f0;
+}
+
+/* --- 规则卡片 --- */
+.rules-card {
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.04);
+  margin-bottom: 15rpx;
+}
+
+.rules-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.rule-line {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.rule-dot {
+  width: 12rpx;
+  height: 12rpx;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  margin-top: 14rpx;
+  margin-right: 15rpx;
+  flex-shrink: 0; /* 防止圆点被挤压 */
+}
+
+/* --- 底部按钮 --- */
+.action-section {
+  margin-top: auto; /* 将按钮推到屏幕下方 */
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.start-btn {
+  width: 85%;
+  height: 100rpx;
+  background: linear-gradient(135deg, #66BB6A, #43A047); /* 绿色渐变，显得更有质感 */
+  border-radius: 50rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 36rpx;
+  font-weight: bold;
+  box-shadow: 0 10rpx 30rpx rgba(76, 175, 80, 0.4);
+  transition: transform 0.1s;
+}
+
+.start-btn:active {
+  transform: scale(0.96); /* 点击时的按压反馈 */
+}

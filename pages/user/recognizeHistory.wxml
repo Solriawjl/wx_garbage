@@ -1,0 +1,42 @@
+<!--pages/user/recognizeHistory.wxml-->
+<view class="history-page">
+
+<view class="filter-bar">
+  <text class="filter-text">全部记录 ({{historyList.length}})</text>
+  <view class="filter-btn" bindtap="onFilter">
+    <text>筛选</text>
+    <text class="icon-filter"> ▾</text>
+  </view>
+</view>
+
+<scroll-view scroll-y="true" class="list-container">
+  
+  <block wx:if="{{historyList.length > 0}}">
+    <block wx:for="{{historyList}}" wx:key="id">
+      <view class="history-card" bindtap="goToDetail" data-item="{{item}}">
+        
+        <image class="item-img" src="{{item.imageUrl}}" mode="aspectFill"></image>
+        
+        <view class="item-info">
+          <view class="info-top">
+            <text class="item-name">{{item.itemName}}</text>
+            <text class="arrow">></text>
+          </view>
+          
+          <view class="tag {{item.categoryClass}}">{{item.categoryName}}</view>
+          
+          <view class="item-date">{{item.date}}</view>
+        </view>
+        
+      </view>
+    </block>
+  </block>
+
+  <view class="empty-state" wx:else>
+    <icon type="info" size="64" color="#ccc"></icon>
+    <text class="empty-text">暂无识别记录，快去首页拍一拍吧~</text>
+  </view>
+
+</scroll-view>
+
+</view>

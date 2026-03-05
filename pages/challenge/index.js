@@ -1,66 +1,41 @@
 // pages/challenge/index.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    userScore: 0,
+    userTitle: '环保新手' // 默认称号
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
+  // onShow，积分能实时刷新。
+  onShow: function () {
+    const score = wx.getStorageSync('totalScore') || 0;
+    
+    // 增加一个 titleClass 变量来控制颜色
+    let title = '环保新手';
+    let tClass = 'title-level-1'; // 默认：青铜/大地色
 
+    if (score >= 100) {
+      title = '环保王者';
+      tClass = 'title-level-4';   // 王者：耀眼橙金
+    } else if (score >= 50) {
+      title = '环保达人';
+      tClass = 'title-level-3';   // 达人：钻石亮蓝
+    } else if (score >= 20) {
+      title = '环保卫士';
+      tClass = 'title-level-2';   // 卫士：生机亮绿
+    }
+
+    this.setData({
+      userScore: score,
+      userTitle: title,
+      titleClass: tClass // 将动态计算的类名存入 data
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  // 点击开始挑战，跳转到真正的答题页
+  goToQuiz: function() {
+    wx.navigateTo({
+      // 注意：这里的路径要对应我们刚才写的答题页的真实路径
+      url: '/pages/challenge/quiz' 
+    });
   }
 })

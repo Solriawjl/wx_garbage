@@ -1,0 +1,132 @@
+/* pages/user/recognizeHistory.wxss */
+.history-page {
+  min-height: 100vh;
+  background-color: #f5f7fa; /* 极浅灰底色 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 筛选栏 --- */
+.filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 40rpx;
+  background-color: #ffffff;
+  border-bottom: 2rpx solid #eee;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.02);
+  z-index: 10;
+}
+
+.filter-text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: bold;
+}
+
+.filter-btn {
+  font-size: 28rpx;
+  color: #4CAF50;
+  display: flex;
+  align-items: center;
+}
+
+.icon-filter {
+  font-size: 24rpx; 
+  margin-left: 8rpx;
+  font-family: Arial, sans-serif;
+}
+
+/* --- 列表容器 --- */
+.list-container {
+  flex: 1;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+/* --- 历史记录卡片 (左图右文设计) --- */
+.history-card {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
+  transition: transform 0.1s;
+}
+
+.history-card:active {
+  transform: scale(0.98); /* 点击反馈 */
+}
+
+/* 左侧图片 */
+.item-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 16rpx;
+  background-color: #e0e0e0;
+  margin-right: 30rpx;
+  flex-shrink: 0;
+}
+
+/* 右侧信息区 */
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.info-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-name {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.arrow {
+  color: #ccc;
+  font-family: consolas;
+}
+
+/* 分类小标签通用样式 */
+.tag {
+  align-self: flex-start;
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-weight: 500;
+  margin-top: 10rpx;
+}
+
+/* 四大类动态颜色配置 */
+.tag.recycle { background-color: #e3efff; color: #4c84ff; }
+.tag.kitchen { background-color: #f1f8e9; color: #68b644; }
+.tag.harmful { background-color: #ffebee; color: #e53935; }
+.tag.other { background-color: #fff8e1; color: #ffb300; }
+
+.item-date {
+  font-size: 24rpx;
+  color: #999;
+  text-align: right; /* 时间靠右对齐 */
+}
+
+/* --- 空状态 --- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-text {
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #999;
+}

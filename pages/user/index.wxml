@@ -1,0 +1,74 @@
+<view class="user-page">
+
+<view class="user-header">
+  <view class="user-info">
+    <image class="avatar" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png" mode="aspectFill"></image>
+    <view class="info-text">
+      <view class="nickname">微信用户</view>
+      <view class="title-tag">{{userTitle}}</view>
+    </view>
+  </view>
+</view>
+
+<view class="data-board">
+  <view class="data-item">
+    <text class="data-num">{{totalScore}}</text>
+    <text class="data-label">总积分</text>
+  </view>
+  <view class="data-divider"></view>
+  <view class="data-item">
+    <text class="data-num">12</text>
+    <text class="data-label">识别次数</text>
+  </view>
+  <view class="data-divider"></view>
+  <view class="data-item">
+    <text class="data-num">5</text>
+    <text class="data-label">通关挑战</text>
+  </view>
+</view>
+
+<view class="menu-list">
+  <view class="menu-item" bindtap="goToHistory" data-type="recognize">
+    <view class="menu-left">
+      <text class="menu-icon">🔍</text>
+      <text class="menu-text">识别历史</text>
+    </view>
+    <text class="menu-arrow">></text>
+  </view>
+
+  <view class="menu-item" bindtap="goToHistory" data-type="challenge">
+    <view class="menu-left">
+      <text class="menu-icon">🏆</text>
+      <text class="menu-text">挑战历史</text>
+    </view>
+    <text class="menu-arrow">></text>
+  </view>
+
+  <view class="menu-item" bindtap="goToWrongBook">
+    <view class="menu-left">
+      <text class="menu-icon">📓</text>
+      <text class="menu-text">我的错题本</text>
+    </view>
+    <text class="menu-arrow">></text>
+  </view>
+</view>
+
+<view class="menu-list">
+  <view class="menu-item" bindtap="showAbout">
+    <view class="menu-left">
+      <text class="menu-icon">ℹ️</text>
+      <text class="menu-text">关于我们</text>
+    </view>
+    <text class="menu-arrow">></text>
+  </view>
+  
+  <view class="menu-item" bindtap="clearCache">
+    <view class="menu-left">
+      <text class="menu-icon">🧹</text>
+      <text class="menu-text">清除缓存</text>
+    </view>
+    <text class="menu-arrow">></text>
+  </view>
+</view>
+
+</view>

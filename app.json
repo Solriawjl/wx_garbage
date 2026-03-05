@@ -9,9 +9,10 @@
     "pages/challenge/index",
     "pages/challenge/quiz",
     "pages/challenge/result",
-    "pages/profile/index",
-    "pages/profile/history_rec",
-    "pages/profile/history_quiz"
+    "pages/user/index",
+    "pages/user/recognizeHistory",
+    "pages/user/challengeHistory",
+    "pages/user/wrongBook"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -42,7 +43,7 @@
         "selectedIconPath": "images/tab_quiz_active.png"
       },
       {
-        "pagePath": "pages/profile/index",
+        "pagePath": "pages/user/index",
         "text": "个人",
         "iconPath": "images/tab_user.png",
         "selectedIconPath": "images/tab_user_active.png"

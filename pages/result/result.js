@@ -1,7 +1,8 @@
 // pages/result/result.js
 Page({
   data: {
-    isFromSearch: true, // 核心开关：默认假设是搜索
+    isFromSearch: true, // 默认假设是搜索
+    isFromHistory: false, // 记录是否来自历史页面
     itemImageUrl: '',                //物品图片
     itemName: '',                     // 物品名称
     categoryName: '',           // 分类名称
@@ -12,14 +13,17 @@ Page({
   },
 
   onLoad: function (options) {
+    // 获取历史页面传来的标记
+    const fromHistory = options.isFromHistory === 'true';
     // 微信小程序中，上个页面 url 里带的参数会放在 options 里
     if (options.keyword) {
       // 场景 A：如果是文字搜索过来的
       console.log("执行搜索逻辑，关键词：", options.keyword);
       this.setData({
         isFromSearch: true,
+        isFromHistory: fromHistory, //存入data
         itemName: options.keyword,
-        itemImageUrl: '/images/temp_search_icon.png', // 搜索时可以用一个通用图标占位
+        itemImageUrl: '/images/tab_home.png', // 搜索时可以用一个通用图标占位
         categoryName: '可回收物', // 这里后续调用后端接口获取
         categoryClass: 'recycle',
         accuracy: '--', // 搜索不需要置信度
@@ -31,6 +35,7 @@ Page({
       console.log("执行图片识别逻辑，图片路径：", decodeURIComponent(options.imagePath));
       this.setData({
         isFromSearch: false, // 切换为拍照模式视图
+        isFromHistory: fromHistory, // 存入data
         itemImageUrl: decodeURIComponent(options.imagePath), // 直接把用户拍的图展示在卡片上
         categoryName: '厨余垃圾', // 这里后续调用模型接口获取
         categoryClass: 'kitchen',
@@ -56,9 +61,22 @@ Page({
 
   // 跳转纠错反馈
   goToFeedback: function() {
-    // 跳转时把当前模式传过去，让反馈页也知道是“搜索反馈”还是“识别反馈”
+    // 1. 获取当前页面所需的数据
+    const isFromSearch = this.data.isFromSearch;
+    const itemName = this.data.itemName;
+    const categoryName = this.data.categoryName;
+    
+    // 如果是拍照获取的本地临时路径，URL 传参时必须用 encodeURIComponent 编码，否则可能引发解析错误
+    const imagePath = encodeURIComponent(this.data.itemImageUrl);
+
+    // 2. 动态拼接“原识别结果”
+    // 搜索场景下，告诉用户是哪个词搜错了（例如：钱币 - 可回收物）
+    // 拍照场景下，直接告诉用户是被错认成了什么（例如：可回收物）
+    const originalResult = isFromSearch ? `${itemName} (${categoryName})` : categoryName;
+
+    // 3. 带着完整的上下文参数跳转到反馈页
     wx.navigateTo({
-      url: `/pages/feedback/feedback?isFromSearch=${this.data.isFromSearch}&itemName=${this.data.itemName}`
+      url: `/pages/feedback/feedback?isFromSearch=${isFromSearch}&itemName=${itemName}&imagePath=${imagePath}&result=${originalResult}`
     });
   }
 })

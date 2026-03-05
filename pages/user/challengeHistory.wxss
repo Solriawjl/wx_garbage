@@ -1,0 +1,161 @@
+/* pages/user/challengeHistory.wxss */
+.history-page {
+  min-height: 100vh;
+  background-color: #f5f7fa; 
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 筛选栏 --- */
+.filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 40rpx;
+  background-color: #ffffff;
+  border-bottom: 2rpx solid #eee;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.02);
+  z-index: 10;
+}
+
+.filter-text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: bold;
+}
+
+.filter-btn {
+  font-size: 28rpx;
+  color: #4CAF50;
+  display: flex;
+  align-items: center;
+}
+
+.icon-filter {
+  font-size: 24rpx;
+  margin-left: 8rpx;
+  font-family: Arial, sans-serif;
+}
+
+/* --- 列表容器 --- */
+.list-container {
+  flex: 1;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+/* --- 挑战摘要卡片 --- */
+.challenge-card {
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
+  transition: transform 0.1s;
+}
+
+.challenge-card:active {
+  transform: scale(0.98);
+}
+
+/* 卡片上半部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* 让底部对齐 */
+  margin-bottom: 25rpx;
+}
+
+.score-box {
+  display: flex;
+  align-items: baseline;
+}
+
+.score-label {
+  font-size: 26rpx;
+  color: #888;
+  margin-right: 15rpx;
+}
+
+.score-num {
+  font-size: 50rpx;
+  font-weight: bold;
+  color: #ffb300; /* 抢眼的橙黄色积分 */
+  font-family: 'Courier New', Courier, monospace; /* 让数字看起来更有科技感 */
+}
+
+/* 称号标签 */
+.title-tag {
+  font-size: 24rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  font-weight: bold;
+}
+
+/* 称号的动态颜色 */
+.level-4 { background-color: #fff3e0; color: #ff9800; border: 2rpx solid #ffe0b2; } /* 王者：橙金 */
+.level-3 { background-color: #e3efff; color: #2196F3; border: 2rpx solid #bbdefb; } /* 达人：亮蓝 */
+.level-2 { background-color: #e8f5e9; color: #4CAF50; border: 2rpx solid #c8e6c9; } /* 卫士：生机绿 */
+.level-1 { background-color: #f5f5f5; color: #8D6E63; border: 2rpx solid #d7ccc8; } /* 新手：大地色 */
+
+/* 分割线 */
+.card-divider {
+  width: 100%;
+  height: 2rpx;
+  border-bottom: 2rpx dashed #eeeeee;
+  margin-bottom: 25rpx;
+}
+
+/* 卡片下半部 */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-box {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.stat-val {
+  font-weight: bold;
+  color: #333;
+  font-size: 30rpx;
+}
+
+.stat-val.perfect {
+  color: #4CAF50; /* 满分绿字表扬 */
+}
+
+.date-box {
+  display: flex;
+  align-items: center;
+}
+
+.date-text {
+  font-size: 24rpx;
+  color: #aaa;
+  margin-right: 10rpx;
+}
+
+.arrow {
+  color: #ccc;
+  font-family: consolas;
+  font-size: 28rpx;
+}
+
+/* --- 空状态 --- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-text {
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #999;
+}
