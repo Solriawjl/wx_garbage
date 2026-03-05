@@ -42,10 +42,10 @@
 
     <view class="action-group">
       <view class="btn research-btn" bindtap="goBack">
-        {{isFromHistory ? '返回记录' : (isFromSearch ? '重新搜索' : '重新识别')}}
+        {{isFromHistory ? '返回记录' : (isFromTip ? '返回首页' : (isFromSearch ? '重新搜索' : '重新识别'))}}
       </view>
       <view class="btn feedback-btn" bindtap="goToFeedback">
-        {{isFromSearch ? '搜索反馈' : '识别反馈'}}
+      {{isFromSearch ? '搜索反馈' : '识别反馈'}}
       </view>
     </view>
   </view>

@@ -1,5 +1,4 @@
-/* pages/search/search.wxss */
-/* pages/search/search.wxss */
+/* pages/search/index.wxss */
 .search-page {
   padding: 30rpx;
   background-color: #ffffff;

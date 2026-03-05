@@ -3,6 +3,7 @@ Page({
   data: {
     isFromSearch: true, // 默认假设是搜索
     isFromHistory: false, // 记录是否来自历史页面
+    isFromTip: false, // 记录是否来自首页每日一问
     itemImageUrl: '',                //物品图片
     itemName: '',                     // 物品名称
     categoryName: '',           // 分类名称
@@ -13,8 +14,8 @@ Page({
   },
 
   onLoad: function (options) {
-    // 获取历史页面传来的标记
-    const fromHistory = options.isFromHistory === 'true';
+    const fromHistory = options.isFromHistory === 'true';    // 获取历史页面传来的标记
+    const fromTip = options.isFromTip === 'true'; // 获取小贴士标记
     // 微信小程序中，上个页面 url 里带的参数会放在 options 里
     if (options.keyword) {
       // 场景 A：如果是文字搜索过来的
@@ -22,6 +23,7 @@ Page({
       this.setData({
         isFromSearch: true,
         isFromHistory: fromHistory, //存入data
+        isFromTip: fromTip,
         itemName: options.keyword,
         itemImageUrl: '/images/tab_home.png', // 搜索时可以用一个通用图标占位
         categoryName: '可回收物', // 这里后续调用后端接口获取

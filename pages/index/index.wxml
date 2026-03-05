@@ -1,56 +1,38 @@
-<!--index.wxml-->
-<view class="container">
-  
-  <view class="main-card">
-    <view class="card-title">垃圾分类查询</view>
-    
-    <view class="search-box" bindtap="goToSearch">
-      <icon type="search" size="18" color="#999"></icon>
-      <text class="search-placeholder">请输入垃圾名称搜索</text>
-    </view>
-    
-    <view class="action-group">
-      <view class="action-btn" bindtap="takePhoto">
-        <image class="action-icon" src="/images/page_index/icon_camera.png" mode="aspectFit"></image>
-        <text>拍照识别</text>
-      </view>
-      <view class="divider"></view> <view class="action-btn" bindtap="uploadImage">
-        <image class="action-icon" src="/images/page_index/icon_gallery.png" mode="aspectFit"></image>
-        <text>上传图片识别</text>
+<view class="home-page">
+
+<view class="search-section">
+  <view class="search-box" bindtap="goToSearch">
+    <icon type="search" size="18" color="#999"></icon>
+    <text class="search-placeholder">输入你要查询的垃圾名称...</text>
+  </view>
+</view>
+
+<view class="core-action-section">
+  <view class="main-btn-card" bindtap="onTapCamera">
+    <view class="btn-content">
+      <image class="btn-icon" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/camera.png" mode="aspectFit"></image>
+      <view class="btn-text-group">
+        <text class="btn-title">AI 智能识别</text>
+        <text class="btn-desc">点击拍照或上传相册图片</text>
       </view>
     </view>
   </view>
+</view>
 
-  <view class="daily-tip">
-    <swiper class="tip-swiper" vertical="true" autoplay="true" circular="true" interval="3000" duration="500">
-      <block wx:for="{{tips}}" wx:key="index">
-        <swiper-item>
-          <view class="tip-text">你知道 [{{item}}] 属于哪种类型的垃圾吗？</view>
-        </swiper-item>
-      </block>
-    </swiper>
+<view class="tip-section">
+  <view class="tip-card" bindtap="goToRandomResult">
+    <text class="tip-icon">💡</text>
+    <text class="tip-text">你知道 [{{dailyItem}}] 属于哪种类型的垃圾吗？</text>
+    <text class="tip-arrow">去看看 ></text>
   </view>
+</view>
 
-  <view class="function-grid">
-    <view class="grid-item" bindtap="goToKnowledge">
-      <text>垃圾分类图谱</text>
-    </view>
-    <view class="grid-item" bindtap="goToTips">
-      <text>环保小知识</text>
-    </view>
-    <view class="grid-item full-width" bindtap="goToChallenge">
-      <text>知识竞赛</text>
-    </view>
-  </view>
-
-  <view class="banner-container">
-    <swiper class="banner-swiper" indicator-dots="true" indicator-active-color="#4CAF50" autoplay="true" circular="true" interval="8000" duration="500">
-      <block wx:for="{{banners}}" wx:key="index">
-        <swiper-item>
-          <image class="banner-img" src="{{item}}" mode="aspectFit"></image>
-        </swiper-item>
-      </block>
-    </swiper>
-  </view>
+<view class="banner-section">
+  <swiper class="banner-swiper" indicator-dots="true" autoplay="true" interval="4000" duration="500" circular="true" indicator-active-color="#4CAF50" indicator-color="rgba(255,255,255,0.6)">
+    <swiper-item><image src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/banner/banner1.png" class="banner-img" mode="aspectFill"></image></swiper-item>
+    <swiper-item><image src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/banner/banner2.png" class="banner-img" mode="aspectFill"></image></swiper-item>
+    <swiper-item><image src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/banner/banner3.png" class="banner-img" mode="aspectFill"></image></swiper-item>
+  </swiper>
+</view>
 
 </view>

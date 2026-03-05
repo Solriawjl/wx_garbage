@@ -1,144 +1,143 @@
 /* pages/index/index.wxss */
-page {
-  /* 整个页面的浅绿色背景 */
-  background-color: #f4faeb; 
-}
-
-.container {
-  padding: 30rpx;
+.home-page {
+  min-height: 100vh;
+  background-color: #f5f7fa; 
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
-/* --- 核心查询卡片 --- */
-.main-card {
-  width: 100%;
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 40rpx 30rpx;
-  box-sizing: border-box;
-  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05); /* 淡淡的阴影 */
-  margin-bottom: 30rpx;
-  /* 添加一点浅绿色的边框呼应主题 */
-  border: 1px solid #e8f5e9; 
-}
-
-.card-title {
-  text-align: center;
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 30rpx;
+/* --- 顶部搜索区 --- */
+.search-section {
+  background-color: #4CAF50; 
+  padding: 20rpx 40rpx 80rpx; /* 底部多留白，为了让大按钮叠在上面 */
 }
 
 .search-box {
+  background-color: #ffffff;
+  height: 80rpx;
+  border-radius: 40rpx;
   display: flex;
   align-items: center;
-  border: 2rpx solid #333; /* 原型图里搜索框有明显的黑边 */
-  border-radius: 40rpx;
-  padding: 16rpx 30rpx;
-  margin-bottom: 40rpx;
+  padding: 0 30rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
 }
 
 .search-placeholder {
-  color: #666;
   font-size: 28rpx;
-  margin-left: 10rpx;
+  color: #999;
+  margin-left: 20rpx;
 }
 
-.action-group {
+/* --- 核心 AI 大按钮 (现在它是破框悬浮的视觉中心了) --- */
+.core-action-section {
+  padding: 0 30rpx;
+  margin-top: -50rpx; /* 负边距！让大按钮压在绿底色上 */
+  z-index: 2;
+  position: relative;
+  margin-bottom: 40rpx;
+}
+
+.main-btn-card {
+  background: linear-gradient(135deg, #66BB6A, #388E3C); 
+  border-radius: 30rpx;
+  padding: 60rpx 40rpx;
+  box-shadow: 0 12rpx 30rpx rgba(76, 175, 80, 0.4); 
+  transition: transform 0.1s;
+}
+
+.main-btn-card:active {
+  transform: scale(0.96); 
+}
+
+.btn-content {
   display: flex;
-  justify-content: space-around;
   align-items: center;
+  justify-content: center;
 }
 
-.action-btn {
+.btn-icon {
+  width: 110rpx;
+  height: 110rpx;
+  margin-right: 40rpx;
+  background-color: rgba(255, 255, 255, 0.2); 
+  border-radius: 50%;
+  padding: 24rpx;
+}
+
+.btn-text-group {
   display: flex;
   flex-direction: column;
+}
+
+.btn-title {
+  font-size: 46rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 12rpx;
+  letter-spacing: 2rpx;
+  text-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
+}
+
+.btn-desc {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* --- 每日贴士 --- */
+.tip-section {
+  padding: 0 30rpx;
+  margin-bottom: 40rpx;
+}
+
+.tip-card {
+  background-color: #e8f5e9; 
+  border-radius: 16rpx;
+  padding: 24rpx 30rpx;
+  display: flex;
   align-items: center;
+  border: 2rpx solid #c8e6c9;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.02);
 }
 
-.action-icon {
-  width: 80rpx;
-  height: 80rpx;
-  margin-bottom: 10rpx;
-}
-
-.action-btn text {
-  font-size: 28rpx;
-  color: #333;
-}
-
-/* 拍照和上传中间的占位（如果是实体分割线可以加样式） */
-.divider {
-  width: 2rpx;
-  height: 60rpx;
-  background-color: transparent; 
-}
-
-/* --- 每日科普提示 (文字轮播) --- */
-.daily-tip {
-  width: 100%;
-  height: 40rpx; /* 控制文字显示区域的固定高度 */
-  margin-bottom: 25rpx;
-}
-
-.tip-swiper {
-  width: 100%;
-  height: 100%;
+.tip-icon {
+  font-size: 32rpx;
+  margin-right: 15rpx;
 }
 
 .tip-text {
-  font-size: 26rpx;
-  color: #333;
-  text-align: center;
-  line-height: 40rpx; /* 垂直居中 */
+  flex: 1;
+  font-size: 28rpx;
+  color: #2e7d32; 
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* --- Banner 轮播图 --- */
-.banner-container {
-  width: 100%;
-  height: 500rpx; /* 给定一个高度，适配轮播组件 */
-  margin-bottom: 30rpx;
-  border-radius: 16rpx;
-  overflow: hidden; /* 保证圆角在轮播滑动时依然生效 */
-  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.08); /* 增加一点阴影让它更立体 */
+.tip-arrow {
+  font-size: 24rpx;
+  color: #66BB6A;
+  margin-left: 10rpx;
+  font-weight: bold;
+}
+
+/* --- 轮播图 (移到底部，恢复正常的视觉边距) --- */
+.banner-section {
+  margin: 0 30rpx 40rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.05);
 }
 
 .banner-swiper {
+  height: 400rpx; /* 稍微缩减一点高度，让画面比例更协调 */
   width: 100%;
-  height: 100%;
+  background-color: #fff;
+  border-radius: 20rpx;
 }
 
 .banner-img {
   width: 100%;
   height: 100%;
-  border-radius: 16rpx;
-}
-
-/* --- 底部功能网格 --- */
-.function-grid {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.grid-item {
-  width: 48%; /* 一排两个 */
-  background-color: #ffffff;
-  height: 90rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12rpx;
-  margin-bottom: 20rpx;
-  font-size: 28rpx;
-  color: #666;
-  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.03);
-}
-
-.full-width {
-  width: 100%; /* 知识竞赛占满整行 */
+  border-radius: 20rpx;
 }

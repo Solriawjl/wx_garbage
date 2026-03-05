@@ -1,4 +1,4 @@
-// pages/search/search.js
+// pages/search/index.js
 Page({
   data: {
     searchValue: '', // 用于实时保存用户输入的内容
