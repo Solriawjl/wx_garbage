@@ -1,0 +1,139 @@
+/* pages/feedback/feedback.wxss */
+.feedback-page {
+  padding: 30rpx;
+  background-color: #f4faeb; /* 保持系统主题色统一 */
+  min-height: 100vh;
+}
+
+/* --- 顶部错误重现卡片 --- */
+.context-card {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
+  margin-bottom: 40rpx;
+}
+
+.target-img {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  background-color: #e0e0e0;
+  margin-right: 30rpx;
+}
+
+.context-info {
+  flex: 1;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.error-text {
+  font-size: 32rpx;
+  color: #e57373; /* 红色表示这是错的 */
+  font-weight: bold;
+  margin-top: 10rpx;
+  display: block;
+}
+
+/* --- 表单区域通用样式 --- */
+.form-section {
+  background-color: #ffffff;
+  padding: 40rpx 30rpx;
+  border-radius: 20rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.required {
+  color: #e57373;
+}
+
+/* --- 四宫格选择器 --- */
+.category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.cat-item {
+  width: 47%;
+  height: 90rpx;
+  background-color: #f5f5f5;
+  color: #666;
+  border-radius: 12rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.2s;
+}
+
+/* 选中状态：使用主色调绿色 */
+.cat-item.active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-color: #81c784;
+  font-weight: bold;
+}
+
+/* --- 文本输入框 --- */
+.input-box {
+  background-color: #f5f5f5;
+  border-radius: 12rpx;
+  padding: 0 25rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+}
+
+.input-box input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.ph-style {
+  color: #b2b2b2;
+}
+
+/* --- 底部提交按钮 --- */
+.submit-btn {
+  width: 100%;
+  height: 96rpx;
+  border-radius: 48rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 34rpx;
+  font-weight: bold;
+  margin-top: 60rpx;
+  transition: all 0.3s;
+}
+
+/* 没选大类时不让提交 */
+.btn-disabled {
+  background-color: #cccccc;
+  color: #ffffff;
+}
+
+/* 选了之后按钮亮起 */
+.btn-ready {
+  background-color: #4CAF50;
+  color: #ffffff;
+  box-shadow: 0 8rpx 20rpx rgba(76, 175, 80, 0.4);
+}

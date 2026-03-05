@@ -1,0 +1,53 @@
+<!--pages/result/result.wxml-->
+<view class="result-page">
+
+<view class="result-card">
+  <image class="item-image" src="{{itemImageUrl}}" mode="aspectFill"></image>
+  
+  <view class="result-text-box">
+    <block wx:if="{{isFromSearch}}">
+      <text class="item-name">{{itemName}}</text>
+      <text class="static-text"> 属于 </text>
+      <text class="category-name {{categoryClass}}">{{categoryName}}</text> 
+    </block>
+      
+    <block wx:else>
+      <view class="static-text" style="margin-bottom: 10rpx;">AI 识别结果为</view>
+      <view class="category-name {{categoryClass}}">{{categoryName}}</view>
+    </block>
+  </view>
+
+  <view class="accuracy-tag">
+    <text>AI 识别置信度：{{accuracy}}%</text>
+  </view>
+</view>
+
+<view class="info-card">
+  <view class="info-title">{{isFromSearch ? '环保价值' : categoryName + '科普'}}</view>
+  <view class="info-content">{{ecoValue}}</view>
+</view>
+
+<view class="info-card highlight-card">
+  <view class="info-title">💡 投放指导</view>
+  <view class="info-content">{{putGuidance}}</view>
+</view>
+
+<view class="bottom-controls">
+    <view class="voice-section">
+      <view class="voice-btn" bindtap="playVoice">
+        <text>重播</text>
+        <text>语音</text>
+      </view>
+    </view>
+
+    <view class="action-group">
+      <view class="btn research-btn" bindtap="goBack">
+        {{isFromSearch ? '重新搜索' : '重新识别'}}
+      </view>
+      <view class="btn feedback-btn" bindtap="goToFeedback">
+        {{isFromSearch ? '搜索反馈' : '识别反馈'}}
+      </view>
+    </view>
+  </view>
+
+</view>

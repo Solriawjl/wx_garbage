@@ -1,0 +1,53 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/result/result",
+    "pages/search/search",
+    "pages/feedback/feedback",
+    "pages/knowledge/index",
+    "pages/knowledge/detail",
+    "pages/challenge/index",
+    "pages/challenge/quiz",
+    "pages/challenge/result",
+    "pages/profile/index",
+    "pages/profile/history_rec",
+    "pages/profile/history_quiz"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4CAF50", 
+    "navigationBarTitleText": "智分投放",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4CAF50",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab_home.png",
+        "selectedIconPath": "images/tab_home_active.png"
+      },
+      {
+        "pagePath": "pages/knowledge/index",
+        "text": "知识库",
+        "iconPath": "images/tab_know.png",
+        "selectedIconPath": "images/tab_know_active.png"
+      },
+      {
+        "pagePath": "pages/challenge/index",
+        "text": "挑战",
+        "iconPath": "images/tab_quiz.png",
+        "selectedIconPath": "images/tab_quiz_active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "个人",
+        "iconPath": "images/tab_user.png",
+        "selectedIconPath": "images/tab_user_active.png"
+      }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents"
+}

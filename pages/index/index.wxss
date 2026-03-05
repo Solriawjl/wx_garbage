@@ -1,0 +1,144 @@
+/* pages/index/index.wxss */
+page {
+  /* 整个页面的浅绿色背景 */
+  background-color: #f4faeb; 
+}
+
+.container {
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --- 核心查询卡片 --- */
+.main-card {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05); /* 淡淡的阴影 */
+  margin-bottom: 30rpx;
+  /* 添加一点浅绿色的边框呼应主题 */
+  border: 1px solid #e8f5e9; 
+}
+
+.card-title {
+  text-align: center;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  border: 2rpx solid #333; /* 原型图里搜索框有明显的黑边 */
+  border-radius: 40rpx;
+  padding: 16rpx 30rpx;
+  margin-bottom: 40rpx;
+}
+
+.search-placeholder {
+  color: #666;
+  font-size: 28rpx;
+  margin-left: 10rpx;
+}
+
+.action-group {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.action-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 10rpx;
+}
+
+.action-btn text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 拍照和上传中间的占位（如果是实体分割线可以加样式） */
+.divider {
+  width: 2rpx;
+  height: 60rpx;
+  background-color: transparent; 
+}
+
+/* --- 每日科普提示 (文字轮播) --- */
+.daily-tip {
+  width: 100%;
+  height: 40rpx; /* 控制文字显示区域的固定高度 */
+  margin-bottom: 25rpx;
+}
+
+.tip-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.tip-text {
+  font-size: 26rpx;
+  color: #333;
+  text-align: center;
+  line-height: 40rpx; /* 垂直居中 */
+}
+
+/* --- Banner 轮播图 --- */
+.banner-container {
+  width: 100%;
+  height: 500rpx; /* 给定一个高度，适配轮播组件 */
+  margin-bottom: 30rpx;
+  border-radius: 16rpx;
+  overflow: hidden; /* 保证圆角在轮播滑动时依然生效 */
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.08); /* 增加一点阴影让它更立体 */
+}
+
+.banner-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.banner-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 16rpx;
+}
+
+/* --- 底部功能网格 --- */
+.function-grid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.grid-item {
+  width: 48%; /* 一排两个 */
+  background-color: #ffffff;
+  height: 90rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+  color: #666;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.03);
+}
+
+.full-width {
+  width: 100%; /* 知识竞赛占满整行 */
+}

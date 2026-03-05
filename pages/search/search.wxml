@@ -1,0 +1,38 @@
+<!--pages/search/search.wxml-->
+<view class="search-page">
+  <view class="search-header">
+    <view class="search-input-group">
+      <icon type="search" size="16" color="#999"></icon>
+      <input 
+        class="input-element" 
+        placeholder="请输入要查询的内容" 
+        placeholder-class="placeholder-style"
+        confirm-type="search"
+        focus="true"
+        bindinput="onInput"          
+        value="{{searchValue}}"      
+        bindconfirm="onSearch"
+      />
+    </view>
+    <text class="search-confirm-btn" bindtap="onSearch">搜索</text>
+  </view>
+
+  <view class="history-section">
+    <view class="history-title-bar">
+      <text class="title-text">历史搜索</text>
+      <image 
+        class="delete-icon" 
+        src="/images/page_search/icon_delete.png" 
+        bindtap="clearHistory"
+      ></image>
+    </view>
+
+    <view class="tag-container">
+      <block wx:for="{{historyList}}" wx:key="index">
+        <view class="tag-item" bindtap="onTagTap" data-word="{{item}}">
+          {{item}}
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

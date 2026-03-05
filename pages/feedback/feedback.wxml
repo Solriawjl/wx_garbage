@@ -1,0 +1,44 @@
+<!--pages/feedback/feedback.wxml-->
+<view class="feedback-page">
+
+<view class="context-card">
+  <image class="target-img" src="{{imagePath}}" mode="aspectFill"></image>
+  <view class="context-info">
+    <text class="label">原识别结果：</text>
+    <text class="value error-text">{{originalResult}}</text>
+  </view>
+</view>
+
+<view class="form-section">
+  <view class="section-title">
+    <text class="required">*</text> 请选择实际的垃圾分类
+  </view>
+  <view class="category-grid">
+    <block wx:for="{{categories}}" wx:key="index">
+      <view 
+        class="cat-item {{selectedCategory === item ? 'active' : ''}}" 
+        bindtap="onSelectCategory" 
+        data-category="{{item}}">
+        {{item}}
+      </view>
+    </block>
+  </view>
+</view>
+
+<view class="form-section">
+  <view class="section-title">具体是什么物品？(选填，助力AI变聪明)</view>
+  <view class="input-box">
+    <input 
+      placeholder="例如：废旧干电池、用过的纸巾" 
+      placeholder-class="ph-style" 
+      bindinput="onInputItemName"
+      value="{{realItemName}}"
+    />
+  </view>
+</view>
+
+<view class="submit-btn {{selectedCategory ? 'btn-ready' : 'btn-disabled'}}" bindtap="submitFeedback">
+  提交反馈
+</view>
+
+</view>
