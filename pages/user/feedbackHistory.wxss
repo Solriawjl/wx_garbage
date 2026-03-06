@@ -1,0 +1,207 @@
+/* pages/user/feedbackHistory.wxss */
+
+.feedback-page {
+  min-height: 100vh;
+  background-color: #f5f7fa; 
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 顶部统计栏 --- */
+.header-bar {
+  padding: 30rpx 40rpx;
+  background-color: #ffffff;
+  border-bottom: 2rpx solid #eee;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.02);
+  z-index: 10;
+}
+
+.count-text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: bold;
+}
+
+/* --- 列表容器 --- */
+.list-container {
+  flex: 1;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+/* --- 反馈卡片 --- */
+.feedback-card {
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
+}
+
+/* 1. 卡片头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.item-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.icon-bulb {
+  margin-right: 15rpx;
+  font-size: 32rpx;
+}
+
+/* 动态状态标签 */
+.status-tag {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-weight: bold;
+}
+
+/* 0: 待处理 (橙黄) */
+.status-0 { background-color: #fff8e1; color: #ffb300; }
+/* 1: 已采纳 (绿色) */
+.status-1 { background-color: #e8f5e9; color: #4CAF50; }
+/* 2: 已驳回 (红色) */
+.status-2 { background-color: #ffebee; color: #e53935; }
+
+/* 分割线 */
+.card-divider {
+  width: 100%;
+  height: 2rpx;
+  border-bottom: 2rpx dashed #eeeeee;
+  margin-bottom: 25rpx;
+}
+
+/* 2. 动态追溯区 (图片/文本) */
+.source-box {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 25rpx;
+}
+
+.source-img {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 8rpx;
+  margin-right: 20rpx;
+  background-color: #e0e0e0;
+  flex-shrink: 0;
+  border: 2rpx solid #eee;
+}
+
+.source-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.source-info.no-margin {
+  flex-direction: row;
+  align-items: center;
+}
+
+.error-text {
+  text-decoration: line-through; /* AI 误判的文字加上删除线 */
+  color: #999 !important;
+  margin-top: 8rpx;
+}
+
+/* 3. 卡片内容 (用户建议) */
+.content-row {
+  font-size: 28rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: flex-start;
+}
+
+.label {
+  color: #888;
+  white-space: nowrap;
+  margin-right: 10rpx;
+}
+
+.value {
+  color: #333;
+  font-weight: 500;
+  flex: 1;
+}
+
+.value.highlight {
+  color: #4CAF50; /* 突出用户的建议分类 */
+}
+
+/* 4. 管理员回复区 (工单风格) */
+.admin-reply-box {
+  background-color: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  border-left: 6rpx solid #ccc;
+}
+
+/* 采纳时的回复框边框变绿 */
+.status-1 + .card-divider + .source-box + .content-row + .admin-reply-box,
+.status-1 + .card-divider + .content-row + .admin-reply-box {
+  border-left-color: #4CAF50;
+  background-color: #f1f8e9;
+}
+
+/* 驳回时的回复框边框变红 */
+.status-2 + .card-divider + .source-box + .content-row + .admin-reply-box,
+.status-2 + .card-divider + .content-row + .admin-reply-box {
+  border-left-color: #e53935;
+  background-color: #ffebee;
+}
+
+.reply-label {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #555;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.reply-text {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 5. 卡片底部 */
+.card-footer {
+  text-align: right;
+  margin-top: 10rpx;
+}
+
+.date-text {
+  font-size: 24rpx;
+  color: #aaa;
+}
+
+/* --- 空状态 --- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 250rpx;
+}
+
+.empty-text {
+  margin-top: 40rpx;
+  font-size: 30rpx;
+  color: #888;
+}

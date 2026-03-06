@@ -1,0 +1,64 @@
+<view class="feedback-page">
+
+<view class="header-bar">
+  <text class="count-text">共提交 {{feedbackList.length}} 条反馈</text>
+</view>
+
+<scroll-view scroll-y="true" class="list-container">
+  <block wx:if="{{feedbackList.length > 0}}">
+    <block wx:for="{{feedbackList}}" wx:key="id">
+      <view class="feedback-card">
+        
+        <view class="card-header">
+          <view class="item-title">
+            <text class="icon-bulb">{{item.type === 'image' ? '📸' : '🔍'}}</text>
+            <text>{{item.type === 'image' ? '识别纠错' : '搜索纠错'}}</text>
+          </view>
+          <view class="status-tag status-{{item.status}}">
+            {{item.status === 0 ? '待处理' : (item.status === 1 ? '已采纳' : '已驳回')}}
+          </view>
+        </view>
+        
+        <view class="card-divider"></view>
+        
+        <view class="source-box">
+          <block wx:if="{{item.type === 'image'}}">
+            <image class="source-img" src="{{item.imageUrl}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.imageUrl}}"></image>
+            <view class="source-info">
+              <text class="label">AI 识别为：</text>
+              <text class="value error-text">{{item.itemName}}</text>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="source-info no-margin">
+              <text class="label">搜索原词：</text>
+              <text class="value">{{item.itemName}}</text>
+            </view>
+          </block>
+        </view>
+
+        <view class="content-row">
+          <text class="label">我的建议：</text>
+          <text class="value highlight">{{item.suggestion}}</text>
+        </view>
+
+        <view class="admin-reply-box" wx:if="{{item.status !== 0 && item.adminReply}}">
+          <text class="reply-label">管理员回复：</text>
+          <text class="reply-text">{{item.adminReply}}</text>
+        </view>
+        
+        <view class="card-footer">
+          <text class="date-text">提交于 {{item.date}}</text>
+        </view>
+        
+      </view>
+    </block>
+  </block>
+
+  <view class="empty-state" wx:else>
+    <icon type="order" size="70" color="#ccc"></icon>
+    <text class="empty-text">您还没有提交过纠错反馈哦~</text>
+  </view>
+</scroll-view>
+
+</view>

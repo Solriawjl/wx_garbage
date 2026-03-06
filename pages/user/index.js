@@ -43,6 +43,13 @@ Page({
     });
   },
 
+  // 跳转到我的反馈历史
+  goToFeedbackHistory: function() {
+    wx.navigateTo({ 
+      url: '/pages/user/feedbackHistory' 
+    });
+  },
+
   // 关于我们
   showAbout: function() {
     wx.showModal({

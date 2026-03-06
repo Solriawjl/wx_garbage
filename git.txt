@@ -1,0 +1,13 @@
+1、在 develop 提交代码：
+git add .
+git commit -m "feat: 增加 FastAPI 图片上传接口"
+
+2、合并到 master：
+git checkout master
+git merge develop
+
+3、推送到 GitHub：
+git push origin main
+
+4、回到 develop 开启后端新篇章
+git checkout develop

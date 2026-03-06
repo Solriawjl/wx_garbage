@@ -12,7 +12,8 @@
     "pages/user/index",
     "pages/user/recognizeHistory",
     "pages/user/challengeHistory",
-    "pages/user/wrongBook"
+    "pages/user/wrongBook",
+    "pages/user/feedbackHistory"
   ],
   "window": {
     "backgroundTextStyle": "light",
