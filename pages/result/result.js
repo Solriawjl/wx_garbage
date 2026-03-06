@@ -29,22 +29,25 @@ Page({
         categoryName: '可回收物', // 这里后续调用后端接口获取
         categoryClass: 'recycle',
         accuracy: '--', // 搜索不需要置信度
-        ecoValue: '搜索物品的特定环保价值...',
-        putGuidance: '搜索物品的特定投放要求...'
+        ecoValue: '适宜回收利用和资源化利用的废弃物...',
+        putGuidance: '轻投轻放；清洁干燥，避免污染...'
       });
     } else if (options.imagePath) {
       // 场景 B：如果是拍照或上传图片过来的
       console.log("执行图片识别逻辑，图片路径：", decodeURIComponent(options.imagePath));
+      // 从缓存中捞出刚才存的后端返回的完整结果
+      const aiResult = wx.getStorageSync('tempAiResult');
       this.setData({
         isFromSearch: false, // 切换为拍照模式视图
         isFromHistory: fromHistory, // 存入data
         itemImageUrl: decodeURIComponent(options.imagePath), // 直接把用户拍的图展示在卡片上
-        categoryName: '厨余垃圾', // 这里后续调用模型接口获取
-        categoryClass: 'kitchen',
-        accuracy: '89.5', // 填入模型返回的置信度
-        ecoValue: '厨余垃圾是指居民日常生活及食品加工、饮食服务、单位供餐等活动中产生的垃圾。',
-        putGuidance: '请沥干水分后投放。'
+        categoryName: aiResult.category_name || '未知', 
+        categoryClass: aiResult.category_class || '未知',
+        accuracy: aiResult.confidence || '0', // 填入模型返回的置信度
+        ecoValue: aiResult.eco_value || '未知',
+        putGuidance: aiResult.put_guidance || '未知'
       });
+      wx.removeStorageSync('tempAiResult');
     }
   },
 

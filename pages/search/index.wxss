@@ -1,76 +1,86 @@
 /* pages/search/index.wxss */
 .search-page {
-  padding: 30rpx;
-  background-color: #ffffff;
   min-height: 100vh;
+  background-color: #ffffff;
 }
 
-/* --- 搜索框区域 --- */
+/* 顶部搜索栏 */
 .search-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 50rpx;
+  padding: 20rpx 30rpx;
+  background-color: #4CAF50; /* 保持跟首页一致的主题绿 */
 }
 
-.search-input-group {
+.search-bar {
   flex: 1;
-  background-color: #f2f2f2; /* 浅灰色背景 */
-  height: 80rpx;
-  border-radius: 8rpx;
+  background-color: #ffffff;
+  height: 70rpx;
+  border-radius: 35rpx;
   display: flex;
   align-items: center;
   padding: 0 25rpx;
-  margin-right: 30rpx;
 }
 
-.input-element {
+.search-input {
   flex: 1;
-  margin-left: 15rpx;
   font-size: 28rpx;
+  margin-left: 15rpx;
+  color: #333;
 }
 
-.placeholder-style {
-  color: #b2b2b2;
+.cancel-btn {
+  font-size: 30rpx;
+  color: #ffffff;
+  margin-left: 30rpx;
 }
 
-.search-confirm-btn {
-  color: #4c84ff; /* 原型图中的蓝色 */
-  font-size: 32rpx;
-  font-weight: 500;
+/* 内容区 */
+.content-body {
+  padding: 40rpx 30rpx;
 }
 
-/* --- 历史搜索标题栏 --- */
-.history-title-bar {
+.section {
+  margin-bottom: 50rpx;
+}
+
+.section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30rpx;
+  margin-bottom: 25rpx;
 }
 
-.title-text {
-  font-size: 28rpx;
-  color: #666;
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
 }
 
-.delete-icon {
-  width: 40rpx;
-  height: 40rpx;
+.delete-icon, .hot-icon {
+  font-size: 30rpx;
+  color: #999;
+  padding: 10rpx; /* 增加点击热区 */
 }
 
-/* --- 标签云布局 --- */
-.tag-container {
+/* 标签容器 */
+.tags-container {
   display: flex;
-  flex-wrap: wrap; /* 自动换行 */
-  gap: 20rpx; /* 标签之间的间距 */
+  flex-wrap: wrap;
 }
 
-.tag-item {
-  background-color: #b0b8c4; /* 蓝灰色背景 */
-  color: #ffffff;
-  padding: 12rpx 40rpx;
-  border-radius: 40rpx; /* 全圆角胶囊形状 */
-  font-size: 28rpx;
-  min-width: 80rpx;
-  text-align: center;
+.tag {
+  background-color: #f5f5f5;
+  color: #555;
+  font-size: 26rpx;
+  padding: 12rpx 30rpx;
+  border-radius: 30rpx;
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 热门标签可以加点特殊的底色 */
+.hot-tag {
+  background-color: #e8f5e9;
+  color: #2e7d32;
 }

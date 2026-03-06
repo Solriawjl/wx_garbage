@@ -1,38 +1,47 @@
 <!--pages/search/index.wxml-->
 <view class="search-page">
-  <view class="search-header">
-    <view class="search-input-group">
-      <icon type="search" size="16" color="#999"></icon>
-      <input 
-        class="input-element" 
-        placeholder="请输入要查询的内容" 
-        placeholder-class="placeholder-style"
-        confirm-type="search"
-        focus="true"
-        bindinput="onInput"          
-        value="{{searchValue}}"      
-        bindconfirm="onSearch"
-      />
-    </view>
-    <text class="search-confirm-btn" bindtap="onSearch">搜索</text>
+
+<view class="search-header">
+  <view class="search-bar">
+    <icon type="search" size="18" color="#999"></icon>
+    <input 
+      class="search-input" 
+      placeholder="输入你要查询的垃圾名称..." 
+      value="{{inputValue}}"
+      bindinput="onInput"
+      bindconfirm="onConfirm"
+      focus="true"
+      confirm-type="search"
+    />
+    <icon type="clear" size="16" color="#ccc" wx:if="{{inputValue.length > 0}}" bindtap="clearInput"></icon>
   </view>
+  <text class="cancel-btn" bindtap="goBack">取消</text>
+</view>
 
-  <view class="history-section">
-    <view class="history-title-bar">
-      <text class="title-text">历史搜索</text>
-      <image 
-        class="delete-icon" 
-        src="/images/page_search/icon_delete.png" 
-        bindtap="clearHistory"
-      ></image>
+<view class="content-body">
+  <view class="section" wx:if="{{historyList.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">历史搜索</text>
+      <view class="delete-icon" bindtap="clearHistory">🗑️</view>
     </view>
-
-    <view class="tag-container">
-      <block wx:for="{{historyList}}" wx:key="index">
-        <view class="tag-item" bindtap="onTagTap" data-word="{{item}}">
-          {{item}}
-        </view>
+    <view class="tags-container">
+      <block wx:for="{{historyList}}" wx:key="*this">
+        <view class="tag" bindtap="onTapTag" data-keyword="{{item}}">{{item}}</view>
       </block>
     </view>
   </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">热门搜索</text>
+      <view class="hot-icon">🔥</view>
+    </view>
+    <view class="tags-container">
+      <block wx:for="{{hotList}}" wx:key="*this">
+        <view class="tag hot-tag" bindtap="onTapTag" data-keyword="{{item}}">{{item}}</view>
+      </block>
+    </view>
+  </view>
+</view>
+
 </view>
