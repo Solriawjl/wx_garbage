@@ -2,39 +2,30 @@
 Page({
   data: {
     userScore: 0,
-    userTitle: '环保新手' // 默认称号
+    userTitle: '环保新手',
+    titleClass: 'title-level-1' 
   },
 
-  // onShow，积分能实时刷新。
   onShow: function () {
+    // 每次显示页面时，读取后端同步过来的最新数据
     const score = wx.getStorageSync('totalScore') || 0;
+    const title = wx.getStorageSync('currentTitle') || '环保新手';
     
-    // 增加一个 titleClass 变量来控制颜色
-    let title = '环保新手';
-    let tClass = 'title-level-1'; // 默认：青铜/大地色
-
-    if (score >= 100) {
-      title = '环保王者';
-      tClass = 'title-level-4';   // 王者：耀眼橙金
-    } else if (score >= 50) {
-      title = '环保达人';
-      tClass = 'title-level-3';   // 达人：钻石亮蓝
-    } else if (score >= 20) {
-      title = '环保卫士';
-      tClass = 'title-level-2';   // 卫士：生机亮绿
-    }
+    // 颜色样式我们还是在前端根据名字动态匹配一下
+    let tClass = 'title-level-1'; 
+    if (title === '环保宗师' || title === '环保王者') tClass = 'title-level-4';
+    else if (title === '环保达人') tClass = 'title-level-3';
+    else if (title === '环保卫士') tClass = 'title-level-2';
 
     this.setData({
       userScore: score,
       userTitle: title,
-      titleClass: tClass // 将动态计算的类名存入 data
+      titleClass: tClass
     });
   },
 
-  // 点击开始挑战，跳转到真正的答题页
   goToQuiz: function() {
     wx.navigateTo({
-      // 注意：这里的路径要对应我们刚才写的答题页的真实路径
       url: '/pages/challenge/quiz' 
     });
   }

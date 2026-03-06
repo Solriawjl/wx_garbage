@@ -2,21 +2,36 @@
 Page({
   data: {
     totalScore: 0,
-    userTitle: '环保新手'
+    userTitle: '环保新手',
+    recognizeCount: 0, // 识别次数
+    challengeCount: 0  // 通关次数
   },
 
-  // 每次进入页面时，实时读取最新的积分和称号
   onShow: function () {
-    const score = wx.getStorageSync('totalScore') || 0;
-    
-    let title = '环保新手';
-    if (score >= 100) title = '环保王者';
-    else if (score >= 50) title = '环保达人';
-    else if (score >= 20) title = '环保卫士';
+    const userId = wx.getStorageSync('userId');
+    if (!userId) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
 
-    this.setData({
-      totalScore: score,
-      userTitle: title
+    // 从后端实时拉取用户最新数据
+    wx.request({
+      url: `http://127.0.0.1:8000/api/user/info?user_id=${userId}`,
+      method: 'GET',
+      success: (res) => {
+        if (res.data.code === 200) {
+          const info = res.data.data;
+          this.setData({
+            totalScore: info.total_score,
+            userTitle: info.title,
+            recognizeCount: info.recognize_count,
+            challengeCount: info.challenge_count
+          });
+          // 同步更新本地缓存，防止其他页面读取旧数据
+          wx.setStorageSync('totalScore', info.total_score);
+          wx.setStorageSync('currentTitle', info.title);
+        }
+      }
     });
   },
 

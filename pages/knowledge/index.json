@@ -1,3 +1,7 @@
 {
-  "usingComponents": {}
+  "navigationBarTitleText": "知识库",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "tip-card": "/components/tip-card/tip-card"
+  }
 }

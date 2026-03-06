@@ -1,7 +1,7 @@
 <!--pages/result/result.wxml-->
 <view class="result-page">
 
-<view class="result-card">
+  <view class="result-card">
   <image class="item-image" src="{{itemImageUrl}}" mode="aspectFill"></image>
   
   <view class="result-text-box">
@@ -17,8 +17,14 @@
     </block>
   </view>
 
-  <view class="accuracy-tag">
-    <text>AI 识别置信度：{{accuracy}}%</text>
+  <view class="tag-container">
+    <view class="match-tag" wx:if="{{isFromSearch}}">
+      <text class="icon-check">✓</text> 词库精准匹配
+    </view>
+    
+    <view class="confidence-tag" wx:else>
+      <text class="icon-ai">🤖</text> AI 识别置信度：{{accuracy}}%
+    </view>
   </view>
 </view>
 

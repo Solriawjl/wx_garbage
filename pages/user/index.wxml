@@ -15,14 +15,18 @@
     <text class="data-num">{{totalScore}}</text>
     <text class="data-label">总积分</text>
   </view>
+  
   <view class="data-divider"></view>
+  
   <view class="data-item">
-    <text class="data-num">12</text>
+    <text class="data-num">{{recognizeCount}}</text>
     <text class="data-label">识别次数</text>
   </view>
+  
   <view class="data-divider"></view>
+  
   <view class="data-item">
-    <text class="data-num">5</text>
+    <text class="data-num">{{challengeCount}}</text>
     <text class="data-label">通关挑战</text>
   </view>
 </view>

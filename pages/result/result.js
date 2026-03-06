@@ -16,21 +16,70 @@ Page({
   onLoad: function (options) {
     const fromHistory = options.isFromHistory === 'true';    // 获取历史页面传来的标记
     const fromTip = options.isFromTip === 'true'; // 获取小贴士标记
+    const that = this; // 保存 this 指向
+    // 将加密的参数解密回中文！
+    const realKeyword = decodeURIComponent(options.keyword);
     // 微信小程序中，上个页面 url 里带的参数会放在 options 里
     if (options.keyword) {
       // 场景 A：如果是文字搜索过来的
-      console.log("执行搜索逻辑，关键词：", options.keyword);
+      console.log("执行搜索逻辑，关键词：", realKeyword);
       this.setData({
         isFromSearch: true,
         isFromHistory: fromHistory, //存入data
         isFromTip: fromTip,
-        itemName: options.keyword,
-        itemImageUrl: '/images/tab_home.png', // 搜索时可以用一个通用图标占位
-        categoryName: '可回收物', // 这里后续调用后端接口获取
-        categoryClass: 'recycle',
-        accuracy: '--', // 搜索不需要置信度
-        ecoValue: '适宜回收利用和资源化利用的废弃物...',
-        putGuidance: '轻投轻放；清洁干燥，避免污染...'
+        itemName: realKeyword + ' (查询中...)',
+        itemImageUrl: '/images/null.png', // 搜索时可以用一个通用图标占位
+      });
+
+      wx.showLoading({ title: '检索中...' });
+
+      // 2. 发起真实的 GET 请求调用后端搜索接口
+      wx.request({
+        url: 'http://127.0.0.1:8000/api/search', // 你的 FastAPI 后端地址
+        method: 'GET',
+        data: {
+          keyword: realKeyword
+        },
+        success: (res) => {
+          wx.hideLoading();
+          const resData = res.data;
+
+          if (resData.code === 200) {
+            // 查到了，把后端返回的真实数据渲染到页面上
+            const searchResult = resData.data;
+            that.setData({
+              itemName: searchResult.item_name, 
+              itemImageUrl: searchResult.image_url,
+              categoryName: searchResult.category_name,
+              categoryClass: searchResult.category_class,
+              ecoValue: searchResult.eco_value,
+              putGuidance: searchResult.put_guidance
+            });
+          } else if (resData.code === 404) {
+            // 没查到该物品
+            that.setData({ 
+              itemName: realKeyword + ' (未收录)' ,
+              categoryClass:'harmful',
+              categoryName:"未知"
+            });
+            wx.showModal({
+              title: '抱歉',
+              content: resData.message, // 弹出后端传来的提示：“抱歉，词库暂未收录...”
+              confirmText: '去反馈',
+              cancelText: '取消',
+              success(modalRes) {
+                if (modalRes.confirm) {
+                  // 用户点击去反馈，可以跳转到我们之前的反馈提交页
+                  wx.navigateTo({ url: '/pages/feedback/feedback' });
+                }
+              }
+            });
+          }
+        },
+        fail: (err) => {
+          wx.hideLoading();
+          wx.showToast({ title: '网络请求失败', icon: 'error' });
+        }
       });
     } else if (options.imagePath) {
       // 场景 B：如果是拍照或上传图片过来的

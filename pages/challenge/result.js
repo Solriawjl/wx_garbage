@@ -12,27 +12,13 @@ Page({
     // 0. 判断是否是从历史记录页跳转过来的
     const fromHistory = options.isFromHistory === 'true';
 
-    // 1. 获取本次挑战的得分和错题本
+    // 1. 获取本次挑战的得分和错题本,直接从缓存中读取后端算好的数据
     const score = wx.getStorageSync('challengeScore') || 0;
     const wrongs = wx.getStorageSync('challengeWrongList') || [];
-    
-    // 2. 获取之前的全局总积分
-    let oldTotalScore = wx.getStorageSync('totalScore') || 0;
-    let newTotalScore = oldTotalScore;
-    
-    // 3. 【防刷分逻辑优化】只有刚答完题（不是查历史）时，才累加总积分！
-    if (!fromHistory) {
-      newTotalScore = oldTotalScore + score;
-      wx.setStorageSync('totalScore', newTotalScore);
-    }
+    const newTotalScore = wx.getStorageSync('totalScore') || 0;
+    const currentTitle = wx.getStorageSync('currentTitle') || '环保新手';
 
-    // 4. 计算称号
-    let currentTitle = '再接再厉';
-    if (score === 10) currentTitle = '环保完美王者';
-    else if (score >= 8) currentTitle = '环保小达人';
-    else if (score >= 6) currentTitle = '环保小卫士';
-
-    // 5. 渲染页面
+    // 2. 渲染页面
     this.setData({
       isFromHistory: fromHistory,
       currentScore: score,

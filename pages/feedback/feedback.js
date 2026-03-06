@@ -9,11 +9,16 @@ Page({
   },
 
   onLoad: function (options) {
-    // 接收从结果页传过来的参数
-    // 假设在上一个页面的跳转是：url: `/pages/feedback/feedback?imagePath=xxx&result=可回收物`
+    // 1. 获取加密的原始字符串
+    let rawItemName = options.itemName || options.result || '';
+    let decodedItemName = rawItemName ? decodeURIComponent(rawItemName) : '未知分类';
+
+    // 2. 兼容 imageUrl 和 imagePath 两种参数名
+    let rawImageUrl = options.imageUrl || options.imagePath || '';
+
     this.setData({
-      imagePath: options.imagePath ? decodeURIComponent(options.imagePath) : '/images/temp_money.png',
-      originalResult: options.result || '未知分类'
+      imagePath: rawImageUrl ? decodeURIComponent(rawImageUrl) : '/images/null.png',
+      originalResult: decodedItemName 
     });
   },
 
@@ -32,26 +37,76 @@ Page({
     });
   },
 
-  // 提交反馈
+  // 提交反馈到真实的 FastAPI 后端
   submitFeedback: function() {
-    // 防呆拦截：必须选择一个分类才能提交
+    // 1. 必须选择一个分类才能提交
     if (!this.data.selectedCategory) {
-      wx.showToast({
-        title: '请先选择正确的分类',
-        icon: 'none'
-      });
+      wx.showToast({ title: '请先选择正确的分类', icon: 'none' });
       return;
     }
 
-    // 这里是模拟数据提交到服务器的动作
-    const feedbackData = {
-      image: this.data.imagePath,
-      wrongResult: this.data.originalResult,
-      correctCategory: this.data.selectedCategory,
-      itemName: this.data.realItemName
+    // 2. 获取用户 ID
+    const userId = wx.getStorageSync('userId');
+    if (!userId) {
+      wx.showToast({ title: '登录异常，请重新登录', icon: 'none' });
+      return;
+    }
+
+    // 3. 判断反馈类型 (有真实图片路径就是 image，否则就是 text 文字搜索反馈)
+    let fbType = 'text';
+    let imgUrl = null;
+    if (this.data.imagePath && !this.data.imagePath.includes('null.png')) {
+      fbType = 'image';
+      imgUrl = this.data.imagePath; // 已经是腾讯云的链接了
+    }
+
+    // 4. 巧妙地拼接建议：把用户手填的具体物品名附带在分类后面
+    let finalSuggestion = this.data.selectedCategory;
+    if (this.data.realItemName.trim()) {
+      finalSuggestion += ` (实际物品：${this.data.realItemName.trim()})`;
+    }
+
+    // 5. 组装发给后端的 payload
+    const payload = {
+      user_id: parseInt(userId),
+      type: fbType,
+      image_url: imgUrl,
+      item_name: this.data.originalResult,
+      suggestion: finalSuggestion
     };
-    
-    console.log("即将提交的纠错数据（非常适合用来重训练）：", feedbackData);
+
+    wx.showLoading({ title: '提交中...', mask: true });
+
+    // 6. 发起真实的网络请求
+    wx.request({
+      url: 'http://127.0.0.1:8000/api/feedback/submit', // 你的后端接口地址
+      method: 'POST',
+      data: payload,
+      success: (res) => {
+        wx.hideLoading();
+        if (res.data.code === 200) {
+          // 提交成功，显示你精心设计的成功动画
+          wx.showToast({
+            title: '感谢您的纠错！',
+            icon: 'success',
+            duration: 2000,
+            success: () => {
+              // 延迟 2 秒让用户看清提示，然后返回上一页
+              setTimeout(() => {
+                wx.navigateBack({ delta: 1 });
+              }, 2000);
+            }
+          });
+        } else {
+          wx.showToast({ title: res.data.message || '提交失败', icon: 'error' });
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading();
+        wx.showToast({ title: '网络连接失败', icon: 'error' });
+        console.error('提交反馈出错:', err);
+      }
+    });
 
     // 提交成功的反馈动画
     wx.showToast({

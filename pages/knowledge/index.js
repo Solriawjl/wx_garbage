@@ -92,56 +92,117 @@ Page({
     ],
     currentCategory: {}, // 当前选中的垃圾分类
 
-    // 环保小知识的模拟数据
-    articles: [
-      { id: 1, title: '你知道一节废电池污染多少水吗？', summary: '一节1号电池烂在地里，能使1平方米的土壤永久丧失利用价值...', date: '2026-03-05', image: '/images/article1.png' },
-      { id: 2, title: '变废为宝：咖啡渣的5个神仙妙用', summary: '喝完咖啡别急着倒掉，它可是纯天然的去味剂和植物肥料。', date: '2026-03-04', image: '/images/article2.png' },
-      { id: 3, title: '外卖盒到底属于什么垃圾？', summary: '洗干净的外卖盒是可回收物，但沾满油污的只能算其他垃圾...', date: '2026-03-01', image: '/images/article3.png' }
-    ]
+    // ==========================================
+    // 环保小知识的分页数据流
+    // ==========================================
+    tipList: [],           // 存放后端请求回来的真实文章列表
+    page: 1,               // 当前第几页
+    size: 10,              // 每页请求多少条
+    isLoading: false,      // 请求锁，防止重复加载
+    hasMore: true,         // 是否还有下一页
+
+    currentTipData: {},     // 存着当前被点击的完整图文数据
+    isTipCardVisible: false // 控制卡片弹窗开关
   },
 
   onLoad: function (options) {
-    // 页面加载时，默认选中第一个分类（可回收物）
-    this.setData({
-      currentCategory: this.data.categories[0]
-    });
+    // 图谱默认选中第一个
+    if(this.data.categories && this.data.categories.length > 0) {
+      this.setData({ currentCategory: this.data.categories[0] });
+    }
+    
+    // 一进页面就去请求第一页的科普知识
+    this.fetchTipsList(true);
   },
 
-  // 切换顶部 Tab (分类图谱 / 环保小知识)
+  // 切换顶部 Tab
   switchTab: function(e) {
     const index = parseInt(e.currentTarget.dataset.index);
-    this.setData({
-      currentTab: index
-    });
+    this.setData({ currentTab: index });
   },
 
-  // 点击顶部垃圾桶，切换当前图谱大类
+  // ==========================================
+  // 分类图谱的相关逻辑
+  // ==========================================
   selectCategory: function(e) {
     const id = e.currentTarget.dataset.id;
     const selected = this.data.categories.find(item => item.id === id);
-    this.setData({
-      currentCategory: selected
-    });
+    this.setData({ currentCategory: selected });
   },
 
-  // 点击具体的百科词条（如：报纸、易拉罐）
   onItemTap: function(e) {
     const itemName = e.currentTarget.dataset.name;
-    console.log("点击了知识库词条：", itemName);
-    
-    // 直接带着词条名称，跳转到搜索结果页进行查询展示
+    // 直接跳转到了写好的真实搜索结果页
     wx.navigateTo({
-      url: '/pages/result/result?keyword=' + itemName
+      url: '/pages/result/result?keyword=' + encodeURIComponent(itemName) 
     });
   },
 
-  // 跳转到文章详情页 (后续可扩展)
-  goToArticleDetail: function(e) {
-    const id = e.currentTarget.dataset.id;
-    console.log("准备跳转到文章详情，ID:", id);
-    wx.showToast({
-      title: '正在打开文章...',
-      icon: 'none'
+  // ==========================================
+  // 后端分页加载 环保小知识
+  // ==========================================
+  fetchTipsList: function(isRefresh = false) {
+    if (this.data.isLoading || (!this.data.hasMore && !isRefresh)) return;
+
+    this.setData({ isLoading: true });
+    let targetPage = isRefresh ? 1 : this.data.page;
+
+    wx.request({
+      url: `http://127.0.0.1:8000/api/tips/list?page=${targetPage}&size=${this.data.size}`,
+      method: 'GET',
+      success: (res) => {
+        if (res.data.code === 200) {
+          const newData = res.data.data;
+          this.setData({
+            tipList: isRefresh ? newData : this.data.tipList.concat(newData),
+            page: targetPage + 1,
+            hasMore: newData.length === this.data.size,
+            isLoading: false
+          });
+        }
+      },
+      fail: (err) => {
+        this.setData({ isLoading: false });
+        wx.showToast({ title: '网络请求失败', icon: 'error' });
+      },
+      complete: () => {
+        if (isRefresh) wx.stopPullDownRefresh(); // 停止系统下拉动画
+      }
     });
+  },
+
+  // 页面自带监听：用户下拉动作
+  onPullDownRefresh: function () {
+    // 只有在科普 Tab 下才响应下拉刷新
+    if (this.data.currentTab === 1) {
+      this.setData({ hasMore: true });
+      this.fetchTipsList(true);
+    } else {
+      wx.stopPullDownRefresh();
+    }
+  },
+
+  // 页面自带监听：用户上拉触底动作
+  onReachBottom: function () {
+    if (this.data.currentTab === 1) {
+      this.fetchTipsList(false);
+    }
+  },
+
+  // ==========================================
+  // 点击科普文章触发
+  // ==========================================
+  showTipCard: function(e) {
+    const clickedTip = e.currentTarget.dataset.tip;
+    if (clickedTip) {
+      this.setData({ 
+        currentTipData: clickedTip,
+        isTipCardVisible: true 
+      });
+    }
+  },
+
+  hideTipCard: function() {
+    this.setData({ isTipCardVisible: false });
   }
 })

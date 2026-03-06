@@ -50,18 +50,28 @@
 </view>
 
 <view class="tab-content" wx:if="{{currentTab === 1}}">
-  <scroll-view scroll-y="true" class="article-list">
-    <block wx:for="{{articles}}" wx:key="index">
-      <view class="article-card" bindtap="goToArticleDetail" data-id="{{item.id}}">
+  <view class="article-list">
+    <block wx:for="{{tipList}}" wx:key="id">
+      <view class="article-card" bindtap="showTipCard" data-tip="{{item}}">
         <view class="article-info">
           <text class="article-title">{{item.title}}</text>
-          <text class="article-desc">{{item.summary}}</text>
-          <text class="article-date">{{item.date}}</text>
+          <text class="article-desc">{{item.content}}</text>
+          
+          <view class="article-meta">
+            <text class="article-date">{{item.created_at}}</text>
+            <text class="article-views">🔥 {{item.view_count}}</text>
+          </view>
         </view>
-        <image class="article-img" src="{{item.image}}" mode="aspectFill"></image>
+        <image class="article-img" src="{{item.image_url ? item.image_url : '/images/default_item.png'}}" mode="aspectFill"></image>
       </view>
     </block>
-  </scroll-view>
+  </view>
+
+  <view class="loading-box" wx:if="{{isLoading}}"><text>拼命加载中...</text></view>
+  <view class="no-more" wx:if="{{!hasMore && tipList.length > 0}}"><text>—— 我也是有底线的 ——</text></view>
+  <view class="empty-state" wx:if="{{!isLoading && tipList.length === 0}}"><text>暂无科普内容~</text></view>
 </view>
+
+<tip-card visible="{{isTipCardVisible}}" tipData="{{currentTipData}}" bind:close="hideTipCard"></tip-card>
 
 </view>

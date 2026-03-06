@@ -34,7 +34,7 @@
   margin-top: -50rpx; /* 负边距！让大按钮压在绿底色上 */
   z-index: 2;
   position: relative;
-  margin-bottom: 40rpx;
+  margin-bottom: 25rpx;
 }
 
 .main-btn-card {
@@ -84,41 +84,37 @@
 }
 
 /* --- 每日贴士 --- */
-.tip-section {
-  padding: 0 30rpx;
-  margin-bottom: 40rpx;
-}
-
-.tip-card {
-  background-color: #e8f5e9; 
-  border-radius: 16rpx;
-  padding: 24rpx 30rpx;
+/* 外层容器：带边框和浅绿背景 */
+.daily-tip-box {
   display: flex;
   align-items: center;
-  border: 2rpx solid #c8e6c9;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.02);
+  background-color: #f2fbf4; /* 浅绿色背景 */
+  border-radius: 20rpx;
+  padding: 0 20rpx;
+  height: 80rpx; /* 固定栏目高度 */
+  margin: 30rpx;
+  border: 1px solid #c8e6c9; /* 描个绿边更精致 */
 }
 
-.tip-icon {
-  font-size: 32rpx;
-  margin-right: 15rpx;
+.tip-icon { 
+  font-size: 32rpx; 
+  margin-right: 15rpx; 
 }
 
-.tip-text {
-  flex: 1;
+/* 轮播组件本身必须设置高宽 */
+.tip-swiper {
+  flex: 1; /* 占据中间所有剩余空间 */
+  height: 100%;
+}
+
+/* 轮播里的文字 */
+.tip-title {
+  line-height: 80rpx; /* 行高和父容器一致，完美垂直居中 */
   font-size: 28rpx;
-  color: #2e7d32; 
-  font-weight: bold;
-  white-space: nowrap;
+  color: #333;
   overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tip-arrow {
-  font-size: 24rpx;
-  color: #66BB6A;
-  margin-left: 10rpx;
-  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis; /* 文字太长自动变成省略号 */
 }
 
 /* --- 轮播图 (移到底部，恢复正常的视觉边距) --- */

@@ -1,0 +1,29 @@
+<!--components/tip-card/tip-card.wxml-->
+<view class="modal-mask" wx:if="{{visible}}" bindtap="onClose">
+  
+  <view class="tip-card" catchtap="preventTouch">
+    
+    <image 
+      class="card-image" 
+      src="{{tipData.image_url ? tipData.image_url : '/images/default_tip.png'}}" 
+      mode="aspectFill"
+    ></image>
+
+    <view class="card-body">
+      <view class="card-title">{{tipData.title}}</view>
+      
+      <scroll-view scroll-y class="card-content">
+        <text>{{tipData.content}}</text>
+      </scroll-view>
+
+      <view class="card-footer">
+        <text class="view-count">🔥 {{tipData.view_count || 0}} 人已读</text>
+        <text class="date-text">{{tipData.created_at || '刚刚'}}</text>
+      </view>
+    </view>
+
+    <view class="close-btn" bindtap="onClose">我知道啦</view>
+    
+  </view>
+
+</view>

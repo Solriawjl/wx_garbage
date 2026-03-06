@@ -5,7 +5,6 @@
     "pages/search/index",
     "pages/feedback/feedback",
     "pages/knowledge/index",
-    "pages/knowledge/detail",
     "pages/challenge/index",
     "pages/challenge/quiz",
     "pages/challenge/result",

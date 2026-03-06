@@ -1,0 +1,91 @@
+/* components/tip-card/tip-card.wxss */
+/* 半透明黑色遮罩层，铺满全屏 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999; /* 保证它在最顶层 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 卡片主体 */
+.tip-card {
+  width: 80%;
+  max-height: 85vh;
+  background-color: #fff;
+  border-radius: 30rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.2);
+  /* 简单的弹出动画效果 */
+  animation: popIn 0.3s ease-out forwards; 
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* 顶部配图 */
+.card-image {
+  width: 100%;
+  height: 280rpx;
+  background-color: #f0f0f0;
+}
+
+/* 核心内容区 */
+.card-body {
+  padding: 40rpx 40rpx 20rpx 40rpx;
+  flex: 1; /* 让它自适应高度 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+/* 可滚动的内容区域 */
+.card-content {
+  max-height: 400rpx; /* 控制文字区域最大高度 */
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 30rpx;
+}
+
+/* 底部数据栏 */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: #999;
+  border-top: 1rpx solid #eee;
+  padding-top: 20rpx;
+}
+
+/* 底部大按钮 */
+.close-btn {
+  background-color: #4CAF50;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+  padding: 30rpx 0;
+  width: 100%;
+}
+
+.close-btn:active {
+  background-color: #43a047; /* 按下时的变色效果 */
+}

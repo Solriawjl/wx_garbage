@@ -38,5 +38,28 @@
   </view>
 
 </scroll-view>
+<view class="modal-mask" wx:if="{{showDetailModal}}" bindtap="closeDetail">
+  
+  <view class="detail-card" catchtap="preventTouch">
+    <image class="detail-img" src="{{currentDetailItem.imageUrl}}" mode="aspectFill"></image>
+    
+    <view class="detail-info">
+      <view class="detail-title">AI 识别结果</view>
+      <view class="detail-name">{{currentDetailItem.itemName}}</view>
+      
+      <view class="detail-tags">
+        <view class="tag {{currentDetailItem.categoryClass}}">{{currentDetailItem.categoryName}}</view>
+        <view class="confidence-tag" wx:if="{{currentDetailItem.confidence}}">置信度：{{currentDetailItem.confidence}}%</view>
+      </view>
+      
+      <view class="detail-date">识别时间：{{currentDetailItem.date}}</view>
+    </view>
+    
+    <view class="modal-actions">
+      <view class="action-btn cancel-btn" bindtap="closeDetail">我知道了</view>
+      <view class="action-btn feedback-btn" bindtap="goToFeedback">识别有误？去反馈</view>
+    </view>
+  </view>
 
+</view>
 </view>

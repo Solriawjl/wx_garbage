@@ -19,13 +19,27 @@
   </view>
 </view>
 
-<view class="tip-section">
-  <view class="tip-card" bindtap="goToRandomResult">
-    <text class="tip-icon">💡</text>
-    <text class="tip-text">你知道 [{{dailyItem}}] 属于哪种类型的垃圾吗？</text>
-    <text class="tip-arrow">去看看 ></text>
-  </view>
+<view class="daily-tip-box">
+  <view class="tip-icon">💡</view>
+  
+  <swiper 
+    class="tip-swiper" 
+    vertical="true" 
+    autoplay="true" 
+    circular="true" 
+    interval="3500" 
+    duration="500"
+  >
+    <block wx:for="{{carouselTips}}" wx:key="id">
+      <swiper-item catchtap="showTipCard" data-tip="{{item}}">
+        <view class="tip-title">{{item.title}}</view>
+      </swiper-item>
+    </block>
+  </swiper>
+
 </view>
+
+<tip-card visible="{{isTipCardVisible}}" tipData="{{currentTipData}}" bind:close="hideTipCard"></tip-card>
 
 <view class="banner-section">
   <swiper class="banner-swiper" indicator-dots="true" autoplay="true" interval="4000" duration="500" circular="true" indicator-active-color="#4CAF50" indicator-color="rgba(255,255,255,0.6)">
@@ -34,5 +48,5 @@
     <swiper-item><image src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/banner/banner3.png" class="banner-img" mode="aspectFill"></image></swiper-item>
   </swiper>
 </view>
-
+<tip-card visible="{{isTipCardVisible}}" tipData="{{currentTipData}}" bind:close="hideTipCard"></tip-card>
 </view>
