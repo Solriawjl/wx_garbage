@@ -148,7 +148,7 @@ Page({
     let targetPage = isRefresh ? 1 : this.data.page;
 
     wx.request({
-      url: `http://127.0.0.1:8000/api/tips/list?page=${targetPage}&size=${this.data.size}`,
+      url: `http://192.168.0.126:8000/api/tips/list?page=${targetPage}&size=${this.data.size}`,
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {

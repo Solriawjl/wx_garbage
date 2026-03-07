@@ -1,11 +1,11 @@
 <!--pages/feedback/feedback.wxml-->
 <view class="feedback-page">
 
-<view class="context-card">
+  <view class="context-card">
   <image class="target-img" src="{{imagePath}}" mode="aspectFill"></image>
   <view class="context-info">
     <text class="label">原识别结果：</text>
-    <text class="value error-text">{{originalResult}}</text>
+    <text class="value error-text">{{displayResult}}</text>
   </view>
 </view>
 

@@ -1,4 +1,3 @@
-<!--pages/user/wrongBook.wxml-->
 <view class="wrong-book-page">
 
 <view class="header-bar" wx:if="{{wrongList.length > 0}}">
@@ -8,15 +7,19 @@
   </view>
 </view>
 
-<scroll-view scroll-y="true" class="list-container">
+<scroll-view scroll-y="true" class="list-container" bindtap="recoverSwipe">
   
   <block wx:if="{{wrongList.length > 0}}">
-    <block wx:for="{{wrongList}}" wx:key="name">
-      <view class="wrong-card">
+    <view class="list-item-wrap" wx:for="{{wrongList}}" wx:key="id">
+      
+      <view class="wrong-card"
+            bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-index="{{index}}"
+            style="transform: translateX({{item.offsetX || 0}}rpx); transition: {{isMoving ? 'none' : 'transform 0.3s'}};">
+        
+        <view class="remove-btn" catchtap="removeItem" data-index="{{index}}">✕</view>
         
         <view class="item-header">
           <text class="item-name">{{item.name}}</text>
-          <view class="remove-btn" bindtap="removeItem" data-index="{{index}}">✕</view>
         </view>
         
         <view class="card-divider"></view>
@@ -33,7 +36,10 @@
         </view>
         
       </view>
-    </block>
+
+      <view class="delete-action" catchtap="removeItem" data-index="{{index}}">删除</view>
+      
+    </view>
   </block>
 
   <view class="empty-state" wx:else>

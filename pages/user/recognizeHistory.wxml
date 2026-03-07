@@ -1,27 +1,29 @@
-<!--pages/user/recognizeHistory.wxml-->
 <view class="history-page">
 
-<view class="filter-bar">
-  <text class="filter-text">全部记录 ({{historyList.length}})</text>
-  <view class="filter-btn" bindtap="onFilter">
-    <text>筛选</text>
-    <text class="icon-filter"> ▾</text>
+<view class="filter-bar" wx:if="{{historyList.length > 0}}">
+  <text class="filter-text">共 {{historyList.length}} 条记录</text>
+  <view class="clear-btn" bindtap="clearAll">
+    <text class="icon-trash">🗑️</text> 一键清空
   </view>
 </view>
 
-<scroll-view scroll-y="true" class="list-container">
+<scroll-view scroll-y="true" class="list-container" bindtap="recoverSwipe">
   
   <block wx:if="{{historyList.length > 0}}">
-    <block wx:for="{{historyList}}" wx:key="id">
-      <view class="history-card" bindtap="goToDetail" data-item="{{item}}">
+    <view class="list-item-wrap" wx:for="{{historyList}}" wx:key="id">
+      
+      <view class="history-card" bindtap="goToDetail" data-item="{{item}}"
+            bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-index="{{index}}"
+            style="transform: translateX({{item.offsetX || 0}}rpx); transition: {{isMoving ? 'none' : 'transform 0.3s'}};">
         
+        <view class="remove-btn" catchtap="removeItem" data-index="{{index}}">✕</view>
+
         <image class="item-img" src="{{item.imageUrl}}" mode="aspectFill"></image>
         
         <view class="item-info">
           <view class="info-top">
             <text class="item-name">{{item.itemName}}</text>
-            <text class="arrow">></text>
-          </view>
+            </view>
           
           <view class="tag {{item.categoryClass}}">{{item.categoryName}}</view>
           
@@ -29,7 +31,9 @@
         </view>
         
       </view>
-    </block>
+
+      <view class="delete-action" catchtap="removeItem" data-index="{{index}}">删除</view>
+    </view>
   </block>
 
   <view class="empty-state" wx:else>
@@ -38,8 +42,8 @@
   </view>
 
 </scroll-view>
+
 <view class="modal-mask" wx:if="{{showDetailModal}}" bindtap="closeDetail">
-  
   <view class="detail-card" catchtap="preventTouch">
     <image class="detail-img" src="{{currentDetailItem.imageUrl}}" mode="aspectFill"></image>
     
@@ -60,6 +64,6 @@
       <view class="action-btn feedback-btn" bindtap="goToFeedback">识别有误？去反馈</view>
     </view>
   </view>
-
 </view>
+
 </view>

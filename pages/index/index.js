@@ -17,7 +17,7 @@ Page({
   // ==========================================
   fetchCarouselTips: function() {
     wx.request({
-      url: 'http://127.0.0.1:8000/api/tips/carousel', // 调取新的批量随机接口
+      url: 'http://192.168.0.126:8000/api/tips/carousel', // 调取新的批量随机接口
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -89,7 +89,7 @@ Page({
             wx.showLoading({ title: 'AI 引擎识别中...', mask: true });
 
             wx.uploadFile({
-              url: 'http://127.0.0.1:8000/api/recognize', 
+              url: 'http://192.168.0.126:8000/api/recognize', 
               filePath: tempFilePath,
               name: 'file', 
               formData: {

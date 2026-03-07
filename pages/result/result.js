@@ -1,4 +1,7 @@
 // pages/result/result.js
+// 引入同声传译插件和内部音频上下文
+const plugin = requirePlugin("WechatSI");
+const innerAudioContext = wx.createInnerAudioContext();
 Page({
   data: {
     isFromSearch: true, // 默认假设是搜索
@@ -35,7 +38,7 @@ Page({
 
       // 2. 发起真实的 GET 请求调用后端搜索接口
       wx.request({
-        url: 'http://127.0.0.1:8000/api/search', // 你的 FastAPI 后端地址
+        url: 'http://192.168.0.126:8000/api/search', // 你的 FastAPI 后端地址
         method: 'GET',
         data: {
           keyword: realKeyword
@@ -55,6 +58,8 @@ Page({
               ecoValue: searchResult.eco_value,
               putGuidance: searchResult.put_guidance
             });
+            // 触发语音：搜索成功
+            that.generateAndPlayVoice(searchResult.item_name, searchResult.category_name, searchResult.put_guidance, true, true);
           } else if (resData.code === 404) {
             // 没查到该物品
             that.setData({ 
@@ -62,6 +67,8 @@ Page({
               categoryClass:'harmful',
               categoryName:"未知"
             });
+            // 触发语音：未收录
+            that.generateAndPlayVoice(realKeyword, "未知", false, true);
             wx.showModal({
               title: '抱歉',
               content: resData.message, // 弹出后端传来的提示：“抱歉，词库暂未收录...”
@@ -97,13 +104,56 @@ Page({
         putGuidance: aiResult.put_guidance || '未知'
       });
       wx.removeStorageSync('tempAiResult');
+      // 触发语音：AI 识别成功 (没有具体物品名，只报大类)
+      this.generateAndPlayVoice('', this.data.categoryName, this.data.putGuidance, true, false);
     }
   },
 
-  // 重播语音
+  // 页面卸载时（点左上角返回），立刻停止语音，防止在别的页面继续说话
+  onUnload: function () {
+    innerAudioContext.stop();
+  },
+
+  // 生成并播放语音
+  generateAndPlayVoice: function(itemName, categoryName, putGuidance, isSuccess, isSearch) {
+    let speakText = "";
+    
+    // 智能组合文案
+    if (!isSuccess) {
+      speakText = `抱歉，词库暂未收录 ${itemName}，您可以尝试提交反馈。`;
+    } else if (isSearch) {
+      speakText = `为您查到：${itemName}，它属于 ${categoryName}。投放建议：${putGuidance}`;
+    } else {
+      speakText = `AI 识别结果为：${categoryName}。投放建议：${putGuidance}`;
+    }
+
+    // 调用腾讯同声传译接口
+    plugin.textToSpeech({
+      lang: "zh_CN", 
+      tts: true,
+      content: speakText,
+      success: (res) => {
+        console.log("语音合成成功，准备播放：", speakText);
+        innerAudioContext.src = res.filename; // 设置音频源为云端生成的临时文件
+        // 调整播放倍速（范围 0.5 ~ 2.0，默认 1.0）
+        innerAudioContext.playbackRate = 1.2;
+        innerAudioContext.play();             // 自动播放！
+      },
+      fail: (res) => {
+        console.error("语音合成失败", res);
+      }
+    });
+  },
+
+  // 绑定给 WXML 中“重播语音”按钮的方法
   playVoice: function() {
-    console.log("播放语音：" + this.data.itemName + "属于" + this.data.categoryName);
-    // 后续这里会接入 TTS 播放接口
+    if (innerAudioContext.src) {
+      innerAudioContext.stop(); // 先停止当前的
+      innerAudioContext.play(); // 重新开始播放
+      wx.showToast({ title: '重新播报', icon: 'none' });
+    } else {
+      wx.showToast({ title: '语音加载中', icon: 'loading' });
+    }
   },
 
   // 统一的返回上一页操作 (无论是重新搜索还是重新识别，逻辑都是回退一页)
@@ -113,24 +163,18 @@ Page({
     });
   },
 
-  // 跳转纠错反馈
+  // 跳转到纠错反馈页
   goToFeedback: function() {
-    // 1. 获取当前页面所需的数据
-    const isFromSearch = this.data.isFromSearch;
-    const itemName = this.data.itemName;
-    const categoryName = this.data.categoryName;
+    // 1. 获取当前页面所需的数据 (兼容不同的命名习惯)
+    const itemName = this.data.itemName || this.data.keyword || '未知物品'; 
+    const categoryName = this.data.categoryName || '未知分类';
     
-    // 如果是拍照获取的本地临时路径，URL 传参时必须用 encodeURIComponent 编码，否则可能引发解析错误
-    const imagePath = encodeURIComponent(this.data.itemImageUrl);
-
-    // 2. 动态拼接“原识别结果”
-    // 搜索场景下，告诉用户是哪个词搜错了（例如：钱币 - 可回收物）
-    // 拍照场景下，直接告诉用户是被错认成了什么（例如：可回收物）
-    const originalResult = isFromSearch ? `${itemName} (${categoryName})` : categoryName;
+    // 2. 对图片路径进行安全编码（如果没有图片路径，则传空）
+    const imagePath = this.data.itemImageUrl ? encodeURIComponent(this.data.itemImageUrl) : '';
 
     // 3. 带着完整的上下文参数跳转到反馈页
     wx.navigateTo({
-      url: `/pages/feedback/feedback?isFromSearch=${isFromSearch}&itemName=${itemName}&imagePath=${imagePath}&result=${originalResult}`
+      url: `/pages/feedback/feedback?itemName=${encodeURIComponent(itemName)}&categoryName=${encodeURIComponent(categoryName)}&imagePath=${imagePath}`
     });
   }
 })

@@ -1,13 +1,21 @@
 <view class="feedback-page">
 
-<view class="header-bar">
+<view class="header-bar" wx:if="{{feedbackList.length > 0}}">
   <text class="count-text">共提交 {{feedbackList.length}} 条反馈</text>
+  <view class="clear-btn" bindtap="clearAll">
+    <text class="icon-trash">🗑️</text> 一键清空
+  </view>
 </view>
 
-<scroll-view scroll-y="true" class="list-container">
+<scroll-view scroll-y="true" class="list-container" bindtap="recoverSwipe">
   <block wx:if="{{feedbackList.length > 0}}">
-    <block wx:for="{{feedbackList}}" wx:key="id">
-      <view class="feedback-card">
+    <view class="list-item-wrap" wx:for="{{feedbackList}}" wx:key="id">
+      
+      <view class="feedback-card"
+            bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-index="{{index}}"
+            style="transform: translateX({{item.offsetX || 0}}rpx); transition: {{isMoving ? 'none' : 'transform 0.3s'}};">
+        
+        <view class="remove-btn" catchtap="removeItem" data-index="{{index}}">✕</view>
         
         <view class="card-header">
           <view class="item-title">
@@ -23,7 +31,7 @@
         
         <view class="source-box">
           <block wx:if="{{item.type === 'image'}}">
-            <image class="source-img" src="{{item.imageUrl}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.imageUrl}}"></image>
+            <image class="source-img" src="{{item.imageUrl}}" mode="aspectFill" catchtap="previewImage" data-url="{{item.imageUrl}}"></image>
             <view class="source-info">
               <text class="label">AI 识别为：</text>
               <text class="value error-text">{{item.itemName}}</text>
@@ -52,11 +60,14 @@
         </view>
         
       </view>
-    </block>
+
+      <view class="delete-action" catchtap="removeItem" data-index="{{index}}">删除</view>
+      
+    </view>
   </block>
 
   <view class="empty-state" wx:else>
-    <icon type="order" size="70" color="#ccc"></icon>
+    <icon type="info" size="70" color="#ccc"></icon>
     <text class="empty-text">您还没有提交过纠错反馈哦~</text>
   </view>
 </scroll-view>

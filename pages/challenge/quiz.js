@@ -42,7 +42,7 @@ Page({
     wx.showLoading({ title: '题目生成中...', mask: true });
     
     wx.request({
-      url: 'http://127.0.0.1:8000/api/challenge/questions?limit=10',
+      url: 'http://192.168.0.126:8000/api/challenge/questions?limit=10',
       method: 'GET',
       success: (res) => {
         wx.hideLoading();
@@ -155,7 +155,7 @@ Page({
     };
 
     wx.request({
-      url: 'http://127.0.0.1:8000/api/challenge/submit',
+      url: 'http://192.168.0.126:8000/api/challenge/submit',
       method: 'POST',
       data: payload,
       success: (res) => {

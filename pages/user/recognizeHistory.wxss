@@ -241,3 +241,75 @@
 .feedback-btn {
   color: #F44336; /* 用红色警示色突出纠错功能 */
 }
+
+/* --- 左滑删除核心样式 --- */
+/* 覆盖顶栏的清空按钮样式 */
+.clear-btn {
+  font-size: 26rpx;
+  color: #F44336;
+  display: flex;
+  align-items: center;
+  padding: 7rpx 20rpx;
+  background-color: #ffebee;
+  border-radius: 30rpx;
+  transition: transform 0.1s;
+}
+.clear-btn:active { transform: scale(0.95); }
+.icon-trash { margin-right: 8rpx; font-size: 26rpx; }
+/* 1. 外层包裹器：接管阴影和整体间距，彻底消除红边溢出 */
+.list-item-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 30rpx;
+  border-radius: 20rpx;
+  background-color: #ffffff; /* 改回白色底，彻底消灭红色边框伪影 */
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03); /* 阴影放在外层，防止滑动时被裁切断裂 */
+}
+
+/* 2. 可滑动的卡片本体 */
+.history-card {
+  margin-bottom: 0 !important; 
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2; /* 盖在删除按钮上面 */
+  background-color: #ffffff; 
+  border-radius: 20rpx;
+  box-shadow: none !important; /* 去除内部阴影，由外层包裹器接管 */
+}
+
+/* 3. 右上角独立删除 X (弱化颜色，让页面更干净协调) */
+.remove-btn {
+  position: absolute;
+  top: 15rpx;
+  right: 15rpx;
+  color: #d8d8d8; /* 颜色调浅一点，不抢视觉焦点 */
+  width: 50rpx;
+  height: 50rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: consolas;
+  font-size: 32rpx;
+  z-index: 10;
+}
+
+/* 4. 底层露出的删除按钮 */
+.delete-action {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 140rpx;
+  background-color: #FF5252; /* 🚀 将红色背景移到这里，并换成质感更好的西瓜红 */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  z-index: 1;
+  /* 完美贴合外层卡片的右侧圆角 */
+  border-top-right-radius: 20rpx;
+  border-bottom-right-radius: 20rpx;
+}

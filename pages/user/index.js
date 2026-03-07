@@ -16,7 +16,7 @@ Page({
 
     // 从后端实时拉取用户最新数据
     wx.request({
-      url: `http://127.0.0.1:8000/api/user/info?user_id=${userId}`,
+      url: `http://192.168.0.126:8000/api/user/info?user_id=${userId}`,
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -74,16 +74,45 @@ Page({
     });
   },
 
-  // 清除本地缓存
+  // 清除本地缓存 (升级版)
   clearCache: function() {
     wx.showModal({
-      title: '提示',
-      content: '确定要清除所有缓存数据（包括总积分和错题本）吗？',
+      title: '清除本地缓存',
+      content: '确定要清除本地缓存的临时图片和状态吗？\n(您的积分、历史记录和错题本已安全保存在云端，不会丢失)',
       success: (res) => {
         if (res.confirm) {
-          wx.clearStorageSync(); // 一键清理
-          this.onShow(); // 重新刷新页面数据
-          wx.showToast({ title: '清理成功' });
+          // 1. 🚀 核心护城河：先把极其重要的登录凭证备份出来！
+          const userId = wx.getStorageSync('userId');
+          
+          // 2. 放心大胆地一键清空本地所有垃圾缓存
+          wx.clearStorageSync(); 
+          
+          // 3. 🚀 赶紧把 userId 存回去，让用户保持登录状态！
+          if (userId) {
+            wx.setStorageSync('userId', userId);
+          }
+
+          // 4. 重新触发一次请求，把后端最新的积分和称号拉取下来
+          this.onShow(); 
+          
+          wx.showToast({ title: '缓存清理完毕', icon: 'success' });
+        }
+      }
+    });
+  },
+
+  // 退出登录
+  logout: function() {
+    wx.showModal({
+      title: '退出登录',
+      content: '确定要退出当前账号吗？',
+      confirmColor: '#F44336',
+      success: (res) => {
+        if (res.confirm) {
+          wx.clearStorageSync(); // 彻底清空本地缓存（包含 userId）
+          wx.reLaunch({
+            url: '/pages/login/login' // 假设你的登录页叫这个，如果是其他名字请修改
+          });
         }
       }
     });

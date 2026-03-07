@@ -130,3 +130,24 @@
   color: #ccc;
   font-family: consolas; /* 让箭头看起来更整齐 */
 }
+
+/* --- 退出登录按钮 --- */
+.logout-btn {
+  width: 90%;
+  margin: 40rpx auto 60rpx;
+  height: 100rpx;
+  background-color: #ffffff;
+  color: #F44336;
+  font-size: 34rpx;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
+  transition: background-color 0.2s;
+}
+
+.logout-btn:active {
+  background-color: #f9f9f9;
+}

@@ -139,3 +139,62 @@
   font-size: 30rpx;
   color: #888;
 }
+
+/* --- 左滑删除与无边框溢出核心样式 --- */
+
+/* 1. 外层包裹器：接管阴影，消除滑动时的裁切感 */
+.list-item-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 30rpx;
+  border-radius: 20rpx;
+  background-color: #ffffff; /* 保持白色底 */
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03); 
+}
+
+/* 2. 可滑动的卡片本体：覆盖原有边距和阴影 */
+.wrong-card {
+  margin-bottom: 0 !important; 
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2; 
+  background-color: #ffffff; 
+  border-radius: 20rpx;
+  box-shadow: none !important; /* 原本的阴影交由父级 */
+}
+
+/* 3. 右上角独立删除 X */
+.remove-btn {
+  position: absolute;
+  top: 15rpx;
+  right: 15rpx;
+  color: #d8d8d8; 
+  width: 50rpx;
+  height: 50rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: consolas;
+  font-size: 32rpx;
+  z-index: 10;
+}
+
+/* 4. 底层露出的西瓜红删除按钮 */
+.delete-action {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 140rpx;
+  background-color: #FF5252; 
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  z-index: 1;
+  border-top-right-radius: 20rpx;
+  border-bottom-right-radius: 20rpx;
+}

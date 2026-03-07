@@ -15,7 +15,7 @@ App({
           
           // 2. 把 code 发送给我们刚刚写好的 FastAPI 后端
           wx.request({
-            url: 'http://127.0.0.1:8000/api/user/login', // 本地后端地址
+            url: 'http://192.168.0.126:8000/api/user/login', // 本地后端地址
             method: 'POST',
             data: {
               code: res.code
