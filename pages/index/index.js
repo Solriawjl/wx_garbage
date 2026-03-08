@@ -12,9 +12,24 @@ Page({
     this.fetchCarouselTips();
   },
 
-  // ==========================================
+  // 页面每次显示时执行 (用于捕捉“重新识别”的暗号)
+  onShow: function () {
+    // 1. 检查是否接到了“重新识别”的暗号
+    const autoTrigger = wx.getStorageSync('autoTriggerCamera');
+    
+    if (autoTrigger) {
+      // 2. 阅后即焚：立马把暗号删掉，防止下次正常进入首页也疯狂弹窗
+      wx.removeStorageSync('autoTriggerCamera');
+
+      // 3. 稍微延迟 300 毫秒，等页面退回的动画播完再弹窗，视觉更丝滑
+      setTimeout(() => {
+        // 自动调用下方的拍照/相册选择功能
+        this.onTapCamera(); 
+      }, 300);
+    }
+  },
+
   // 获取科普轮播列表
-  // ==========================================
   fetchCarouselTips: function() {
     wx.request({
       url: 'http://192.168.0.126:8000/api/tips/carousel', // 调取新的批量随机接口
@@ -50,9 +65,7 @@ Page({
     this.setData({ isTipCardVisible: false });
   },
 
-  // ==========================================
   // 搜索与 AI 拍照识别
-  // ==========================================
 
   // 点击顶部搜索框
   goToSearch: function() {

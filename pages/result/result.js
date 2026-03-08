@@ -156,10 +156,16 @@ Page({
     }
   },
 
-  // 统一的返回上一页操作 (无论是重新搜索还是重新识别，逻辑都是回退一页)
+  // 统一的返回上一页操作
   goBack: function() {
+    // 如果不是搜索、不是历史、不是贴士，说明就是“拍照识别”进来的
+    if (!this.data.isFromSearch && !this.data.isFromHistory && !this.data.isFromTip) {
+      // 回到首页，弹出拍照页
+      wx.setStorageSync('autoTriggerCamera', true);
+    }
+
     wx.navigateBack({
-      delta: 1 // 如果从搜索页来，就退回搜索页；如果从首页拍照来，就退回首页
+      delta: 1 
     });
   },
 
