@@ -1,22 +1,95 @@
 // pages/user/index.js
 Page({
   data: {
+    avatarUrl: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png', // 默认头像
+    nickname: '', // 默认昵称
     totalScore: 0,
     userTitle: '环保新手',
-    recognizeCount: 0, // 识别次数
-    challengeCount: 0  // 通关次数
+    recognizeCount: 0, 
+    challengeCount: 0  
   },
 
   onShow: function () {
+    // 1. 尝试从本地恢复头像和昵称
+    const savedAvatar = wx.getStorageSync('avatarUrl');
+    const savedNickname = wx.getStorageSync('nickname');
+    if (savedAvatar) this.setData({ avatarUrl: savedAvatar });
+    if (savedNickname) this.setData({ nickname: savedNickname });
+
+    // 2. 🚀 检查是否有账户，没有则触发“静默登录”
     const userId = wx.getStorageSync('userId');
     if (!userId) {
-      wx.showToast({ title: '请先登录', icon: 'none' });
-      return;
+      this.doSilentLogin();
+    } else {
+      this.fetchUserData(userId);
     }
+  },
 
-    // 从后端实时拉取用户最新数据
+  // ==========================================
+  // 🚀 核心能力：微信静默登录与注册
+  // ==========================================
+  doSilentLogin: function() {
+    wx.showLoading({ title: '登录中...', mask: true });
+    
+    // 调起微信原生登录，获取临时 code
+    wx.login({
+      success: (res) => {
+        if (res.code) {
+          // 发送 code 到你的 FastAPI 后端换取 openid
+          wx.request({
+            url: 'http://192.168.0.126:8000/api/user/login', // ⚠️记得换IP
+            method: 'POST',
+            data: { code: res.code },
+            success: (backendRes) => {
+              wx.hideLoading();
+              if (backendRes.statusCode === 200 && backendRes.data.id) {
+                const newUserId = backendRes.data.id;
+                // 登录成功，把专属的 userId 存在本地
+                wx.setStorageSync('userId', newUserId);
+                wx.showToast({ title: '登录成功', icon: 'success' });
+                // 拉取这个新用户的积分数据（0分）
+                this.fetchUserData(newUserId);
+              } else {
+                wx.showToast({ title: '登录失败', icon: 'error' });
+              }
+            },
+            fail: () => {
+              wx.hideLoading();
+              wx.showToast({ title: '服务器连接失败', icon: 'error' });
+            }
+          })
+        }
+      }
+    });
+  },
+
+  // ==========================================
+  // 🚀 核心能力：获取微信头像和昵称
+  // ==========================================
+  onChooseAvatar(e) {
+    const { avatarUrl } = e.detail;
+    // 存入页面数据渲染
+    this.setData({ avatarUrl });
+    // 永久保存在手机缓存中
+    wx.setStorageSync('avatarUrl', avatarUrl);
+    
+    // 💡 进阶：在真实毕设中，如果你想把头像永久存在后端，
+    // 可以用 wx.uploadFile 把这个本地临时路径 avatarUrl 传给后端。
+    // 目前存本地缓存对演示来说已经足够完美。
+  },
+
+  onNicknameBlur(e) {
+    const { value } = e.detail;
+    this.setData({ nickname: value });
+    wx.setStorageSync('nickname', value);
+  },
+
+  // ==========================================
+  // 原有的业务逻辑保持不变
+  // ==========================================
+  fetchUserData: function(userId) {
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/info?user_id=${userId}`,
+      url: `http://192.168.0.126:8000/api/user/info?user_id=${userId}`, // ⚠️记得换IP
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -27,7 +100,6 @@ Page({
             recognizeCount: info.recognize_count,
             challengeCount: info.challenge_count
           });
-          // 同步更新本地缓存，防止其他页面读取旧数据
           wx.setStorageSync('totalScore', info.total_score);
           wx.setStorageSync('currentTitle', info.title);
         }
@@ -35,37 +107,23 @@ Page({
     });
   },
 
-  // 跳转到历史记录页
   goToHistory: function(e) {
-    const type = e.currentTarget.dataset.type; // 获取是'recognize'还是'challenge'
-    console.log("即将跳转历史记录类型：", type);
+    const type = e.currentTarget.dataset.type; 
     if (type === 'recognize') {
-      // 1. 如果点击的是“识别历史”，识别历史页
-      wx.navigateTo({
-        url: '/pages/user/recognizeHistory'
-      });
+      wx.navigateTo({ url: '/pages/user/recognizeHistory' });
     } else if (type === 'challenge') {
-      wx.navigateTo({
-        url: '/pages/user/challengeHistory'
-      });
+      wx.navigateTo({ url: '/pages/user/challengeHistory' });
     }
   },
 
-  // 跳转错题本
   goToWrongBook: function() {
-    wx.navigateTo({
-      url: '/pages/user/wrongBook'
-    });
+    wx.navigateTo({ url: '/pages/user/wrongBook' });
   },
 
-  // 跳转到我的反馈历史
   goToFeedbackHistory: function() {
-    wx.navigateTo({ 
-      url: '/pages/user/feedbackHistory' 
-    });
+    wx.navigateTo({ url: '/pages/user/feedbackHistory' });
   },
 
-  // 关于我们
   showAbout: function() {
     wx.showModal({
       title: '关于我们',
@@ -74,45 +132,46 @@ Page({
     });
   },
 
-  // 清除本地缓存 (升级版)
   clearCache: function() {
     wx.showModal({
       title: '清除本地缓存',
-      content: '确定要清除本地缓存的临时图片和状态吗？\n(您的积分、历史记录和错题本已安全保存在云端，不会丢失)',
+      content: '确定要清除缓存吗？\n(您的积分和历史记录已安全保存在云端)',
       success: (res) => {
         if (res.confirm) {
-          // 1. 🚀 核心护城河：先把极其重要的登录凭证备份出来！
           const userId = wx.getStorageSync('userId');
+          const avatarUrl = wx.getStorageSync('avatarUrl');
+          const nickname = wx.getStorageSync('nickname');
           
-          // 2. 放心大胆地一键清空本地所有垃圾缓存
           wx.clearStorageSync(); 
           
-          // 3. 🚀 赶紧把 userId 存回去，让用户保持登录状态！
-          if (userId) {
-            wx.setStorageSync('userId', userId);
-          }
+          if (userId) wx.setStorageSync('userId', userId);
+          if (avatarUrl) wx.setStorageSync('avatarUrl', avatarUrl);
+          if (nickname) wx.setStorageSync('nickname', nickname);
 
-          // 4. 重新触发一次请求，把后端最新的积分和称号拉取下来
           this.onShow(); 
-          
-          wx.showToast({ title: '缓存清理完毕', icon: 'success' });
+          wx.showToast({ title: '清理完毕', icon: 'success' });
         }
       }
     });
   },
 
-  // 退出登录
   logout: function() {
     wx.showModal({
-      title: '退出登录',
-      content: '确定要退出当前账号吗？',
+      title: '清除账号信息',
+      content: '相当于退出登录，下次进入将自动重新分配新账号。',
       confirmColor: '#F44336',
       success: (res) => {
         if (res.confirm) {
-          wx.clearStorageSync(); // 彻底清空本地缓存（包含 userId）
-          wx.reLaunch({
-            url: '/pages/login/login' // 假设你的登录页叫这个，如果是其他名字请修改
+          wx.clearStorageSync(); 
+          this.setData({
+            avatarUrl: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png',
+            nickname: '',
+            totalScore: 0,
+            userTitle: '环保新手',
+            recognizeCount: 0,
+            challengeCount: 0
           });
+          this.doSilentLogin(); // 退出后立即重新分配新身份
         }
       }
     });

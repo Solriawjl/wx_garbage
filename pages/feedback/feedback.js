@@ -116,17 +116,17 @@ Page({
         wx.showToast({ title: '网络连接失败', icon: 'error' });
       }
     });
-    // 提交成功的反馈动画
-    wx.showToast({
-      title: '感谢您的纠错！',
-      icon: 'success',
-      duration: 2000,
-      success: () => {
-        // 2秒后自动返回结果页或首页
-        setTimeout(() => {
-          wx.navigateBack({ delta: 1 });
-        }, 2000);
-      }
-    });
+    // // 提交成功的反馈动画
+    // wx.showToast({
+    //   title: '感谢您的纠错！',
+    //   icon: 'success',
+    //   duration: 2000,
+    //   success: () => {
+    //     // 2秒后自动返回结果页或首页
+    //     setTimeout(() => {
+    //       wx.navigateBack({ delta: 1 });
+    //     }, 2000);
+    //   }
+    // });
   }
 })

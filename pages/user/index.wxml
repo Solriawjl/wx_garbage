@@ -2,9 +2,12 @@
 
 <view class="user-header">
   <view class="user-info">
-    <image class="avatar" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png" mode="aspectFill"></image>
+    <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+      <image class="avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
+    </button>
+    
     <view class="info-text">
-      <view class="nickname">微信用户</view>
+      <input type="nickname" class="nickname-input" placeholder="点击设置昵称" placeholder-style="color: rgba(255,255,255,0.7);" value="{{nickname}}" bindblur="onNicknameBlur" />
       <view class="title-tag">{{userTitle}}</view>
     </view>
   </view>

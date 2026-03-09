@@ -49,4 +49,6 @@
   </swiper>
 </view>
 <tip-card visible="{{isTipCardVisible}}" tipData="{{currentTipData}}" bind:close="hideTipCard"></tip-card>
+
+<canvas type="2d" id="aiCanvas" style="width: 224px; height: 224px; position: absolute; left: -9999px;"></canvas>
 </view>

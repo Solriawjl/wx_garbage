@@ -92,11 +92,11 @@ Page({
       // 场景 B：如果是拍照或上传图片过来的
       console.log("执行图片识别逻辑，图片路径：", decodeURIComponent(options.imagePath));
       // 从缓存中捞出刚才存的后端返回的完整结果
-      const aiResult = wx.getStorageSync('tempAiResult');
+      const aiResult = wx.getStorageSync('tempAiResult') || {};
       this.setData({
         isFromSearch: false, // 切换为拍照模式视图
         isFromHistory: fromHistory, // 存入data
-        itemImageUrl: decodeURIComponent(options.imagePath), // 直接把用户拍的图展示在卡片上
+        itemImageUrl: aiResult.image_path || decodeURIComponent(options.imagePath),
         categoryName: aiResult.category_name || '未知', 
         categoryClass: aiResult.category_class || '未知',
         accuracy: aiResult.confidence || '0', // 填入模型返回的置信度
@@ -177,7 +177,6 @@ Page({
     
     // 2. 对图片路径进行安全编码（如果没有图片路径，则传空）
     const imagePath = this.data.itemImageUrl ? encodeURIComponent(this.data.itemImageUrl) : '';
-
     // 3. 带着完整的上下文参数跳转到反馈页
     wx.navigateTo({
       url: `/pages/feedback/feedback?itemName=${encodeURIComponent(itemName)}&categoryName=${encodeURIComponent(categoryName)}&imagePath=${imagePath}`
