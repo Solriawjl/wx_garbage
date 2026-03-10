@@ -3,6 +3,34 @@
 // 全局端侧推理引擎实例
 let inferenceSession = null;
 
+// 无网环境下的本地分类字典
+const localCategoryDict = [
+  {
+    category_name: "厨余垃圾",
+    category_class: "kitchen",
+    eco_value: "处理后可作为天然肥料或沼气发电",
+    put_guidance: "请沥干水分后投放，注意不要混入塑料袋、牙签等硬物。"
+  },
+  {
+    category_name: "可回收物",
+    category_class: "recyclable",
+    eco_value: "可进入再生资源回收体系，变废为宝",
+    put_guidance: "请尽量保持清洁干燥，立体包装请压扁后投放。"
+  },
+  {
+    category_name: "有害垃圾",
+    category_class: "harmful",
+    eco_value: "需特殊安全处理，防止重金属和化学物质污染环境",
+    put_guidance: "请轻投轻放，易碎物品连带包装或包裹后投放。"
+  },
+  {
+    category_name: "其他垃圾",
+    category_class: "other",
+    eco_value: "通常通过焚烧发电或卫生填埋处理",
+    put_guidance: "请沥干水分，难以分辨类别的垃圾均可投放到此桶。"
+  }
+];
+
 Page({
   data: {
     // 1. 每日一签相关的状态变量
@@ -38,8 +66,8 @@ Page({
   // ==========================================
   initEdgeAI: function() {
     // 腾讯云模型直链
-    const modelUrl = 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/weights/mobilenetv3_edge_v1_1.onnx';
-    const localPath = `${wx.env.USER_DATA_PATH}/mobilenetv3_edge_v1_1.onnx`; // 微信本地缓存路径
+    const modelUrl = 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/weights/mobilenetv3_edge_v1_2.onnx';
+    const localPath = `${wx.env.USER_DATA_PATH}/mobilenetv3_edge_v1_2.onnx`; // 微信本地缓存路径
     const fs = wx.getFileSystemManager();
 
     // 先检查手机里是不是已经下载过了（防止每次打开都下载）
@@ -214,36 +242,54 @@ Page({
                 
                 console.log(`端侧推理完成！预测索引:${predictedIdx}, 置信度:${confidence}%`);
 
-                // 🌟 4. 把答案告诉后端，去查询详细科普并记录历史
-                wx.showLoading({ title: '获取科普中...', mask: true });
-                wx.uploadFile({
-                  url: 'http://192.168.0.126:8000/api/recognize/edge', 
-                  filePath: tempFilePath,
-                  name: 'file', 
-                  formData: {
-                    'user_id': userId,
-                    'predicted_idx': predictedIdx,
-                    'confidence': confidence
-                  },
-                  success: (uploadRes) => {
-                    wx.hideLoading(); 
-                    const resData = JSON.parse(uploadRes.data);
-                    
-                    if (resData.code === 200) {
-                      const aiResult = resData.data; 
-                      wx.setStorageSync('tempAiResult', aiResult);
-                      wx.navigateTo({
-                        url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}`
+                // 🌟 4. 重构：优先使用本地字典快速组装结果
+                const localResult = localCategoryDict[predictedIdx];
+                const aiResultData = {
+                  image_path: tempFilePath, // 本地图片临时路径
+                  category_name: localResult.category_name,
+                  category_class: localResult.category_class,
+                  confidence: confidence,
+                  eco_value: localResult.eco_value,
+                  put_guidance: localResult.put_guidance
+                };
+
+                // 先把组装好的结果塞入缓存，准备跳转
+                wx.setStorageSync('tempAiResult', aiResultData);
+                wx.hideLoading(); // 关掉 loading，因为本地推理极快
+
+                // 🌟 5. 立即跳转到结果页 (实现无网秒开)
+                wx.navigateTo({
+                  url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}`
+                });
+
+                // 🌟 6. 异步静默同步给后端 (用于收集强化训练数据)
+                // 注意：这里不需要 showLoading，用户已经无感跳转了
+                wx.getNetworkType({
+                  success (res) {
+                    if (res.networkType !== 'none') {
+                      console.log("检测到有网络，开始静默上传识别记录...");
+                      wx.uploadFile({
+                        url: 'http://192.168.0.126:8000/api/recognize/edge', 
+                        filePath: tempFilePath,
+                        name: 'file', 
+                        formData: {
+                          'user_id': userId,
+                          'predicted_idx': predictedIdx,
+                          'confidence': confidence
+                        },
+                        success: (uploadRes) => {
+                           console.log("静默上传历史记录成功");
+                        },
+                        fail: (err) => {
+                           console.log("静默上传失败(可能是弱网)，不影响前端显示");
+                        }
                       });
                     } else {
-                      wx.showToast({ title: '后端处理异常', icon: 'error' });
+                      console.log("当前无网络，纯离线模式运行");
                     }
-                  },
-                  fail: (err) => {
-                    wx.hideLoading();
-                    wx.showToast({ title: '网络连接失败', icon: 'error' });
                   }
                 });
+
               }).catch(err => {
                 wx.hideLoading();
                 console.error("推理异常", err);
