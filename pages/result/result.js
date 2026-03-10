@@ -50,16 +50,18 @@ Page({
           if (resData.code === 200) {
             // 查到了，把后端返回的真实数据渲染到页面上
             const searchResult = resData.data;
+            // 优先获取特定物品的 tips，没有则用大类指导兜底
+            const finalGuidance = searchResult.tips ? searchResult.tips : searchResult.put_guidance;
             that.setData({
               itemName: searchResult.item_name, 
               itemImageUrl: searchResult.image_url,
               categoryName: searchResult.category_name,
               categoryClass: searchResult.category_class,
               ecoValue: searchResult.eco_value,
-              putGuidance: searchResult.put_guidance
-            });
-            // 触发语音：搜索成功
-            that.generateAndPlayVoice(searchResult.item_name, searchResult.category_name, searchResult.put_guidance, true, true);
+              putGuidance: finalGuidance // 使用判断后的指导文本
+            });       
+            // 让语音播报也读专属的 tips
+            that.generateAndPlayVoice(searchResult.item_name, searchResult.category_name, finalGuidance, true, true);
           } else if (resData.code === 404) {
             // 没查到该物品
             that.setData({ 
@@ -156,6 +158,18 @@ Page({
     }
   },
 
+  // 点击放大全屏预览图片
+  previewImage: function() {
+    const url = this.data.itemImageUrl;
+    if (!url) return; // 如果图片还没加载出来，就不执行
+    
+    // 调用微信原生的图片预览 API
+    wx.previewImage({
+      current: url,  // 当前显示图片的 http 链接
+      urls: [url]    // 需要预览的图片 http 链接列表
+    });
+  },
+
   // 统一的返回上一页操作
   goBack: function() {
     // 如果不是搜索、不是历史、不是贴士，说明就是“拍照识别”进来的
@@ -177,9 +191,10 @@ Page({
     
     // 2. 对图片路径进行安全编码（如果没有图片路径，则传空）
     const imagePath = this.data.itemImageUrl ? encodeURIComponent(this.data.itemImageUrl) : '';
+    const isSearch = this.data.isFromSearch ? 'true' : 'false';
     // 3. 带着完整的上下文参数跳转到反馈页
     wx.navigateTo({
-      url: `/pages/feedback/feedback?itemName=${encodeURIComponent(itemName)}&categoryName=${encodeURIComponent(categoryName)}&imagePath=${imagePath}`
+      url: `/pages/feedback/feedback?itemName=${encodeURIComponent(itemName)}&categoryName=${encodeURIComponent(categoryName)}&imagePath=${imagePath}&isSearch=${isSearch}`
     });
   }
 })

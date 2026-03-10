@@ -18,9 +18,9 @@
         <view class="remove-btn" catchtap="removeItem" data-index="{{index}}">✕</view>
         
         <view class="card-header">
-          <view class="item-title">
-            <text class="icon-bulb">{{item.type === 'image' ? '📸' : '🔍'}}</text>
-            <text>{{item.type === 'image' ? '识别纠错' : '搜索纠错'}}</text>
+          <view class="title-left">
+            <text class="type-tag {{item.type === 'text' ? 'tag-text' : 'tag-image'}}">{{item.type === 'text' ? '🔍 搜索反馈' : '📸 识别反馈'}}
+            </text>
           </view>
           <view class="status-tag status-{{item.status}}">
             {{item.status === 0 ? '待处理' : (item.status === 1 ? '已采纳' : '已驳回')}}

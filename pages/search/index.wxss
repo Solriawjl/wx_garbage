@@ -84,3 +84,30 @@
   background-color: #e8f5e9;
   color: #2e7d32;
 }
+
+/* --- 🚀 搜索联想列表样式 --- */
+.suggest-list {
+  background-color: #ffffff;
+  padding: 0 30rpx;
+}
+
+.suggest-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx 10rpx;
+  border-bottom: 2rpx solid #f5f5f5;
+}
+
+.suggest-item:active {
+  background-color: #f9f9f9; /* 点击时的反馈效果 */
+}
+
+.suggest-item:last-child {
+  border-bottom: none;
+}
+
+.suggest-text {
+  font-size: 30rpx;
+  color: #333;
+  margin-left: 20rpx;
+}

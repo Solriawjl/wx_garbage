@@ -2,7 +2,7 @@
 <view class="result-page">
 
   <view class="result-card">
-  <image class="item-image" src="{{itemImageUrl}}" mode="aspectFill"></image>
+  <image class="item-image" src="{{itemImageUrl}}" mode="aspectFill" bindtap="previewImage"></image>
   
   <view class="result-text-box">
     <block wx:if="{{isFromSearch}}">
@@ -28,14 +28,14 @@
   </view>
 </view>
 
-<view class="info-card">
-  <view class="info-title">{{isFromSearch ? '环保价值' : categoryName + '科普'}}</view>
-  <view class="info-content">{{ecoValue}}</view>
-</view>
-
-<view class="info-card highlight-card">
-  <view class="info-title">💡 投放指导</view>
-  <view class="info-content">{{putGuidance}}</view>
+<view class="desc-card {{categoryClass}}">
+  <view class="desc-title">{{isFromSearch ? '环保价值' : categoryName + '科普'}}</view>
+  <view class="desc-text" wx:if="{{ecoValue}}">{{ecoValue}}</view>
+  
+  <view class="desc-divider"></view>
+  
+  <view class="tip-title">💡 投放指导</view>
+  <view class="desc-text">{{putGuidance}}</view>
 </view>
 
 <view class="bottom-controls">

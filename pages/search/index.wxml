@@ -1,4 +1,3 @@
-<!--pages/search/index.wxml-->
 <view class="search-page">
 
 <view class="search-header">
@@ -18,7 +17,16 @@
   <text class="cancel-btn" bindtap="goBack">取消</text>
 </view>
 
-<view class="content-body">
+<view class="suggest-list" wx:if="{{suggestList.length > 0 && inputValue.length > 0}}">
+  <block wx:for="{{suggestList}}" wx:key="*this">
+    <view class="suggest-item" bindtap="onTapSuggest" data-keyword="{{item}}">
+      <icon type="search" size="14" color="#ccc"></icon>
+      <text class="suggest-text">{{item}}</text>
+    </view>
+  </block>
+</view>
+
+<view class="content-body" wx:if="{{suggestList.length === 0}}">
   <view class="section" wx:if="{{historyList.length > 0}}">
     <view class="section-header">
       <text class="section-title">历史搜索</text>

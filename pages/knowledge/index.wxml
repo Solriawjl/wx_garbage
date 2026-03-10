@@ -37,10 +37,10 @@
         </view>
         
         <view class="dict-item-list">
-          <block wx:for="{{group.items}}" wx:key="*this" wx:for-item="subItem">
-            <view class="dict-item" bindtap="onItemTap" data-name="{{subItem}}">
+          <block wx:for="{{group.items}}" wx:key="id" wx:for-item="subItem">
+            <view class="dict-item" bindtap="onItemTap" data-name="{{subItem.item_name}}">
               <text class="dot" style="background-color: {{currentCategory.color}};"></text>
-              <text class="item-name">{{subItem}}</text>
+              <text class="item-name">{{subItem.item_name}}</text>
             </view>
           </block>
         </view>

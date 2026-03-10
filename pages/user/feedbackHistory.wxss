@@ -46,17 +46,34 @@
   margin-bottom: 20rpx;
 }
 
-.item-title {
-  font-size: 34rpx;
-  font-weight: bold;
-  color: #333;
+/* --- 分类标签样式 --- */
+.title-left {
   display: flex;
   align-items: center;
 }
 
-.icon-bulb {
+.type-tag {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-weight: bold;
   margin-right: 15rpx;
-  font-size: 32rpx;
+  
+  display: inline-block; 
+  line-height: 1.5; 
+  vertical-align: middle;
+}
+
+/* 🔍 搜索反馈 - 专属蓝色系 */
+.tag-text {
+  background-color: #e3efff;
+  color: #4c84ff;
+}
+
+/* 📸 识别反馈 - 专属绿色系 */
+.tag-image {
+  background-color: #e8f5e9;
+  color: #2e7d32;
 }
 
 /* 动态状态标签 */
