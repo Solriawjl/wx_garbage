@@ -1,0 +1,9 @@
+<!--pages/login/login.wxml-->
+<view class="login-container">
+  <image class="logo" src="/images/login.png"></image>
+  <view class="title">智分投放</view>
+  <view class="subtitle">让垃圾分类更智能</view>
+  
+  <button class="login-btn" bindtap="handleLogin">微信一键登录</button>
+  <view class="tips">登录后即可体验完整智能功能</view>
+</view>

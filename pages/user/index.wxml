@@ -1,35 +1,49 @@
 <view class="user-page">
 
 <view class="user-header">
-  <view class="user-info">
-    <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-      <image class="avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
-    </button>
-    
-    <view class="info-text">
-      <input type="nickname" class="nickname-input" placeholder="点击设置昵称" placeholder-style="color: rgba(255,255,255,0.7);" value="{{nickname}}" bindblur="onNicknameBlur" />
-      <view class="title-tag">{{userTitle}}</view>
+  <block wx:if="{{isLoggedIn}}">
+    <view class="user-info">
+      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
+      </button>
+      
+      <view class="info-text">
+        <input type="nickname" class="nickname-input" placeholder="点击设置昵称" placeholder-style="color: rgba(255,255,255,0.7);" value="{{nickname}}" bindblur="onNicknameBlur" />
+        <view class="title-tag">{{userTitle}}</view>
+      </view>
     </view>
-  </view>
+  </block>
+
+  <block wx:else>
+    <view class="user-info" bindtap="handleUserLogin">
+      <view class="avatar-btn">
+        <image class="avatar" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png" mode="aspectFill"></image>
+      </view>
+      <view class="info-text">
+        <view class="login-text" style="font-size: 34rpx; font-weight: bold; color: #fff; margin-bottom: 10rpx;">点击授权登录</view>
+        <view class="title-tag" style="background: rgba(255,255,255,0.2);">未登录</view>
+      </view>
+    </view>
+  </block>
 </view>
 
 <view class="data-board">
   <view class="data-item">
-    <text class="data-num">{{totalScore}}</text>
+    <text class="data-num">{{isLoggedIn ? totalScore : '-'}}</text>
     <text class="data-label">总积分</text>
   </view>
   
   <view class="data-divider"></view>
   
   <view class="data-item">
-    <text class="data-num">{{recognizeCount}}</text>
+    <text class="data-num">{{isLoggedIn ? recognizeCount : '-'}}</text>
     <text class="data-label">识别次数</text>
   </view>
   
   <view class="data-divider"></view>
   
   <view class="data-item">
-    <text class="data-num">{{challengeCount}}</text>
+    <text class="data-num">{{isLoggedIn ? challengeCount : '-'}}</text>
     <text class="data-label">通关挑战</text>
   </view>
 </view>
@@ -86,6 +100,6 @@
   </view>
 </view>
 
-<view class="logout-btn" bindtap="logout">退出登录</view>
+<view class="logout-btn" bindtap="logout" wx:if="{{isLoggedIn}}">退出登录</view>
 
 </view>

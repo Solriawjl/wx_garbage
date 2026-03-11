@@ -61,9 +61,7 @@ Page({
     }
   },
 
-  // ==========================================
   // 一：静默下载并挂载 ONNX 端侧大模型
-  // ==========================================
   initEdgeAI: function() {
     // 腾讯云模型直链
     const modelUrl = 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/weights/mobilenetv3_edge_v1_2.onnx';
@@ -75,6 +73,7 @@ Page({
       path: localPath,
       success: () => {
         console.log("模型已在手机本地，直接挂载...");
+        console.log(localPath);
         this.createInferenceSession(localPath);
       },
       fail: () => {
@@ -189,7 +188,7 @@ Page({
     }
     
     wx.showActionSheet({
-      itemList: ['📸 立即拍照', '🖼️ 从手机相册选择'],
+      itemList: ['立即拍照', '从手机相册选择'],
       success(res) {
         let sourceType = res.tapIndex === 1 ? ['album'] : ['camera']; 
         

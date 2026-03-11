@@ -1,95 +1,67 @@
 // pages/user/index.js
 Page({
   data: {
-    avatarUrl: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png', // 默认头像
-    nickname: '', // 默认昵称
+    isLoggedIn: false,
+    avatarUrl: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png',
+    nickname: '',
     totalScore: 0,
-    userTitle: '环保新手',
+    userTitle: '未登录',
     recognizeCount: 0, 
     challengeCount: 0  
   },
 
   onShow: function () {
-    // 1. 尝试从本地恢复头像和昵称
-    const savedAvatar = wx.getStorageSync('avatarUrl');
-    const savedNickname = wx.getStorageSync('nickname');
-    if (savedAvatar) this.setData({ avatarUrl: savedAvatar });
-    if (savedNickname) this.setData({ nickname: savedNickname });
+    const isLoggedIn = wx.getStorageSync('isLoggedIn') || false;
+    this.setData({ isLoggedIn });
 
-    // 2. 🚀 检查是否有账户，没有则触发“静默登录”
-    const userId = wx.getStorageSync('userId');
-    if (!userId) {
-      this.doSilentLogin();
-    } else {
-      this.fetchUserData(userId);
+    if (isLoggedIn) {
+      const userId = wx.getStorageSync('userId');
+      if (!userId) {
+        // 兜底防错
+        this.doSilentLogin(true);
+      } else {
+        // 1. 核心修复：读取该账号专属的缓存头像和昵称！
+        const savedAvatar = wx.getStorageSync(`avatar_${userId}`);
+        const savedNickname = wx.getStorageSync(`nickname_${userId}`);
+        
+        // 只要有专属缓存就显示，没有才显示默认
+        this.setData({ 
+          avatarUrl: savedAvatar ? savedAvatar : 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png',
+          nickname: savedNickname ? savedNickname : ''
+        });
+
+        // 2. 拉取云端积分数据
+        this.fetchUserData(userId);
+      }
     }
   },
 
-  // ==========================================
-  // 🚀 核心能力：微信静默登录与注册
-  // ==========================================
-  doSilentLogin: function() {
-    wx.showLoading({ title: '登录中...', mask: true });
-    
-    // 调起微信原生登录，获取临时 code
-    wx.login({
-      success: (res) => {
-        if (res.code) {
-          // 发送 code 到你的 FastAPI 后端换取 openid
-          wx.request({
-            url: 'http://192.168.0.126:8000/api/user/login', // ⚠️记得换IP
-            method: 'POST',
-            data: { code: res.code },
-            success: (backendRes) => {
-              wx.hideLoading();
-              if (backendRes.statusCode === 200 && backendRes.data.id) {
-                const newUserId = backendRes.data.id;
-                // 登录成功，把专属的 userId 存在本地
-                wx.setStorageSync('userId', newUserId);
-                wx.showToast({ title: '登录成功', icon: 'success' });
-                // 拉取这个新用户的积分数据（0分）
-                this.fetchUserData(newUserId);
-              } else {
-                wx.showToast({ title: '登录失败', icon: 'error' });
-              }
-            },
-            fail: () => {
-              wx.hideLoading();
-              wx.showToast({ title: '服务器连接失败', icon: 'error' });
-            }
-          })
-        }
-      }
-    });
-  },
-
-  // ==========================================
-  // 🚀 核心能力：获取微信头像和昵称
-  // ==========================================
+  // 获取微信头像和昵称 (深度绑定账号)
   onChooseAvatar(e) {
     const { avatarUrl } = e.detail;
-    // 存入页面数据渲染
     this.setData({ avatarUrl });
-    // 永久保存在手机缓存中
-    wx.setStorageSync('avatarUrl', avatarUrl);
     
-    // 💡 进阶：在真实毕设中，如果你想把头像永久存在后端，
-    // 可以用 wx.uploadFile 把这个本地临时路径 avatarUrl 传给后端。
-    // 目前存本地缓存对演示来说已经足够完美。
+    // 将头像与当前账号(userId)深度绑定，存入专属缓存
+    const userId = wx.getStorageSync('userId');
+    if (userId) {
+      wx.setStorageSync(`avatar_${userId}`, avatarUrl);
+    }
   },
 
   onNicknameBlur(e) {
     const { value } = e.detail;
     this.setData({ nickname: value });
-    wx.setStorageSync('nickname', value);
+    
+    // 将昵称与当前账号(userId)深度绑定，存入专属缓存
+    const userId = wx.getStorageSync('userId');
+    if (userId) {
+      wx.setStorageSync(`nickname_${userId}`, value);
+    }
   },
 
-  // ==========================================
-  // 原有的业务逻辑保持不变
-  // ==========================================
   fetchUserData: function(userId) {
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/info?user_id=${userId}`, // ⚠️记得换IP
+      url: `http://192.168.0.126:8000/api/user/info?user_id=${userId}`, 
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -107,7 +79,18 @@ Page({
     });
   },
 
+  // 操作前检查是否登录
+  checkLoginStatus: function() {
+    if (!this.data.isLoggedIn) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return false;
+    }
+    return true;
+  },
+
+  // 各类跳转逻辑保持不变
   goToHistory: function(e) {
+    if (!this.checkLoginStatus()) return;
     const type = e.currentTarget.dataset.type; 
     if (type === 'recognize') {
       wx.navigateTo({ url: '/pages/user/recognizeHistory' });
@@ -117,17 +100,19 @@ Page({
   },
 
   goToWrongBook: function() {
+    if (!this.checkLoginStatus()) return;
     wx.navigateTo({ url: '/pages/user/wrongBook' });
   },
 
   goToFeedbackHistory: function() {
+    if (!this.checkLoginStatus()) return;
     wx.navigateTo({ url: '/pages/user/feedbackHistory' });
   },
 
   showAbout: function() {
     wx.showModal({
       title: '关于我们',
-      content: '基于移动端的智能垃圾分类系统 v1.0\n开发者：wjl',
+      content: '基于移动端的智能垃圾分类系统 v1.2\n开发者：wjl',
       showCancel: false
     });
   },
@@ -135,19 +120,24 @@ Page({
   clearCache: function() {
     wx.showModal({
       title: '清除本地缓存',
-      content: '确定要清除缓存吗？\n(您的积分和历史记录已安全保存在云端)',
+      // 明确列出清除项和保留项，打消用户顾虑
+      content: '点击确定后，以下数据将被清空：\n1. 您自定义设置的头像和昵称\n2. AI识别产生的临时图片缓存\n\n请放心，您的云端账号数据（总积分、历史记录等）和登录状态将安全保留。',
+      confirmText: '确认清理',
+      confirmColor: '#4CAF50', // 用绿色表示安全操作
       success: (res) => {
         if (res.confirm) {
+          // 1. 先把绝不离手的“底牌”存起来
           const userId = wx.getStorageSync('userId');
-          const avatarUrl = wx.getStorageSync('avatarUrl');
-          const nickname = wx.getStorageSync('nickname');
+          const isLoggedIn = wx.getStorageSync('isLoggedIn'); 
           
+          // 2. 无差别清理本地空间（此时头像、昵称、临时结果全清空了）
           wx.clearStorageSync(); 
           
+          // 3. 瞬间把“底牌”恢复回去，保持不掉线
           if (userId) wx.setStorageSync('userId', userId);
-          if (avatarUrl) wx.setStorageSync('avatarUrl', avatarUrl);
-          if (nickname) wx.setStorageSync('nickname', nickname);
+          if (isLoggedIn) wx.setStorageSync('isLoggedIn', isLoggedIn);
 
+          // 4. 刷新当前页面，头像和昵称会瞬间变回未设置的默认状态
           this.onShow(); 
           wx.showToast({ title: '清理完毕', icon: 'success' });
         }
@@ -155,23 +145,26 @@ Page({
     });
   },
 
+  // 退出登录：改写保护逻辑
   logout: function() {
     wx.showModal({
-      title: '清除账号信息',
-      content: '相当于退出登录，下次进入将自动重新分配新账号。',
+      title: '退出登录',
+      content: '退出后将返回登录界面，确定退出吗？',
       confirmColor: '#F44336',
       success: (res) => {
         if (res.confirm) {
-          wx.clearStorageSync(); 
-          this.setData({
-            avatarUrl: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png',
-            nickname: '',
-            totalScore: 0,
-            userTitle: '环保新手',
-            recognizeCount: 0,
-            challengeCount: 0
-          });
-          this.doSilentLogin(); // 退出后立即重新分配新身份
+          // 只移除通行证状态，坚决不清理 avatar_xxx 缓存
+          wx.removeStorageSync('isLoggedIn');
+          wx.removeStorageSync('userId'); 
+          
+          wx.showToast({ title: '已退出', icon: 'success' });
+          
+          // 回到登录黑屋
+          setTimeout(() => {
+            wx.reLaunch({
+              url: '/pages/login/login'
+            });
+          }, 800);
         }
       }
     });

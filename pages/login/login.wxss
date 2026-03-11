@@ -1,0 +1,67 @@
+/* pages/login/login.wxss */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f5f7fa;
+}
+
+/* logo 样式 */
+.logo { 
+  /* 1. 适当放大 (原为 180rpx) */
+  width: 240rpx; 
+  height: 240rpx; 
+  
+  /* 2. 变为圆角格式 (数值越大圆角越明显) */
+  border-radius: 48rpx; 
+  
+  /* 3. 重要：确保图片内容被裁剪到圆角内 */
+  overflow: hidden; 
+  
+  margin-bottom: 30rpx; 
+}
+
+.title { 
+  font-size: 48rpx; 
+  font-weight: bold; 
+  color: #333; 
+  margin-bottom: 20rpx; 
+}
+
+.subtitle { 
+  font-size: 28rpx; 
+  color: #666; 
+  margin-bottom: 100rpx; 
+}
+
+.login-btn {
+  width: 70%;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 50rpx;
+  font-size: 34rpx;
+  font-weight: bold;
+  padding: 15rpx 0;
+  box-shadow: 0 8rpx 16rpx rgba(76, 175, 80, 0.3);
+  /* 清除 button 默认样式 */
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 微信一键登录按钮的点击效果 */
+.login-btn-hover {
+  background-color: #43A047;
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 8rpx rgba(76, 175, 80, 0.3);
+}
+
+.tips { 
+  font-size: 24rpx; 
+  color: #999; 
+  margin-top: 30rpx; 
+}
