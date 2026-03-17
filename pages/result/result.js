@@ -2,6 +2,7 @@
 // 引入同声传译插件和内部音频上下文
 const plugin = requirePlugin("WechatSI");
 const innerAudioContext = wx.createInnerAudioContext();
+
 Page({
   data: {
     isFromSearch: true, // 默认假设是搜索
@@ -13,7 +14,20 @@ Page({
     categoryClass: '',            // 控制颜色的类名
     accuracy: '0',                  // 置信度/准确率
     ecoValue: '',
-    putGuidance: ''
+    putGuidance: '',
+    
+    // ✨ 新增：教育闭环与细分指导字段
+    harmDescription: '',
+    processMethod: '',
+    subGuidance: '',
+    
+    // ✨ 新增：猜你想扔的具体物品列表
+    recommendItems: [],
+    
+    // ✨ 新增：用于控制专属提示弹窗的变量
+    showTipModal: false,
+    currentTipTitle: '',
+    currentTipContent: ''
   },
 
   onLoad: function (options) {
@@ -22,6 +36,7 @@ Page({
     const that = this; // 保存 this 指向
     // 将加密的参数解密回中文！
     const realKeyword = decodeURIComponent(options.keyword);
+    
     // 微信小程序中，上个页面 url 里带的参数会放在 options 里
     if (options.keyword) {
       // 场景 A：如果是文字搜索过来的
@@ -52,13 +67,19 @@ Page({
             const searchResult = resData.data;
             // 优先获取特定物品的 tips，没有则用大类指导兜底
             const finalGuidance = searchResult.tips ? searchResult.tips : searchResult.put_guidance;
+            
             that.setData({
               itemName: searchResult.item_name, 
               itemImageUrl: searchResult.image_url,
               categoryName: searchResult.category_name,
               categoryClass: searchResult.category_class,
               ecoValue: searchResult.eco_value,
-              putGuidance: finalGuidance // 使用判断后的指导文本
+              putGuidance: finalGuidance, // 使用判断后的指导文本
+              
+              // ✨ 接收教育闭环新字段（修复换行符问题）
+              harmDescription: searchResult.harm_description || '',
+              processMethod: searchResult.process_method || '',
+              subGuidance: (searchResult.sub_guidance || '').replace(/\\n/g, '\n')
             });       
             // 让语音播报也读专属的 tips
             that.generateAndPlayVoice(searchResult.item_name, searchResult.category_name, finalGuidance, true, true);
@@ -73,12 +94,11 @@ Page({
             that.generateAndPlayVoice(realKeyword, "未知", false, true);
             wx.showModal({
               title: '抱歉',
-              content: resData.message, // 弹出后端传来的提示：“抱歉，词库暂未收录...”
+              content: resData.message, 
               confirmText: '去反馈',
               cancelText: '取消',
               success(modalRes) {
                 if (modalRes.confirm) {
-                  // 用户点击去反馈，可以跳转到我们之前的反馈提交页
                   wx.navigateTo({ url: '/pages/feedback/feedback' });
                 }
               }
@@ -95,20 +115,42 @@ Page({
       console.log("执行图片识别逻辑，图片路径：", decodeURIComponent(options.imagePath));
       // 从缓存中捞出刚才存的后端返回的完整结果
       const aiResult = wx.getStorageSync('tempAiResult') || {};
+      console.log("前端接收到的完整 AI 结果:", aiResult);
       this.setData({
         isFromSearch: false, // 切换为拍照模式视图
         isFromHistory: fromHistory, // 存入data
         itemImageUrl: aiResult.image_path || decodeURIComponent(options.imagePath),
         categoryName: aiResult.category_name || '未知', 
         categoryClass: aiResult.category_class || '未知',
-        accuracy: aiResult.confidence || '0', // 填入模型返回的置信度
+        accuracy: aiResult.confidence || '0', 
         ecoValue: aiResult.eco_value || '未知',
-        putGuidance: aiResult.put_guidance || '未知'
+        putGuidance: aiResult.put_guidance || '未知',
+        
+        // ✨ 接收教育闭环与推荐新字段（修复换行符问题）
+        harmDescription: aiResult.harm_description || '',
+        processMethod: aiResult.process_method || '',
+        subGuidance: (aiResult.sub_guidance || '').replace(/\\n/g, '\n'),
+        recommendItems: aiResult.recommend_items || []
       });
       wx.removeStorageSync('tempAiResult');
       // 触发语音：AI 识别成功 (没有具体物品名，只报大类)
       this.generateAndPlayVoice('', this.data.categoryName, this.data.putGuidance, true, false);
     }
+  },
+
+  // ✨ 新增：点击推荐物品展示专属 Tip 弹窗
+  showRecommendTip: function(e) {
+    const item = e.currentTarget.dataset.item;
+    this.setData({
+      showTipModal: true,
+      currentTipTitle: item.item_name,
+      currentTipContent: item.tips || '请按照大类规范进行投放哦。'
+    });
+  },
+
+  // ✨ 新增：关闭弹窗
+  closeTipModal: function() {
+    this.setData({ showTipModal: false });
   },
 
   // 页面卸载时（点左上角返回），立刻停止语音，防止在别的页面继续说话
@@ -120,13 +162,13 @@ Page({
   generateAndPlayVoice: function(itemName, categoryName, putGuidance, isSuccess, isSearch) {
     let speakText = "";
     
-    // 智能组合文案
+    // 智能组合文案 (增加教育语气和目标垃圾桶提示)
     if (!isSuccess) {
-      speakText = `抱歉，词库暂未收录 ${itemName}，您可以尝试提交反馈。`;
+      speakText = `抱歉，AI 小助手暂未收录 ${itemName}，您可以尝试提交反馈。`;
     } else if (isSearch) {
-      speakText = `为您查到：${itemName}，它属于 ${categoryName}。投放建议：${putGuidance}`;
+      speakText = `为您查到：${itemName}，是我们的${categoryName}。请将它投入【${categoryName}桶】中。投放建议：${putGuidance}`;
     } else {
-      speakText = `AI 识别结果为：${categoryName}。投放建议：${putGuidance}`;
+      speakText = `AI 小助手观察发现，这是${categoryName}。请将它投入【${categoryName}桶】中。投放建议：${putGuidance}`;
     }
 
     // 调用腾讯同声传译接口
@@ -136,10 +178,9 @@ Page({
       content: speakText,
       success: (res) => {
         console.log("语音合成成功，准备播放：", speakText);
-        innerAudioContext.src = res.filename; // 设置音频源为云端生成的临时文件
-        // 调整播放倍速（范围 0.5 ~ 2.0，默认 1.0）
+        innerAudioContext.src = res.filename; 
         innerAudioContext.playbackRate = 1.2;
-        innerAudioContext.play();             // 自动播放！
+        innerAudioContext.play();             
       },
       fail: (res) => {
         console.error("语音合成失败", res);
@@ -163,36 +204,26 @@ Page({
     const url = this.data.itemImageUrl;
     if (!url) return; // 如果图片还没加载出来，就不执行
     
-    // 调用微信原生的图片预览 API
     wx.previewImage({
-      current: url,  // 当前显示图片的 http 链接
-      urls: [url]    // 需要预览的图片 http 链接列表
+      current: url,  
+      urls: [url]    
     });
   },
 
   // 统一的返回上一页操作
   goBack: function() {
-    // 如果不是搜索、不是历史、不是贴士，说明就是“拍照识别”进来的
     if (!this.data.isFromSearch && !this.data.isFromHistory && !this.data.isFromTip) {
-      // 回到首页，弹出拍照页
       wx.setStorageSync('autoTriggerCamera', true);
     }
-
-    wx.navigateBack({
-      delta: 1 
-    });
+    wx.navigateBack({ delta: 1 });
   },
 
   // 跳转到纠错反馈页
   goToFeedback: function() {
-    // 1. 获取当前页面所需的数据 (兼容不同的命名习惯)
     const itemName = this.data.itemName || this.data.keyword || '未知物品'; 
     const categoryName = this.data.categoryName || '未知分类';
-    
-    // 2. 对图片路径进行安全编码（如果没有图片路径，则传空）
     const imagePath = this.data.itemImageUrl ? encodeURIComponent(this.data.itemImageUrl) : '';
     const isSearch = this.data.isFromSearch ? 'true' : 'false';
-    // 3. 带着完整的上下文参数跳转到反馈页
     wx.navigateTo({
       url: `/pages/feedback/feedback?itemName=${encodeURIComponent(itemName)}&categoryName=${encodeURIComponent(categoryName)}&imagePath=${imagePath}&isSearch=${isSearch}`
     });

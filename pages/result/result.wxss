@@ -154,58 +154,298 @@
 .desc-card.harmful .desc-divider { background-color: #e53935; }
 .desc-card.harmful .tip-title { color: #e53935; }
 
-/* --- 底部控制区 (打包沉底) --- */
-.bottom-controls {
-  width: 100%;
-  margin-top: auto; /* 将整个控制区推到屏幕最下方 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 60rpx; /* 距离屏幕最底部的安全距离 */
-}
+/* ==========================================
+   新增与优化专属样式
+   ========================================== */
 
-/* --- 重播语音按钮 --- */
-.voice-section {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 60rpx; /* 控制它和下面两个按钮之间固定、紧凑的间距 */
-}
-
-.voice-btn {
-  width: 130rpx;
-  height: 130rpx;
-  background-color: #8bc34a; 
-  border-radius: 50%; 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #ffffff;
+/* --- 明确目标垃圾桶提示区 --- */
+.target-bin {
   font-size: 28rpx;
-  font-weight: bold;
-  box-shadow: 0 8rpx 20rpx rgba(139, 195, 74, 0.4);
-}
-
-/* --- 底部操作按钮组 --- */
-.action-group {
-  width: 100%;
+  color: #444;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 24rpx;
   display: flex;
-  justify-content: space-between;
-  /* 移除了原来的 margin-top: auto 和 padding-top */
+  align-items: center;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.02);
 }
 
-.btn {
-  width: 46%;
+.target-bin-icon {
+  font-size: 38rpx;
+  margin-right: 12rpx;
+}
+
+.bin-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin: 0 4rpx;
+}
+
+/* 匹配四大类的文字颜色 */
+.bin-name.recycle { color: #4c84ff; }
+.bin-name.kitchen { color: #8bc34a; }
+.bin-name.other { color: #ffb300; }
+.bin-name.harmful { color: #e53935; }
+
+/* --- 猜你想扔 (横向滚动区域) --- */
+.recommend-section {
+  width: 95%;
+  margin-top: 20rpx;
+}
+
+.recommend-title {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  padding-left: 10rpx;
+}
+
+.recommend-scroll {
+  width: 100%;
+  white-space: nowrap; 
+  display: flex;
+}
+
+.recommend-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 160rpx;
+  margin-right: 25rpx;
+  background-color: #fff;
+  padding: 20rpx 10rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+  flex-shrink: 0; 
+}
+
+.recommend-item:first-child { margin-left: 5rpx; }
+
+.rec-image {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  margin-bottom: 15rpx;
+}
+
+.rec-name {
+  font-size: 24rpx;
+  color: #333;
+  font-weight: 500;
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================
+   ✨ 全新吸底悬浮操作栏 (Bottom Dock)
+   ========================================== */
+.bottom-dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 140rpx;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
+  box-shadow: 0 -4rpx 30rpx rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30rpx;
+  padding-bottom: env(safe-area-inset-bottom); /* 适配苹果刘海屏底部小黑条 */
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.dock-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dock-btn.icon-btn {
+  flex-direction: column;
+  width: 110rpx;
+  height: 100%;
+}
+
+.dock-icon {
+  font-size: 40rpx;
+  margin-bottom: 6rpx;
+  color: #555;
+}
+
+.dock-text {
+  font-size: 20rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.dock-btn.primary-btn {
+  width: 420rpx;
   height: 88rpx;
-  border-radius: 44rpx; 
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 6rpx 16rpx rgba(0,0,0,0.15);
+  transition: all 0.2s;
+}
+
+.dock-btn.primary-btn:active {
+  transform: scale(0.96); /* 点击时的微小缩放动效 */
+}
+
+.dock-btn-icon {
+  font-size: 36rpx;
+  margin-right: 10rpx;
+}
+
+/* 按钮主题色动态匹配当前垃圾分类 */
+.dock-btn.primary-btn.recycle { background-color: #4c84ff; box-shadow: 0 6rpx 16rpx rgba(76, 132, 255, 0.3); }
+.dock-btn.primary-btn.kitchen { background-color: #8bc34a; box-shadow: 0 6rpx 16rpx rgba(139, 195, 74, 0.3); }
+.dock-btn.primary-btn.other { background-color: #ffb300; box-shadow: 0 6rpx 16rpx rgba(255, 179, 0, 0.3); }
+.dock-btn.primary-btn.harmful { background-color: #e53935; box-shadow: 0 6rpx 16rpx rgba(229, 57, 53, 0.3); }
+
+
+/* --- 专属提示弹窗 (Modal) --- */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 30rpx;
-  color: #ffffff;
-  font-weight: 500;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
 }
 
-.research-btn { background-color: #64b5f6; }
-.feedback-btn { background-color: #e57373; }
+.modal-content {
+  width: 75%;
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.2);
+}
+
+.modal-header {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.modal-body {
+  font-size: 30rpx;
+  line-height: 1.6;
+  color: #444;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.modal-btn {
+  width: 80%;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background-color: #4CAF50;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+.modal-content.recycle .modal-btn { background-color: #4c84ff; }
+.modal-content.harmful .modal-btn { background-color: #e53935; }
+.modal-content.kitchen .modal-btn { background-color: #8bc34a; }
+.modal-content.other .modal-btn { background-color: #ffb300; }
+
+/* 小类指导的引导标题 */
+.sub-guide-title {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: bold;
+  margin-top: 25rpx;
+  margin-bottom: 10rpx;
+  padding-left: 5rpx;
+}
+
+/* ==========================================
+   ✨ 中间区域 UI 终极优化升级
+   ========================================== */
+
+/* 强制让科普卡片回归纯白，增强呼吸感和整洁度 */
+.desc-card.white-card {
+  background-color: #ffffff !important;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); /* 增加柔和的悬浮阴影 */
+  border: none;
+  margin-top: 24rpx;
+}
+
+/* --- 核心指示牌：目标垃圾桶 (超强视觉焦点) --- */
+.target-bin-banner {
+  width: 95%;
+  margin: 30rpx auto 10rpx auto;
+  border-radius: 20rpx;
+  padding: 40rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.15);
+}
+
+/* 四大类专属高亮渐变色 (让指示牌极具质感) */
+.target-bin-banner.recycle-bg { background: linear-gradient(135deg, #4c84ff, #2962ff); }
+.target-bin-banner.kitchen-bg { background: linear-gradient(135deg, #8bc34a, #558b2f); }
+.target-bin-banner.harmful-bg { background: linear-gradient(135deg, #e53935, #b71c1c); }
+.target-bin-banner.other-bg { background: linear-gradient(135deg, #ffb300, #f39c12); }
+
+.bin-action { 
+  font-size: 28rpx; 
+  opacity: 0.9; 
+  margin-bottom: 8rpx; 
+}
+
+.bin-name-large { 
+  font-size: 52rpx; 
+  font-weight: bold; 
+  letter-spacing: 4rpx;
+  text-shadow: 0 4rpx 10rpx rgba(0,0,0,0.2); /* 文字投影，增加立体感 */
+}
+
+/* --- 细分小类指导：做成侧边带颜色的引用框，打破枯燥 --- */
+.sub-guidance-box {
+  margin-top: 15rpx;
+  padding: 20rpx 24rpx;
+  background-color: #f8f9fa; /* 极浅的灰色底 */
+  border-radius: 12rpx;
+  border-left: 8rpx solid #ccc; /* 默认左边框 */
+}
+
+/* 引用框左边框跟随大类变色 */
+.sub-guidance-box.recycle-border { border-left-color: #4c84ff; }
+.sub-guidance-box.kitchen-border { border-left-color: #8bc34a; }
+.sub-guidance-box.harmful-border { border-left-color: #e53935; }
+.sub-guidance-box.other-border { border-left-color: #ffb300; }
+
+/* 覆盖之前可能存在的旧样式，让文字换行更好看 */
+.sub-guidance-text {
+  font-size: 26rpx;
+  line-height: 1.8;
+  color: #555;
+  background-color: transparent; 
+  padding: 0;
+}
+
+/* 单独让特定科普标题带点颜色 */
+.tip-title.recycle-text { color: #2e7d32; }
+.tip-title.harmful-text { color: #c62828; }

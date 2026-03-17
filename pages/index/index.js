@@ -118,7 +118,6 @@ Page({
 
   // ==========================================
   // 二：纯前端 JS 图像张量化预处理
-  // 等价于 Python 的 pad_to_square + Normalize + ToTensor
   // ==========================================
   processImageToTensor: function(tempFilePath) {
     return new Promise((resolve, reject) => {
@@ -159,9 +158,9 @@ Page({
 
           let j = 0;
           for (let i = 0; i < data.length; i += 4) {
-            float32Data[j] = ((data[i] / 255.0) - mean[0]) / std[0];             // R通道
-            float32Data[j + 224*224] = ((data[i+1] / 255.0) - mean[1]) / std[1]; // G通道
-            float32Data[j + 2*224*224] = ((data[i+2] / 255.0) - mean[2]) / std[2]; // B通道
+            float32Data[j] = ((data[i] / 255.0) - mean[0]) / std[0];             
+            float32Data[j + 224*224] = ((data[i+1] / 255.0) - mean[1]) / std[1]; 
+            float32Data[j + 2*224*224] = ((data[i+2] / 255.0) - mean[2]) / std[2]; 
             j++;
           }
           resolve(float32Data.buffer); // 返回内存地址！
@@ -200,7 +199,8 @@ Page({
           success: async (resImg) => {
             const tempFilePath = resImg.tempFiles[0].tempFilePath;
             
-            wx.showLoading({ title: '手机端极速推理中...', mask: true });
+            // 显示等待提示
+            wx.showLoading({ title: 'AI 识别中...', mask: true }); 
 
             try {
               // 🌟 1. 前端处理图像张量
@@ -208,16 +208,15 @@ Page({
 
               // 🌟 2. 前端脱机推理 (瞬间完成)
               inferenceSession.run({
-                'input': { // 对应 ONNX 导出的 input_names
+                'input': { 
                   type: 'float32',
                   data: tensorBuffer,
                   shape: [1, 3, 224, 224]
                 }
               }).then(inferRes => {
-                // 提取 output 层的张量结果
                 const outputs = new Float32Array(inferRes['output'].data);
                 
-                // 🌟 3. JS 实现 Softmax 与最大值提取
+                // 🌟 3. 计算 Softmax 与提取结果
                 const maxVal = Math.max(...outputs);
                 let sumExp = 0;
                 let probs = [];
@@ -228,7 +227,6 @@ Page({
                 }
                 probs = probs.map(p => p / sumExp);
                 
-                // 找出概率最高的分类索引和置信度
                 let maxProb = -1;
                 let predictedIdx = -1;
                 for(let i=0; i<probs.length; i++){
@@ -238,35 +236,12 @@ Page({
                   }
                 }
                 const confidence = parseFloat((maxProb * 100).toFixed(2));
-                
                 console.log(`端侧推理完成！预测索引:${predictedIdx}, 置信度:${confidence}%`);
 
-                // 🌟 4. 重构：优先使用本地字典快速组装结果
-                const localResult = localCategoryDict[predictedIdx];
-                const aiResultData = {
-                  image_path: tempFilePath, // 本地图片临时路径
-                  category_name: localResult.category_name,
-                  category_class: localResult.category_class,
-                  confidence: confidence,
-                  eco_value: localResult.eco_value,
-                  put_guidance: localResult.put_guidance
-                };
-
-                // 先把组装好的结果塞入缓存，准备跳转
-                wx.setStorageSync('tempAiResult', aiResultData);
-                wx.hideLoading(); // 关掉 loading，因为本地推理极快
-
-                // 🌟 5. 立即跳转到结果页 (实现无网秒开)
-                wx.navigateTo({
-                  url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}`
-                });
-
-                // 🌟 6. 异步静默同步给后端 (用于收集强化训练数据)
-                // 注意：这里不需要 showLoading，用户已经无感跳转了
+                // 🌟 4. 向后端请求完整科普数据（并在此处执行唯一跳转）
                 wx.getNetworkType({
                   success (res) {
                     if (res.networkType !== 'none') {
-                      console.log("检测到有网络，开始静默上传识别记录...");
                       wx.uploadFile({
                         url: 'http://192.168.0.126:8000/api/recognize/edge', 
                         filePath: tempFilePath,
@@ -277,14 +252,28 @@ Page({
                           'confidence': confidence
                         },
                         success: (uploadRes) => {
-                           console.log("静默上传历史记录成功");
+                           wx.hideLoading(); // 关掉 loading
+                           const backendData = JSON.parse(uploadRes.data);
+                           if (backendData.code === 200) {
+                             // 将后端返回的完整数据存入缓存
+                             wx.setStorageSync('tempAiResult', backendData.data);
+                             // 拿到完整数据后，执行唯一的一次页面跳转！
+                             wx.navigateTo({
+                               url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}`
+                             });
+                           } else {
+                             wx.showToast({ title: '获取科普数据失败', icon: 'none' });
+                             that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
+                           }
                         },
                         fail: (err) => {
-                           console.log("静默上传失败(可能是弱网)，不影响前端显示");
+                           wx.hideLoading();
+                           that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
                         }
                       });
                     } else {
-                      console.log("当前无网络，纯离线模式运行");
+                      wx.hideLoading();
+                      that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
                     }
                   }
                 });
@@ -324,7 +313,7 @@ Page({
   },
   // 点击轮播里的某一条，弹出科普卡片
   showTipCard: function(e) {
-    // 从点击的标签上（wxml里的 data-tip="{{item}}"）拿到这一条的具体数据
+    // 从点击的标签上拿到这一条的具体数据
     const clickedTip = e.currentTarget.dataset.tip;
     
     if (clickedTip) {
@@ -344,4 +333,21 @@ Page({
       url: '/pages/search/index'
     });
   },
+
+  // 如果断网了，或者后端挂了，使用本地数据显示基本页面
+  fallbackToLocalData: function(predictedIdx, tempFilePath, confidence) {
+    const localResult = localCategoryDict[predictedIdx] || localCategoryDict[3]; // 兜底给其他垃圾
+    const aiResultData = {
+      image_path: tempFilePath,
+      category_name: localResult.category_name,
+      category_class: localResult.category_class,
+      confidence: confidence,
+      eco_value: localResult.eco_value,
+      put_guidance: localResult.put_guidance
+    };
+    wx.setStorageSync('tempAiResult', aiResultData);
+    wx.navigateTo({
+      url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}`
+    });
+  }
 })

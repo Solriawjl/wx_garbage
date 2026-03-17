@@ -1,59 +1,93 @@
-<!--pages/result/result.wxml-->
 <view class="result-page">
 
-  <view class="result-card">
+<view class="result-card">
   <image class="item-image" src="{{itemImageUrl}}" mode="aspectFill" bindtap="previewImage"></image>
   
   <view class="result-text-box">
     <block wx:if="{{isFromSearch}}">
       <text class="item-name">{{itemName}}</text>
-      <text class="static-text"> 属于 </text>
+      <text class="static-text"> 是我们的 </text>
       <text class="category-name {{categoryClass}}">{{categoryName}}</text> 
     </block>
       
     <block wx:else>
-      <view class="static-text" style="margin-bottom: 10rpx;">AI 识别结果为</view>
+      <view class="static-text" style="margin-bottom: 10rpx;">🤖 AI 小助手观察发现这是</view>
       <view class="category-name {{categoryClass}}">{{categoryName}}</view>
     </block>
   </view>
 
   <view class="tag-container">
     <view class="match-tag" wx:if="{{isFromSearch}}">
-      <text class="icon-check">✓</text> 词库精准匹配
+      <text class="icon-check">✓</text> 知识库精准匹配
     </view>
     
     <view class="confidence-tag" wx:else>
-      <text class="icon-ai">🤖</text> AI 识别置信度：{{accuracy}}%
+      <text class="icon-ai">💡</text> 智能分析确定指数：{{accuracy}}%
     </view>
   </view>
 </view>
 
-<view class="desc-card {{categoryClass}}">
-  <view class="desc-title">{{isFromSearch ? '环保价值' : categoryName + '科普'}}</view>
-  <view class="desc-text" wx:if="{{ecoValue}}">{{ecoValue}}</view>
-  
-  <view class="desc-divider"></view>
-  
-  <view class="tip-title">💡 投放指导</view>
+<view class="target-bin-banner {{categoryClass}}-bg">
+  <view class="bin-action">👉 请将它投入</view>
+  <view class="bin-name-large">{{categoryName}}桶</view>
+</view>
+
+<view class="desc-card white-card">
+  <view class="tip-title">💡 投放前置准备</view>
   <view class="desc-text">{{putGuidance}}</view>
+  
+  <block wx:if="{{subGuidance}}">
+    <view class="sub-guide-title">👇 常见的【{{categoryName}}】及处理方式有：</view>
+    <view class="sub-guidance-box {{categoryClass}}-border">
+      <text class="sub-guidance-text">{{subGuidance}}</text>
+    </view>
+  </block>
 </view>
 
-<view class="bottom-controls">
-    <view class="voice-section">
-      <view class="voice-btn" bindtap="playVoice">
-        <text>重播</text>
-        <text>语音</text>
-      </view>
-    </view>
+<view class="desc-card white-card" wx:if="{{processMethod}}">
+  <view class="tip-title recycle-text">♻️ 变废为宝</view>
+  <view class="desc-text">{{processMethod}}</view>
+</view>
 
-    <view class="action-group">
-      <view class="btn research-btn" bindtap="goBack">
-        {{isFromHistory ? '返回记录' : (isFromTip ? '返回首页' : (isFromSearch ? '重新搜索' : '重新识别'))}}
-      </view>
-      <view class="btn feedback-btn" bindtap="goToFeedback">
-      {{isFromSearch ? '搜索反馈' : '识别反馈'}}
-      </view>
-    </view>
-  </view>
+<view class="desc-card white-card" wx:if="{{harmDescription}}">
+  <view class="tip-title harmful-text">⚠️ 乱扔危害</view>
+  <view class="desc-text">{{harmDescription}}</view>
+</view>
 
+<view class="recommend-section" wx:if="{{!isFromSearch && recommendItems.length > 0}}">
+  <view class="recommend-title">👇 猜你扔的是它吗？点击查看专属提示</view>
+  <scroll-view class="recommend-scroll" scroll-x="true" enable-flex="true">
+    <view class="recommend-item" wx:for="{{recommendItems}}" wx:key="index" bindtap="showRecommendTip" data-item="{{item}}">
+      <image class="rec-image" src="{{item.image_url}}" mode="aspectFill"></image>
+      <text class="rec-name">{{item.item_name}}</text>
+    </view>
+  </scroll-view>
+</view>
+
+<view style="height: 180rpx; width: 100%;"></view>
+
+</view>
+
+<view class="bottom-dock">
+<view class="dock-btn icon-btn" bindtap="playVoice">
+  <text class="dock-icon">🔊</text>
+  <text class="dock-text">语音播报</text>
+</view>
+
+<view class="dock-btn icon-btn" bindtap="goToFeedback">
+  <text class="dock-icon">📝</text>
+  <text class="dock-text">结果纠错</text>
+</view>
+
+<view class="dock-btn primary-btn {{categoryClass}}" bindtap="goBack">
+  <text>{{isFromHistory ? '返回历史记录' : (isFromTip ? '返回首页' : (isFromSearch ? '继续搜索查询' : '继续拍照识别'))}}</text>
+</view>
+</view>
+
+<view class="modal-mask" wx:if="{{showTipModal}}" bindtap="closeTipModal">
+<view class="modal-content {{categoryClass}}" catchtap="true">
+  <view class="modal-header">{{currentTipTitle}}</view>
+  <view class="modal-body">{{currentTipContent}}</view>
+  <view class="modal-btn" bindtap="closeTipModal">我记住啦</view>
+</view>
 </view>
