@@ -28,5 +28,10 @@ Page({
     wx.navigateTo({
       url: '/pages/challenge/quiz' 
     });
+  },
+  goToLeaderboard: function() {
+    wx.navigateTo({
+      url: '/pages/leaderboard/index'
+    });
   }
 })

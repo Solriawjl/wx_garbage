@@ -36,26 +36,75 @@ Page({
     }
   },
 
-  // 获取微信头像和昵称 (深度绑定账号)
+  // 获取微信头像 (深度绑定账号 + 同步云端)
   onChooseAvatar(e) {
-    const { avatarUrl } = e.detail;
+    const { avatarUrl } = e.detail; // 这里拿到的是微信的临时路径 wxfile://...
+    
+    // 先让页面瞬间显示出新头像（体验好）
     this.setData({ avatarUrl });
     
-    // 将头像与当前账号(userId)深度绑定，存入专属缓存
     const userId = wx.getStorageSync('userId');
     if (userId) {
+      // 1. 存入专属本地缓存兜底
       wx.setStorageSync(`avatar_${userId}`, avatarUrl);
+      
+      // 2. 显示上传中的提示
+      wx.showLoading({ title: '同步云端中...', mask: true });
+      
+      // 3. 将真实的图片文件上传给 Python 后端
+      wx.uploadFile({
+        url: 'http://192.168.0.126:8000/api/user/update_avatar', 
+        filePath: avatarUrl,
+        name: 'file', // 对应后端 File(...) 的参数名
+        formData: {
+          'user_id': userId // 告诉后端是哪个用户在换头像
+        },
+        success: (res) => {
+          wx.hideLoading();
+          const backendData = JSON.parse(res.data);
+          if (backendData.code === 200) {
+            // 上传成功后，把后端返回的真正腾讯云公网 URL 替换掉本地缓存
+            const realCloudUrl = backendData.data.avatar_url;
+            wx.setStorageSync(`avatar_${userId}`, realCloudUrl);
+            wx.showToast({ title: '头像已同步', icon: 'success' });
+          } else {
+            wx.showToast({ title: '头像同步失败', icon: 'error' });
+          }
+        },
+        fail: (err) => {
+          wx.hideLoading();
+          wx.showToast({ title: '网络请求失败', icon: 'error' });
+        }
+      });
     }
   },
 
+  // 修改昵称 (深度绑定账号 + 同步云端)
   onNicknameBlur(e) {
     const { value } = e.detail;
+    if (!value.trim()) return; // 防止存入空名字
+    
     this.setData({ nickname: value });
     
-    // 将昵称与当前账号(userId)深度绑定，存入专属缓存
     const userId = wx.getStorageSync('userId');
     if (userId) {
+      // 1. 存入专属本地缓存兜底
       wx.setStorageSync(`nickname_${userId}`, value);
+      
+      // 2. 发起网络请求，告诉后端改名字了
+      wx.request({
+        url: 'http://192.168.0.126:8000/api/user/update_nickname',
+        method: 'POST',
+        data: {
+          user_id: userId,
+          nickname: value
+        },
+        success: (res) => {
+          if (res.data.code === 200) {
+            console.log("昵称云端同步成功");
+          }
+        }
+      });
     }
   },
 
@@ -117,27 +166,32 @@ Page({
     });
   },
 
+  // 清除缓存：保护云端数据
   clearCache: function() {
     wx.showModal({
       title: '清除本地缓存',
-      // 明确列出清除项和保留项，打消用户顾虑
-      content: '点击确定后，以下数据将被清空：\n1. 您自定义设置的头像和昵称\n2. AI识别产生的临时图片缓存\n\n请放心，您的云端账号数据（总积分、历史记录等）和登录状态将安全保留。',
+      // 1. 打消用户顾虑，强调头像和昵称很安全
+      content: '点击确定后，AI识别产生的临时图片等冗余缓存将被清空。\n\n请放心，您的云端账号数据（头像、昵称、总积分、历史记录等）和登录状态将安全保留。',
       confirmText: '确认清理',
-      confirmColor: '#4CAF50', // 用绿色表示安全操作
+      confirmColor: '#4CAF50',
       success: (res) => {
         if (res.confirm) {
-          // 1. 先把绝不离手的“底牌”存起来
+          // 2. 扩大“保护伞”范围：把头像和昵称也捞出来
           const userId = wx.getStorageSync('userId');
           const isLoggedIn = wx.getStorageSync('isLoggedIn'); 
+          const savedAvatar = wx.getStorageSync(`avatar_${userId}`);
+          const savedNickname = wx.getStorageSync(`nickname_${userId}`);
           
-          // 2. 无差别清理本地空间（此时头像、昵称、临时结果全清空了）
+          // 3. 无差别清理本地空间（清空冗余图片和识别结果）
           wx.clearStorageSync(); 
           
-          // 3. 瞬间把“底牌”恢复回去，保持不掉线
+          // 4. 瞬间把保护的数据恢复回去
           if (userId) wx.setStorageSync('userId', userId);
           if (isLoggedIn) wx.setStorageSync('isLoggedIn', isLoggedIn);
+          if (savedAvatar) wx.setStorageSync(`avatar_${userId}`, savedAvatar);
+          if (savedNickname) wx.setStorageSync(`nickname_${userId}`, savedNickname);
 
-          // 4. 刷新当前页面，头像和昵称会瞬间变回未设置的默认状态
+          // 5. 刷新当前页面，由于缓存被恢复了，头像和昵称依然稳如泰山
           this.onShow(); 
           wx.showToast({ title: '清理完毕', icon: 'success' });
         }

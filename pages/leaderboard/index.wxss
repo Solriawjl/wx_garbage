@@ -1,0 +1,68 @@
+page { background-color: #f5f7fa; }
+.leaderboard-page { display: flex; flex-direction: column; align-items: center; padding-bottom: 50rpx;}
+
+/* ✨ 顶部横幅：换成和你首页一致的森系渐变绿，极具生机 */
+.header-banner {
+  width: 100%; height: 260rpx;
+  background: linear-gradient(135deg, #a8e063, #56ab2f); 
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  border-bottom-left-radius: 40rpx; border-bottom-right-radius: 40rpx;
+  box-shadow: 0 10rpx 20rpx rgba(86, 171, 47, 0.2);
+  margin-bottom: -40rpx; z-index: 1;
+}
+.banner-title { font-size: 44rpx; font-weight: 900; color: #ffffff; margin-bottom: 15rpx; text-shadow: 0 4rpx 8rpx rgba(0,0,0,0.15);}
+.banner-desc { font-size: 26rpx; color: rgba(255, 255, 255, 0.9); }
+
+/* 列表容器 */
+.list-container {
+  width: 90%; background-color: #fff; border-radius: 30rpx;
+  padding: 20rpx; box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.05); z-index: 2;
+}
+
+/* 列表项 */
+.list-item {
+  display: flex; align-items: center; padding: 30rpx 15rpx;
+  border-bottom: 2rpx solid #f8f9fa; transition: background-color 0.2s;
+}
+.list-item:last-child { border-bottom: none; }
+.list-item:active { background-color: #f9f9f9; border-radius: 16rpx;}
+
+/* 名次 */
+.rank-box { width: 80rpx; text-align: center; margin-right: 15rpx; }
+.medal { font-size: 50rpx; }
+.rank-num { font-size: 36rpx; font-weight: bold; color: #bdc3c7; }
+
+/* 用户信息 */
+.user-avatar { width: 90rpx; height: 90rpx; border-radius: 50%; margin-right: 25rpx; border: 4rpx solid #f0f0f0;}
+.user-info { flex: 1; display: flex; flex-direction: column; }
+.user-name { font-size: 30rpx; font-weight: bold; color: #333; margin-bottom: 8rpx; }
+
+/* ✨ 称号的基础样式与多级配色 */
+.user-title { 
+  font-size: 22rpx; 
+  padding: 4rpx 18rpx; 
+  border-radius: 20rpx; 
+  align-self: flex-start; 
+  font-weight: bold;
+}
+/* 王者：红底金字 */
+.title-king { background-color: #ffebee; color: #d32f2f; border: 1px solid #ffcdd2; }
+/* 大师：紫底紫字 */
+.title-master { background-color: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7; }
+/* 专家：蓝底蓝字 */
+.title-expert { background-color: #e3f2fd; color: #1976d2; border: 1px solid #bbdefb; }
+/* 之星：青底青字 */
+.title-star { background-color: #e0f7fa; color: #0097a7; border: 1px solid #b2ebf2; }
+/* 卫士/默认：绿底绿字 */
+.title-guard, .title-default { background-color: #e8f5e9; color: #388e3c; border: 1px solid #c8e6c9; }
+
+/* 积分区域 */
+.score-box { display: flex; align-items: baseline; }
+.score-label { font-size: 24rpx; color: #999; font-weight: bold; }
+
+/* ✨ 分数分级高亮（前三名特殊对待） */
+.score-num { font-size: 40rpx; font-weight: 900; margin-right: 6rpx; }
+.score-rank-1 { color: #f1c40f; text-shadow: 0 2rpx 4rpx rgba(241, 196, 15, 0.3); } /* 冠军：耀眼金 */
+.score-rank-2 { color: #e2d5d5; text-shadow: 0 2rpx 4rpx rgba(149, 165, 166, 0.3); } /* 亚军：高级银 */
+.score-rank-3 { color: #f68437; text-shadow: 0 2rpx 4rpx rgba(211, 84, 0, 0.2); }   /* 季军：古铜色 */
+.score-rank-other { color: #a0a7a8; font-size: 36rpx; } /* 其他：稳重的石板灰，字号略微缩小 */

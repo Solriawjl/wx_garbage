@@ -154,3 +154,46 @@
 .start-btn:active {
   transform: scale(0.96); /* 点击时的按压反馈 */
 }
+
+/* --- 排行榜入口卡片 --- */
+.leaderboard-entry-card {
+  width: 90%;
+  margin: 0 auto 30rpx auto;
+  background: linear-gradient(135deg, #fff9c4, #fff59d); /* 温暖的浅金色渐变 */
+  border-radius: 20rpx;
+  padding: 25rpx 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8rpx 20rpx rgba(255, 235, 59, 0.2);
+  box-sizing: border-box;
+}
+.leaderboard-entry-card:active {
+  transform: scale(0.98);
+}
+.entry-left {
+  display: flex;
+  align-items: center;
+}
+.entry-icon {
+  font-size: 40rpx;
+  margin-right: 15rpx;
+}
+.entry-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #f57f17;
+}
+.entry-right {
+  display: flex;
+  align-items: center;
+}
+.entry-sub {
+  font-size: 24rpx;
+  color: #fbc02d;
+  margin-right: 10rpx;
+}
+.entry-arrow {
+  color: #fbc02d;
+  font-weight: bold;
+}

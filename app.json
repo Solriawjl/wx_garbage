@@ -13,7 +13,8 @@
     "pages/user/recognizeHistory",
     "pages/user/challengeHistory",
     "pages/user/wrongBook",
-    "pages/user/feedbackHistory"
+    "pages/user/feedbackHistory",
+    "pages/leaderboard/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
