@@ -1,54 +1,54 @@
-<view class="home-page">
-
-<view class="search-section">
-  <view class="search-box" bindtap="goToSearch">
-    <icon type="search" size="18" color="#999"></icon>
-    <text class="search-placeholder">输入你要查询的垃圾名称...</text>
-  </view>
-</view>
-
-<view class="core-action-section">
-  <view class="main-btn-card" bindtap="onTapCamera">
-    <view class="btn-content">
-      <image class="btn-icon" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/camera.png" mode="aspectFit"></image>
-      <view class="btn-text-group">
-        <text class="btn-title">AI 智能识别</text>
-        <text class="btn-desc">点击拍照或上传相册图片</text>
-      </view>
-    </view>
-  </view>
-</view>
-
-<view class="daily-tip-box">
-  <view class="tip-icon">💡</view>
+<view class="index-container">
   
-  <swiper 
-    class="tip-swiper" 
-    vertical="true" 
-    autoplay="true" 
-    circular="true" 
-    interval="3500" 
-    duration="500"
-  >
-    <block wx:for="{{carouselTips}}" wx:key="id">
-      <swiper-item catchtap="showTipCard" data-tip="{{item}}">
-        <view class="tip-title">{{item.title}}</view>
-      </swiper-item>
-    </block>
-  </swiper>
+  <view class="user-header">
+    
+    <image class="avatar-image" wx:if="{{userInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+    <view class="avatar-circle" wx:else>🌱</view>
+
+    <view class="greeting-box">
+      <text class="greeting-title">{{greetingText}}，{{userInfo.nickName ? userInfo.nickName : '环保小卫士'}}</text>
+      <text class="greeting-desc">开启今天的绿色生活</text>
+    </view>
+
+  </view>
+
+  <view class="search-bar" bindtap="goToSearch">
+    <icon type="search" size="18" color="#999"></icon>
+    <text class="search-text">输入你要查询的垃圾名称...</text>
+  </view>
+
+  <view class="ai-action-card" bindtap="onTapCamera">
+    <view class="ai-bg-circle"></view>
+    <image class="ai-camera-icon" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/camera.png" mode="aspectFit"></image>
+    <view class="ai-text-area">
+      <text class="ai-title">一键拍照识别</text>
+      <text class="ai-subtitle">不知道怎么扔？让 AI 帮帮你</text>
+    </view>
+    <view class="ai-btn">立即拍照</view>
+  </view>
+
+  <view class="daily-tip-box" wx:if="{{carouselTips.length > 0}}">
+    <text class="tip-icon">💡</text>
+    <swiper class="tip-swiper" vertical="true" autoplay="true" circular="true" interval="3000">
+      <block wx:for="{{carouselTips}}" wx:key="id">
+        <swiper-item class="tip-swiper-item" catchtap="showTipCard" data-tip="{{item}}">
+          <text class="tip-text">{{item.title}}</text>
+        </swiper-item>
+      </block>
+    </swiper>
+    <text class="tip-arrow">></text>
+  </view>
+
+  <view class="challenge-banner" bindtap="goToChallenge">
+    <view class="challenge-text-area">
+      <text class="challenge-title">🏆 环保知识大挑战</text>
+      <text class="challenge-desc">通关趣味答题，赢取专属称号！</text>
+    </view>
+    <view class="challenge-go-btn">去挑战</view>
+  </view>
+
+  <canvas type="2d" id="aiCanvas" style="width: 224px; height: 224px; position: absolute; left: -9999px;"></canvas>
 
 </view>
 
 <tip-card visible="{{isTipCardVisible}}" tipData="{{currentTipData}}" bind:close="hideTipCard"></tip-card>
-
-<view class="banner-section">
-  <swiper class="banner-swiper" indicator-dots="true" autoplay="true" interval="4000" duration="500" circular="true" indicator-active-color="#4CAF50" indicator-color="rgba(255,255,255,0.6)">
-    <swiper-item><image src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/banner/banner1.png" class="banner-img" mode="aspectFill"></image></swiper-item>
-    <swiper-item><image src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/banner/banner2.png" class="banner-img" mode="aspectFill"></image></swiper-item>
-    <swiper-item><image src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/page_index/banner/banner3.png" class="banner-img" mode="aspectFill"></image></swiper-item>
-  </swiper>
-</view>
-<tip-card visible="{{isTipCardVisible}}" tipData="{{currentTipData}}" bind:close="hideTipCard"></tip-card>
-
-<canvas type="2d" id="aiCanvas" style="width: 224px; height: 224px; position: absolute; left: -9999px;"></canvas>
-</view>

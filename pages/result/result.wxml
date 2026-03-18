@@ -11,7 +11,7 @@
     </block>
       
     <block wx:else>
-      <view class="static-text" style="margin-bottom: 10rpx;">🤖 AI 小助手观察发现这是</view>
+      <view class="static-text" style="margin-bottom: 10rpx;">AI 小助手观察发现这是</view>
       <view class="category-name {{categoryClass}}">{{categoryName}}</view>
     </block>
   </view>

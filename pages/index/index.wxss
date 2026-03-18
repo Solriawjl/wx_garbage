@@ -1,139 +1,241 @@
-/* pages/index/index.wxss */
-.home-page {
-  min-height: 100vh;
-  background-color: #f5f7fa; 
+/* 页面底层背景色，非常淡的绿色 */
+page {
+  background-color: #f7fbf2;
+}
+
+.index-container {
+  padding: 20rpx 30rpx 40rpx 30rpx;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* --- 顶部搜索区 --- */
-.search-section {
-  background-color: #4CAF50; 
-  padding: 20rpx 40rpx 80rpx; /* 底部多留白，为了让大按钮叠在上面 */
-}
-
-.search-box {
-  background-color: #ffffff;
-  height: 80rpx;
-  border-radius: 40rpx;
+/* 1. 精致的用户欢迎头部 */
+.user-header {
+  width: 100%;
   display: flex;
   align-items: center;
-  padding: 0 30rpx;
-  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
+  margin-bottom: 35rpx;
+  padding: 0 10rpx;
 }
 
-.search-placeholder {
-  font-size: 28rpx;
-  color: #999;
-  margin-left: 20rpx;
-}
-
-/* --- 核心 AI 大按钮 (现在它是破框悬浮的视觉中心了) --- */
-.core-action-section {
-  padding: 0 30rpx;
-  margin-top: -50rpx; /* 负边距！让大按钮压在绿底色上 */
-  z-index: 2;
-  position: relative;
-  margin-bottom: 25rpx;
-}
-
-.main-btn-card {
-  background: linear-gradient(135deg, #66BB6A, #388E3C); 
-  border-radius: 30rpx;
-  padding: 60rpx 40rpx;
-  box-shadow: 0 12rpx 30rpx rgba(76, 175, 80, 0.4); 
-  transition: transform 0.1s;
-}
-
-.main-btn-card:active {
-  transform: scale(0.96); 
-}
-
-.btn-content {
+/* 左侧：渐变色头像框 */
+.avatar-circle {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dcedc8, #8bc34a); /* 清新的抹茶绿渐变 */
   display: flex;
+  justify-content: center;
   align-items: center;
+  font-size: 44rpx; /* 控制里面小芽 🌱 的大小 */
+  margin-right: 24rpx;
+  box-shadow: 0 6rpx 16rpx rgba(139, 195, 74, 0.3); /* 柔和的发光阴影 */
+}
+
+/* 真实图片的头像样式，尺寸和默认的小芽框保持绝对一致 */
+.avatar-image {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1); /* 图片用稍微深一点的阴影 */
+  border: 4rpx solid #ffffff; /* 给真实头像加个白边，会非常有高级感 */
+  box-sizing: border-box;
+}
+
+/* 并且给文字加一个最大宽度，防止用户名字太长把屏幕挤爆了 */
+.greeting-title {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 6rpx;
+  letter-spacing: 1rpx;
+  max-width: 450rpx; /* 限制最大宽度 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 太长自动变省略号 */
+  white-space: nowrap;
+}
+
+/* 右侧：紧凑的文字组 */
+.greeting-box {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
-.btn-icon {
-  width: 110rpx;
-  height: 110rpx;
-  margin-right: 40rpx;
-  background-color: rgba(255, 255, 255, 0.2); 
-  border-radius: 50%;
-  padding: 24rpx;
+.greeting-title {
+  font-size: 36rpx; /* 字号稍微缩小，显得更精致 */
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 6rpx;
+  letter-spacing: 1rpx;
 }
 
-.btn-text-group {
+.greeting-desc {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+/* 2. 搜索栏 (更圆润轻薄) */
+.search-bar {
+  width: 100%;
+  background-color: #ffffff;
+  height: 90rpx;
+  border-radius: 45rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 40rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0,0,0,0.03);
+  margin-bottom: 40rpx;
+  box-sizing: border-box;
+}
+.search-text {
+  color: #a5b1c2;
+  font-size: 28rpx;
+  margin-left: 20rpx;
+}
+
+/* 3. ✨绝对核心：AI 大卡片 (高度增加，阴影加深) */
+.ai-action-card {
+  width: 100%;
+  background: linear-gradient(135deg, #a8e063, #56ab2f);
+  border-radius: 40rpx;
+  padding: 70rpx 40rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16rpx 40rpx rgba(86, 171, 47, 0.35); /* 更强的发光阴影 */
+  margin-bottom: 40rpx;
+  transition: transform 0.2s;
+}
+.ai-action-card:active {
+  transform: scale(0.97);
+}
+.ai-bg-circle {
+  position: absolute;
+  top: -60rpx;
+  right: -60rpx;
+  width: 250rpx;
+  height: 250rpx;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+}
+.ai-camera-icon {
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 30rpx;
+  z-index: 1;
+}
+.ai-text-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  color: #ffffff;
+  margin-bottom: 40rpx;
+}
+.ai-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  letter-spacing: 2rpx;
+  margin-bottom: 12rpx;
+  text-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
+}
+.ai-subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+.ai-btn {
+  background-color: #ffffff;
+  color: #56ab2f;
+  font-weight: 800;
+  font-size: 34rpx;
+  padding: 24rpx 70rpx;
+  border-radius: 50rpx;
+  z-index: 1;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.15);
+}
+
+/* 4. ✨恢复轮播的每日小知识 (独立胶囊外观) */
+.daily-tip-box {
+  width: 100%;
+  background-color: #ffffff;
+  height: 100rpx;
+  border-radius: 20rpx;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.03);
+}
+.tip-icon {
+  font-size: 36rpx;
+  margin-right: 15rpx;
+}
+.tip-swiper {
+  flex: 1;
+  height: 100%;
+}
+.tip-swiper-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.tip-text {
+  font-size: 28rpx;
+  color: #444;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.tip-arrow {
+  color: #ccc;
+  font-weight: bold;
+  margin-left: 15rpx;
+  font-size: 30rpx;
+}
+
+/* 5. 游戏化互动：知识挑战大横幅 */
+.challenge-banner {
+  width: 100%;
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  border-radius: 24rpx;
+  padding: 35rpx 40rpx;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8rpx 20rpx rgba(255, 152, 0, 0.15);
+}
+.challenge-text-area {
   display: flex;
   flex-direction: column;
 }
-
-.btn-title {
-  font-size: 46rpx;
+.challenge-title {
+  font-size: 34rpx;
   font-weight: bold;
+  color: #e65100;
+  margin-bottom: 10rpx;
+}
+.challenge-desc {
+  font-size: 24rpx;
+  color: #ef6c00;
+}
+.challenge-go-btn {
+  background-color: #ff9800;
   color: #ffffff;
-  margin-bottom: 12rpx;
-  letter-spacing: 2rpx;
-  text-shadow: 0 4rpx 10rpx rgba(0,0,0,0.1);
-}
-
-.btn-desc {
-  font-size: 26rpx;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-/* --- 每日贴士 --- */
-/* 外层容器：带边框和浅绿背景 */
-.daily-tip-box {
-  display: flex;
-  align-items: center;
-  background-color: #f2fbf4; /* 浅绿色背景 */
-  border-radius: 20rpx;
-  padding: 0 20rpx;
-  height: 80rpx; /* 固定栏目高度 */
-  margin: 30rpx;
-  border: 1px solid #c8e6c9; /* 描个绿边更精致 */
-}
-
-.tip-icon { 
-  font-size: 32rpx; 
-  margin-right: 15rpx; 
-}
-
-/* 轮播组件本身必须设置高宽 */
-.tip-swiper {
-  flex: 1; /* 占据中间所有剩余空间 */
-  height: 100%;
-}
-
-/* 轮播里的文字 */
-.tip-title {
-  line-height: 80rpx; /* 行高和父容器一致，完美垂直居中 */
   font-size: 28rpx;
-  color: #333;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis; /* 文字太长自动变成省略号 */
-}
-
-/* --- 轮播图 (移到底部，恢复正常的视觉边距) --- */
-.banner-section {
-  margin: 0 30rpx 40rpx;
-  border-radius: 20rpx;
-  overflow: hidden;
-  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.05);
-}
-
-.banner-swiper {
-  height: 400rpx; /* 稍微缩减一点高度，让画面比例更协调 */
-  width: 100%;
-  background-color: #fff;
-  border-radius: 20rpx;
-}
-
-.banner-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 20rpx;
+  font-weight: bold;
+  padding: 16rpx 36rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 6rpx 12rpx rgba(255, 152, 0, 0.3);
 }

@@ -20,7 +20,7 @@ Page({
         // 兜底防错
         this.doSilentLogin(true);
       } else {
-        // 1. 核心修复：读取该账号专属的缓存头像和昵称！
+        // 1. 读取该账号专属的缓存头像和昵称！
         const savedAvatar = wx.getStorageSync(`avatar_${userId}`);
         const savedNickname = wx.getStorageSync(`nickname_${userId}`);
         
