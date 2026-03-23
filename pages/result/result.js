@@ -16,15 +16,15 @@ Page({
     ecoValue: '',
     putGuidance: '',
     
-    // ✨ 新增：教育闭环与细分指导字段
+    // 教育闭环与细分指导字段
     harmDescription: '',
     processMethod: '',
     subGuidance: '',
     
-    // ✨ 新增：猜你想扔的具体物品列表
+    // 猜你想扔的具体物品列表
     recommendItems: [],
     
-    // ✨ 新增：用于控制专属提示弹窗的变量
+    // 用于控制专属提示弹窗的变量
     showTipModal: false,
     currentTipTitle: '',
     currentTipContent: ''
@@ -126,7 +126,7 @@ Page({
         ecoValue: aiResult.eco_value || '未知',
         putGuidance: aiResult.put_guidance || '未知',
         
-        // ✨ 接收教育闭环与推荐新字段（修复换行符问题）
+        // 接收教育闭环与推荐新字段（修复换行符问题）
         harmDescription: aiResult.harm_description || '',
         processMethod: aiResult.process_method || '',
         subGuidance: (aiResult.sub_guidance || '').replace(/\\n/g, '\n'),
@@ -138,7 +138,7 @@ Page({
     }
   },
 
-  // ✨ 新增：点击推荐物品展示专属 Tip 弹窗
+  // 点击推荐物品展示专属 Tip 弹窗
   showRecommendTip: function(e) {
     const item = e.currentTarget.dataset.item;
     this.setData({
@@ -148,7 +148,7 @@ Page({
     });
   },
 
-  // ✨ 新增：关闭弹窗
+  // 关闭弹窗
   closeTipModal: function() {
     this.setData({ showTipModal: false });
   },
