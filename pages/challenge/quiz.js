@@ -50,6 +50,7 @@ Page({
           // 将后端返回的数据格式化为前端需要的格式
           const mappedQuestions = res.data.data.map(q => ({
             name: q.item_name,
+            imageUrl: q.image_url || '/images/null.png',
             category: this.data.categoryMap[q.correct_category_id], // 转换为 'recycle' 等
             correctName: q.correct_category_name // 后端直接传回来的中文名
           }));
@@ -64,6 +65,10 @@ Page({
             isAnswering: false,
             showAnswer: false,
             selectedId: ''
+          });
+          // 中途退出拦截
+          wx.enableAlertBeforeUnload({
+            message: '挑战尚未结束，现在退出将不保存本次成绩与错题，确认要放弃吗？'
           });
         } else {
           wx.showToast({ title: '题库获取失败', icon: 'none' });
@@ -166,6 +171,9 @@ Page({
           wx.setStorageSync('challengeWrongList', this.data.wrongList);
           wx.setStorageSync('totalScore', res.data.data.total_score); // 更新最新总分
           wx.setStorageSync('currentTitle', res.data.data.current_title); // 更新最新称号
+          wx.setStorageSync('currentPerformance', res.data.data.performance);
+          // 正常交卷，解除退出拦截
+          wx.disableAlertBeforeUnload();
 
           wx.redirectTo({
             url: '/pages/challenge/result'

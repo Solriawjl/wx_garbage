@@ -1,0 +1,149 @@
+/* pages/user/redemptionHistory.wxss */
+.history-page {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  padding: 30rpx 30rpx 60rpx; /* 增加底部 padding 防遮挡 */
+  box-sizing: border-box;
+}
+
+/* --- 空状态样式 --- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 200rpx;
+}
+.empty-icon { font-size: 100rpx; margin-bottom: 20rpx; }
+.empty-text { font-size: 28rpx; color: #999; }
+
+/* --- 卡片基础样式 (纵向布局模型) --- */
+.record-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  display: flex;
+  flex-direction: column; /* 纵向排列 */
+  align-items: stretch; 
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
+  box-sizing: border-box;
+  overflow: hidden; 
+}
+
+/* --- 1. 卡片主体图文区域 (横向布局模型) --- */
+.card-body {
+  display: flex;
+  align-items: center; 
+  width: 100%;
+}
+
+.item-img {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 12rpx;
+  margin-right: 24rpx;
+  background: #fcfcfc;
+  flex-shrink: 0; /* 绝对防止图片被挤压 */
+}
+
+.item-info {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100rpx; 
+  padding: 6rpx 0; 
+}
+
+.info-top, .info-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  width: 100%;
+}
+
+.info-bottom {
+  margin-top: 16rpx; /* 上下行安全距离 */
+}
+
+/* 垃圾名称大标题 */
+.item-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  max-width: 300rpx; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  line-height: 1; /* 消除文字默认行高偏差 */
+}
+
+/* =========================================
+   🚀 状态标签样式 (终极稳健版)
+   ========================================= */
+.status-tag {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx; /* 恢复 padding 撑开模式 */
+  border-radius: 24rpx; 
+  font-weight: bold;
+  
+  display: inline-flex;
+  align-items: center; 
+  justify-content: center;
+  
+  line-height: 1.2; /* 给定安全行高 */
+  border: none; /* 彻底去除边框 */
+}
+
+/* 待核销：淡淡的红色晕染 */
+.status-tag.pending { 
+  color: #e53935; 
+  background: rgba(229, 57, 53, 0.08); 
+}
+
+/* 已完成：淡淡的绿色晕染 */
+.status-tag.finished { 
+  color: #4CAF50; 
+  background: rgba(76, 175, 80, 0.1); 
+}
+
+/* 已退货：淡淡的灰色晕染 */
+.status-tag.cancelled { 
+  color: #bdbdbd; 
+  background: rgba(189, 189, 189, 0.15); 
+}
+
+.item-time { font-size: 24rpx; color: #999; }
+.item-cost { font-size: 28rpx; font-weight: bold; color: #FF9800; }
+
+/* 已退货的积分变灰 */
+.item-cost.cancelled-cost {
+  color: #bdbdbd;
+}
+
+/* --- 2. 卡片底部动作区域 --- */
+.card-footer {
+  border-top: 1rpx solid #eeeeee; 
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  display: flex;
+  justify-content: flex-end; /* 按钮靠右 */
+  width: 100%;
+}
+
+/* 红色退货反悔按钮样式 */
+.action-btn {
+  font-size: 22rpx;
+  font-weight: bold;
+  padding: 10rpx 28rpx;
+  border-radius: 30rpx;
+  transition: all 0.1s;
+  background-color: #ffffff;
+  color: #e53935;
+  border: 2rpx solid #e53935;
+  box-shadow: 0 4rpx 10rpx rgba(229, 57, 53, 0.05);
+}
+
+.action-btn:active {
+  transform: scale(0.96); 
+}

@@ -449,3 +449,90 @@
 /* 单独让特定科普标题带点颜色 */
 .tip-title.recycle-text { color: #2e7d32; }
 .tip-title.harmful-text { color: #c62828; }
+
+/* =========================================
+   每日任务积分掉落动画样式 (全新：右侧边界滑入版)
+   ========================================= */
+   .reward-popup-container {
+    position: fixed;
+    /* 调整高度，大概在胶囊按钮的下方或平齐，避开刘海屏 */
+    top: 120rpx; 
+    /* 初始位置完全藏在屏幕右侧边界外面 (-100%) */
+    right: -100%; 
+    left: auto; /* 清除居中逻辑 */
+    width: auto; /* 宽度随内容 */
+    pointer-events: none; /* 防止遮挡点击 */
+    z-index: 99999;
+    opacity: 0;
+    
+    /* 绑定新的横向滑入动画，时间依然是我们刚才调好的 4 秒 */
+    animation: slideInFromRight 4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  
+  /* 将卡片设计改为了“游戏 UI 风格”，像从屏幕边缘长出来一样 */
+  .reward-card {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #FFF9C4 0%, #FFD54F 100%);
+    /* 减小内边距，使其更小巧 */
+    padding: 12rpx 30rpx;
+    /* 去掉右侧圆角 (左侧圆角，右侧直角) */
+    border-radius: 40rpx 0rpx 0rpx 40rpx; 
+    /* 去掉右侧边框，使其与边界无缝融合 */
+    border: 4rpx solid #FFF59D;
+    border-right: none; 
+    /* 阴影只需向左和向下投射 */
+    box-shadow: -4rpx 8rpx 20rpx rgba(255, 152, 0, 0.2); 
+  }
+  
+  .coin-icon {
+    width: 50rpx; /* 稍微缩小图标 */
+    height: 50rpx;
+    margin-right: 16rpx;
+  }
+  
+  .reward-text-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .reward-title {
+    font-size: 20rpx; /* 字体缩小，更适合右上角 */
+    color: #F57F17;
+    font-weight: bold;
+  }
+  
+  .reward-score {
+    font-size: 32rpx; /* 字体缩小，更适合右上角 */
+    color: #E65100;
+    font-weight: 900;
+    text-shadow: 0 2rpx 4rpx rgba(255,255,255,0.5);
+  }
+  
+  /* 向左横向滑入并停留 */
+  @keyframes slideInFromRight {
+    0% {
+      right: -100%; /* off-screen right */
+      opacity: 0;
+      transform: scale(0.9); /* 开始时稍微小一点点 */
+    }
+    10% { /* 0.4秒内迅速滑入 */
+      right: 0rpx; /* 滑入到完全靠在右侧边界 (0rpx) */
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* 从 10% 到 90% (约 3.2 秒)，稳稳停靠在右侧边界 */
+    90% {
+      right: 0rpx;
+      top: 120rpx;
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* 缓缓向右上角透明消失 */
+    100% {
+      right: -20rpx; /* 往右侧边界外面稍微移一点 */
+      top: 80rpx; /* 缓缓上浮 */
+      opacity: 0; 
+      transform: scale(0.9);
+    }
+  }

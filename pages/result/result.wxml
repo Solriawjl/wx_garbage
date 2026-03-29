@@ -91,3 +91,13 @@
   <view class="modal-btn" bindtap="closeTipModal">我记住啦</view>
 </view>
 </view>
+
+<view class="reward-popup-container" wx:if="{{showRewardPopup}}">
+  <view class="reward-card">
+    <image class="coin-icon" src="/images/tab_quiz_active.png"></image> 
+    <view class="reward-text-group">
+      <text class="reward-title">达成！每日首拍打卡</text>
+      <text class="reward-score">+{{rewardPoints}} 积分</text>
+    </view>
+  </view>
+</view>

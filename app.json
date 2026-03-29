@@ -14,7 +14,9 @@
     "pages/user/challengeHistory",
     "pages/user/wrongBook",
     "pages/user/feedbackHistory",
-    "pages/leaderboard/index"
+    "pages/leaderboard/index",
+    "pages/mall/mall",
+    "pages/user/redemptionHistory"
   ],
   "window": {
     "backgroundTextStyle": "light",

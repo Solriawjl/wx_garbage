@@ -19,20 +19,19 @@
         <view class="remove-btn" catchtap="removeItem" data-index="{{index}}">✕</view>
         
         <view class="item-header">
-          <text class="item-name">{{item.name}}</text>
+          <view class="item-name">
+          {{item.name}}
+          <text class="error-badge level-high" wx:if="{{item.errorCount >= 3}}">高频易错(错{{item.errorCount}}次)</text>
+          <text class="error-badge level-mid" wx:elif="{{item.errorCount == 2}}">重蹈覆辙(错2次)</text>
+        </view>
         </view>
         
         <view class="card-divider"></view>
         
         <view class="item-answers">
-          <view class="answer-row">
-            <text class="label">你的选择</text>
-            <text class="wrong-ans">{{item.userSelect}}</text>
-          </view>
-          <view class="answer-row">
-            <text class="label">正确答案</text>
-            <text class="correct-ans">{{item.correctAnswer}}</text>
-          </view>
+          <text class="wrong-ans">{{item.errorCount > 1 ? '你最近选了' : '你的选择'}}：{{item.userSelect}}</text>
+          
+          <text class="correct-ans">正确答案：{{item.correctAnswer}}</text>
         </view>
         
       </view>

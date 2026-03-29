@@ -27,7 +27,10 @@ Page({
     // 用于控制专属提示弹窗的变量
     showTipModal: false,
     currentTipTitle: '',
-    currentTipContent: ''
+    currentTipContent: '',
+    // 控制积分掉落弹窗的变量
+    rewardPoints: 0,
+    showRewardPopup: false
   },
 
   onLoad: function (options) {
@@ -76,7 +79,7 @@ Page({
               ecoValue: searchResult.eco_value,
               putGuidance: finalGuidance, // 使用判断后的指导文本
               
-              // ✨ 接收教育闭环新字段（修复换行符问题）
+              // 接收教育闭环新字段（修复换行符问题）
               harmDescription: searchResult.harm_description || '',
               processMethod: searchResult.process_method || '',
               subGuidance: (searchResult.sub_guidance || '').replace(/\\n/g, '\n')
@@ -116,6 +119,7 @@ Page({
       // 从缓存中捞出刚才存的后端返回的完整结果
       const aiResult = wx.getStorageSync('tempAiResult') || {};
       console.log("前端接收到的完整 AI 结果:", aiResult);
+      const currentReward = aiResult.reward_points || 0;
       this.setData({
         isFromSearch: false, // 切换为拍照模式视图
         isFromHistory: fromHistory, // 存入data
@@ -130,11 +134,24 @@ Page({
         harmDescription: aiResult.harm_description || '',
         processMethod: aiResult.process_method || '',
         subGuidance: (aiResult.sub_guidance || '').replace(/\\n/g, '\n'),
-        recommendItems: aiResult.recommend_items || []
+        recommendItems: aiResult.recommend_items || [],
+        // 从后端结果中读取本次获得的积分
+        rewardPoints: currentReward,
+        showRewardPopup: false
       });
       wx.removeStorageSync('tempAiResult');
       // 触发语音：AI 识别成功 (没有具体物品名，只报大类)
       this.generateAndPlayVoice('', this.data.categoryName, this.data.putGuidance, true, false);
+      // 如果本次获得了积分，延迟 0.5 秒触发华丽弹窗
+      if (currentReward > 0) {
+        setTimeout(() => {
+          this.setData({ showRewardPopup: true });
+          
+          setTimeout(() => {
+            this.setData({ showRewardPopup: false });
+          }, 4000);
+        }, 500); 
+      }
     }
   },
 

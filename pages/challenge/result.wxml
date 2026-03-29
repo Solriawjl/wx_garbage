@@ -1,11 +1,15 @@
-<!--pages/challenge/result.wxml-->
 <view class="result-page">
 
-<view class="header-section">
-  <view class="title-text">{{title}}！！</view>
-  <view class="score-container">
-    <text class="score-label">积分</text>
-    <text class="score-value">+{{currentScore}}</text>
+<view class="achievement-card" style="background: {{titleColor}};">
+  <view class="badge-bg"></view>
+  <view class="achievement-content">
+    <image class="trophy-icon" src="/images/tab_quiz_active.png" mode="aspectFit"></image>
+    <view class="title-text">{{performance}}</view>
+    <view class="score-badge">
+      <text class="score-plus">+</text>
+      <text class="score-value">{{currentScore}}</text>
+      <text class="score-unit"> 积分</text>
+    </view>
   </view>
 </view>
 
@@ -13,14 +17,16 @@
   <view class="card-title">答题复盘</view>
   
   <block wx:if="{{wrongList.length > 0}}">
+    <view class="review-subtitle">本次错题（点击查看图文科普）</view>
     <block wx:for="{{wrongList}}" wx:key="index">
-      <view class="review-item">
+      <view class="review-item clickable" bindtap="goToSearchDetail" data-keyword="{{item.name}}">
         <view class="item-name">{{item.name}}</view>
         
         <view class="item-answers">
           <text class="wrong-ans">{{item.userSelect}}</text>
           <text class="correct-ans">{{item.correctAnswer}}</text>
         </view>
+        <view class="arrow-right">></view>
       </view>
     </block>
   </block>
@@ -32,10 +38,8 @@
 </view>
 
 <view class="action-group">
-    <view class="btn retry-btn" bindtap="handleLeftBtn">
-      {{isFromHistory ? '返回记录' : '重新挑战'}}
-    </view>
-    <button class="btn share-btn" open-type="share">分享</button>
-  </view>
+    <view class="btn retry-btn" bindtap="handleLeftBtn">再来一局</view>
+    <view class="btn share-btn" bindtap="handleRightBtn">返回首页</view>
+</view>
 
 </view>

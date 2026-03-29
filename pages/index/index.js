@@ -78,8 +78,8 @@ Page({
 
   // --- 端侧 AI 初始化 ---
   initEdgeAI: function() {
-    const modelUrl = 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/weights/mobilenetv3_edge_v1_2.onnx';
-    const localPath = `${wx.env.USER_DATA_PATH}/mobilenetv3_edge_v1_2.onnx`; 
+    const modelUrl = 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/weights/mobilenetv3_edge_v1_5_1.onnx';
+    const localPath = `${wx.env.USER_DATA_PATH}/mobilenetv3_edge_v1_5_1.onnx`; 
     const fs = wx.getFileSystemManager();
     fs.access({
       path: localPath,
@@ -207,11 +207,54 @@ Page({
     });
   },
 
+  // 点击科普文章触发
   showTipCard: function(e) {
     const clickedTip = e.currentTarget.dataset.tip;
-    if (clickedTip) { this.setData({ currentTipData: clickedTip, isTipCardVisible: true }); }
+    if (clickedTip) {
+      // 1. 保持原有的弹窗展示逻辑不变
+      this.setData({ 
+        currentTipData: clickedTip,
+        isTipCardVisible: true 
+      });
+
+      // 静默触发每日科普阅读打卡任务
+      const userId = wx.getStorageSync('userId');
+      if (userId) {
+        wx.request({
+          // 注意：如果你的后端 IP 有变动，请修改这里
+          url: 'http://192.168.0.126:8000/api/task/read_tip', 
+          method: 'POST',
+          data: { user_id: parseInt(userId) },
+          success: (res) => {
+            if (res.data.code === 200) {
+              const taskData = res.data.data;
+              
+              // 只有当获得了实际积分（即今天第一次读）时才弹窗表扬
+              if (taskData.reward_points > 0) {
+                // 更新本地缓存，防止个人中心的段位和积分没同步刷新
+                wx.setStorageSync('totalScore', taskData.total_score);
+                wx.setStorageSync('currentTitle', taskData.title);
+
+                // 弹出让小朋友极度舒适的加分提示！
+                wx.showToast({
+                  title: `每日阅读 +${taskData.reward_points} 积分`,
+                  icon: 'success',
+                  duration: 2500
+                });
+              }
+            }
+          },
+          fail: (err) => {
+            console.error('阅读任务打卡请求失败', err);
+          }
+        });
+      }
+    }
   },
-  hideTipCard: function() { this.setData({ isTipCardVisible: false }); },
+
+  hideTipCard: function() {
+    this.setData({ isTipCardVisible: false });
+  },
   goToSearch: function() { wx.navigateTo({ url: '/pages/search/index' }); },
   goToChallenge: function() { wx.switchTab({ url: '/pages/challenge/index' }); },
 

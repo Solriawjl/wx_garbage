@@ -120,7 +120,7 @@
 }
 
 .correct-ans {
-  font-size: 32rpx;
+  font-size: 30rpx;
   font-weight: bold;
   color: #4CAF50; /* 采用正确的绿色，增强记忆 */
 }
@@ -197,4 +197,25 @@
   z-index: 1;
   border-top-right-radius: 20rpx;
   border-bottom-right-radius: 20rpx;
+}
+
+.error-badge {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  margin-left: 16rpx;
+  font-weight: normal;
+  vertical-align: middle;
+  display: inline-block;
+  margin-top: -4rpx;
+}
+.level-high {
+  background-color: #ffebee;
+  color: #f44336;
+  border: 1rpx solid #ffcdd2;
+}
+.level-mid {
+  background-color: #fff8e1;
+  color: #ff9800;
+  border: 1rpx solid #ffecb3;
 }

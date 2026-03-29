@@ -12,6 +12,7 @@
 </view>
 
 <view class="question-section">
+  <image class="question-image" src="{{currentQuestion.imageUrl}}" mode="aspectFill"></image>
   <view class="question-item">{{currentQuestion.name}}</view>
   <view class="question-desc">属于下面哪种垃圾分类？</view>
 </view>

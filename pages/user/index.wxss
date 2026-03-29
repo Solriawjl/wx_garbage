@@ -174,3 +174,83 @@
 .logout-btn:active {
   background-color: #f9f9f9;
 }
+
+/* =========================================
+   积分商城超级入口样式
+   ========================================= */
+   .mall-entry-card {
+    width: 90%;
+    margin: 0 auto 30rpx;
+    /* 充满诱惑力的渐变黄橙色 */
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%); 
+    border-radius: 20rpx;
+    padding: 30rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8rpx 20rpx rgba(255, 152, 0, 0.15);
+    border: 2rpx solid #FFE082;
+    transition: transform 0.1s;
+  }
+  
+  .mall-entry-card:active {
+    transform: scale(0.98); /* 点击反馈 */
+  }
+  
+  .mall-entry-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mall-icon {
+    width: 70rpx;
+    height: 70rpx;
+    margin-right: 20rpx;
+    /* 加个轻微的上下浮动动画，吸引点击 */
+    animation: floatIcon 2s ease-in-out infinite; 
+  }
+  
+  @keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6rpx); }
+  }
+  
+  .mall-text {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .mall-title {
+    font-size: 32rpx;
+    font-weight: 900;
+    color: #E65100;
+    margin-bottom: 6rpx;
+  }
+  
+  .mall-desc {
+    font-size: 22rpx;
+    color: #F57F17;
+    font-weight: bold;
+  }
+  
+  .mall-entry-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mall-go {
+    font-size: 26rpx;
+    color: #fff;
+    background-color: #FF9800;
+    padding: 8rpx 24rpx;
+    border-radius: 30rpx;
+    font-weight: bold;
+    margin-right: 10rpx;
+    box-shadow: 0 4rpx 10rpx rgba(255, 152, 0, 0.4);
+  }
+  
+  .mall-arrow {
+    color: #FF9800;
+    font-family: consolas;
+    font-weight: bold;
+  }

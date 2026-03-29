@@ -1,9 +1,20 @@
 // pages/challenge/result.js
+const PERFORMANCE_COLORS = {
+  // 0-3题：再接再厉 (灰色/气馁的颜色)
+  '再接再厉': 'linear-gradient(135deg, #CFD8DC 0%, #90A4AE 100%)',
+  // 5-7题：渐入佳境 (蓝色/鼓励的颜色)
+  '渐入佳境': 'linear-gradient(135deg, #81D4FA 0%, #03A9F4 100%)',
+  // 8-9题：火眼金睛 (橙色/优秀的颜色)
+  '火眼金睛': 'linear-gradient(135deg, #FFD54F 0%, #FF9800 100%)',
+  // 10题满分：完美通关 (紫红色/极致荣誉的颜色)
+  '完美通关': 'linear-gradient(135deg, #CE93D8 0%, #9C27B0 100%)'
+};
 Page({
   data: {
     currentScore: 0,   // 本次得分
     totalScore: 0,     // 累计积分
-    title: '',         // 获得的称号
+    performance: '',         // 表现
+    titleColor: '',    // 环保挑战卡片的动态渐变色
     wrongList: [],      // 错题本
     isFromHistory: false // 是否来自历史记录页的标记
   },
@@ -16,14 +27,15 @@ Page({
     const score = wx.getStorageSync('challengeScore') || 0;
     const wrongs = wx.getStorageSync('challengeWrongList') || [];
     const newTotalScore = wx.getStorageSync('totalScore') || 0;
-    const currentTitle = wx.getStorageSync('currentTitle') || '环保新手';
+    const currentPerf = wx.getStorageSync('currentPerformance') || '再接再厉';
 
     // 2. 渲染页面
     this.setData({
       isFromHistory: fromHistory,
       currentScore: score,
       totalScore: newTotalScore,
-      title: currentTitle,
+      performance: currentPerf,
+      titleColor: PERFORMANCE_COLORS[currentPerf] || 'linear-gradient(135deg, #CFD8DC 0%, #90A4AE 100%)',
       wrongList: wrongs
     });
   },
@@ -51,5 +63,16 @@ Page({
       path: '/pages/index/index', // 分享出去后别人点击进来的页面
       imageUrl: '/images/share_cover.png' // 可选：你可以准备一张好看的分享封面图
     }
-  }
+  },
+
+  // 点击错题，跳转到搜索页查看详情（教育闭环）
+  goToSearchDetail: function(e) {
+    const keyword = e.currentTarget.dataset.keyword;
+    if (keyword) {
+      wx.navigateTo({
+        // 直接跳转到识别结果详情页
+        url: `/pages/result/result?keyword=${keyword}`
+      });
+    }
+  },
 })

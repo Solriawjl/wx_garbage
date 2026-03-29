@@ -1,0 +1,53 @@
+<view class="mall-page">
+
+<view class="assets-header">
+  <view class="assets-bg-circle"></view>
+  <view class="history-btn" bindtap="goToHistory">我的兑换</view>
+  <view class="assets-content">
+    <text class="assets-title">我的环保积分</text>
+    <view class="points-display">
+      <image class="coin-icon-huge" src="/images/tab_quiz_active.png"></image>
+      <text class="points-number">{{currentPoints}}</text>
+    </view>
+    <view class="assets-tip">做任务赚积分，兑换惊喜好礼！</view>
+  </view>
+</view>
+
+<view class="mall-section">
+  <view class="section-title">兑换专区</view>
+  
+  <view class="product-grid">
+    <block wx:for="{{productList}}" wx:key="id">
+      <view class="product-card">
+        <view class="image-wrapper">
+          <image class="product-image" src="{{item.image}}" mode="aspectFit"></image>
+        </view>
+        
+        <view class="product-info">
+          <view class="product-name">{{item.name}}</view>
+          <view class="stock-tag unlimited" wx:if="{{item.stock === -1}}">库存充足</view>
+          <view class="stock-tag limited" wx:elif="{{item.stock > 0}}">仅剩 {{item.stock}} 件🔥</view>
+          <view class="stock-tag empty" wx:else>已被抢光</view>
+          <view class="product-desc">{{item.desc}}</view>
+          
+          <view class="price-action-row">
+              <view class="price-tag {{item.stock === 0 ? 'expensive' : (currentPoints >= item.points ? 'affordable' : 'expensive')}}">
+                <image class="coin-icon-small" src="/images/tab_quiz_active.png"></image>
+                <text>{{item.points}}</text>
+              </view>
+              
+              <view class="redeem-btn {{item.stock === 0 ? 'disabled-btn' : (currentPoints >= item.points ? 'active-btn' : 'disabled-btn')}}" 
+                    bindtap="handleRedeem" 
+                    data-item="{{item}}">
+                {{item.stock === 0 ? '已兑完' : (currentPoints >= item.points ? '兑换' : '积分不足')}}
+              </view>
+            </view>
+
+        </view>
+      </view>
+    </block>
+  </view>
+  
+</view>
+
+</view>

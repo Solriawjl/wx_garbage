@@ -1,65 +1,118 @@
 /* pages/challenge/result.wxss */
 .result-page {
   min-height: 100vh;
-  background-color: #f8f9fa; /* 浅灰底色突出白色卡片 */
-  padding: 60rpx 40rpx;
+  background-color: #f8f9fa;
+  padding: 40rpx;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* --- 顶部光荣榜 --- */
-.header-section {
+/* --- 重新设计的成就卡片（顶部光荣榜） --- */
+.achievement-card {
   width: 100%;
+  height: 320rpx;
+  /* 🚀 修改：这里的静态 background 颜色被移除了，统一由 WXML 中的内联动态 style 控制 */
+  border-radius: 30rpx;
+  position: relative;
+  overflow: hidden;
+  /* 我们依然保留橙色调的阴影，让它适配大多数颜色，或者你可以改成黑色阴影 */
+  box-shadow: 0 16rpx 32rpx rgba(0, 0, 0, 0.1); 
+  margin-bottom: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 装饰性光晕背景 (保持不变) */
+.badge-bg {
+  position: absolute;
+  width: 400rpx;
+  height: 400rpx;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+  top: -50rpx;
+  right: -50rpx;
+  border-radius: 50%;
+}
+
+.achievement-content {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 50rpx;
+}
+
+.trophy-icon {
+  width: 100rpx;
+  height: 100rpx;
+  margin-bottom: 16rpx;
 }
 
 .title-text {
+  /* 🚀 修改：增大此处的字体，更具视觉冲击力 */
   font-size: 56rpx;
-  font-weight: bold;
-  color: #ffb300; /* 原型图中的橙黄色 */
-  margin-bottom: 20rpx;
+  font-weight: 900;
+  color: #FFFFFF;
   letter-spacing: 4rpx;
-  text-shadow: 0 4rpx 10rpx rgba(255, 179, 0, 0.2);
+  text-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 16rpx;
 }
 
-.score-container {
-  align-self: flex-end; /* 让积分像原型图一样靠右 */
-  font-size: 40rpx;
-  color: #333;
+.score-badge {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8rpx 32rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: baseline;
 }
 
-.score-label {
+.score-plus {
   font-size: 32rpx;
-  margin-right: 10rpx;
+  color: #FF5722;
+  font-weight: bold;
 }
 
 .score-value {
+  font-size: 48rpx;
+  color: #FF5722;
+  font-weight: 900;
+  margin: 0 4rpx;
+}
+
+.score-unit {
+  font-size: 26rpx;
+  color: #666;
   font-weight: bold;
 }
 
-/* --- 错题复盘卡片 --- */
+/* --- 答题复盘卡片 --- */
 .review-card {
   width: 100%;
-  background-color: #ffffff;
-  border-radius: 24rpx;
-  padding: 40rpx 30rpx;
-  box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.04);
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
   margin-bottom: 60rpx;
-  min-height: 400rpx; /* 保证卡片有一定高度 */
 }
 
 .card-title {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 30rpx;
-  padding-bottom: 20rpx;
-  border-bottom: 2rpx dashed #eee;
+  margin-bottom: 20rpx;
+  border-left: 8rpx solid #4CAF50;
+  padding-left: 20rpx;
+}
+
+.review-subtitle {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+  margin-top: 10rpx;
 }
 
 .review-item {
@@ -70,6 +123,17 @@
   border-bottom: 2rpx solid #f9f9f9;
 }
 
+.review-item.clickable {
+  transition: background-color 0.2s;
+  border-radius: 12rpx;
+  padding: 24rpx 12rpx; 
+  margin: 0 -12rpx;
+}
+
+.review-item.clickable:active {
+  background-color: #f0f5f0; 
+}
+
 .review-item:last-child {
   border-bottom: none;
 }
@@ -78,7 +142,7 @@
   font-size: 32rpx;
   color: #333;
   font-weight: bold;
-  width: 35%; /* 限制宽度防止文字过长挤压右侧 */
+  width: 35%;
 }
 
 .item-answers {
@@ -88,17 +152,24 @@
   align-items: center;
 }
 
-/* 划掉错的，突出对的 */
 .wrong-ans {
   font-size: 28rpx;
   color: #b2b2b2;
-  text-decoration: line-through; /* 中划线 */
-  margin-right: 30rpx;
+  text-decoration: line-through; 
+  margin-right: 20rpx; 
 }
 
 .correct-ans {
   font-size: 32rpx;
-  color: #4c84ff; /* 知识库原型中代表可回收的蓝色，这里做高亮色 */
+  color: #4c84ff; 
+  font-weight: bold;
+}
+
+.arrow-right {
+  color: #cccccc;
+  font-size: 32rpx;
+  font-family: "Consolas", monospace;
+  margin-left: 16rpx;
   font-weight: bold;
 }
 
@@ -112,8 +183,8 @@
 }
 
 .perfect-text {
-  margin-top: 30rpx;
-  font-size: 34rpx;
+  margin-top: 20rpx;
+  font-size: 32rpx;
   color: #4CAF50;
   font-weight: bold;
 }
@@ -127,26 +198,23 @@
 }
 
 .btn {
-  width: 46%;
-  height: 96rpx;
-  border-radius: 16rpx;
+  width: 45%;
+  height: 88rpx;
+  border-radius: 44rpx;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 34rpx;
+  justify-content: center;
+  font-size: 32rpx;
   font-weight: bold;
-  color: white;
 }
 
 .retry-btn {
-  background-color: #7ab8f5; /* 浅蓝色 */
+  background-color: #f0f0f0;
+  color: #666;
 }
 
 .share-btn {
-  background-color: #ffb300; /* 橙色 */
-  margin: 0; /* 清除微信自带的 margin */
-}
-
-.share-btn::after {
-  border: none; /* 清除微信自带的 button 边框 */
+  background-color: #4CAF50;
+  color: white;
+  box-shadow: 0 4rpx 12rpx rgba(76, 175, 80, 0.3);
 }

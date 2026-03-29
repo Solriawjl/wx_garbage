@@ -1,0 +1,230 @@
+/* pages/mall/mall.wxss */
+.mall-page {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  padding-bottom: 60rpx;
+}
+
+/* --- 1. 顶部积分资产看板 --- */
+.assets-header {
+  width: 100%;
+  height: 380rpx;
+  /* 将背景替换为质感极佳的“森林环保绿”渐变 */
+  background: linear-gradient(135deg, #66BB6A 0%, #2E7D32 100%);
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 40rpx 40rpx;
+  /* 把原本的橙色投影同步修改为幽绿色的投影，保持视觉统一 */
+  box-shadow: 0 10rpx 20rpx rgba(46, 125, 50, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 背景光晕装饰 */
+.assets-bg-circle {
+  position: absolute;
+  top: -100rpx;
+  right: -100rpx;
+  width: 400rpx;
+  height: 400rpx;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+}
+
+.assets-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.assets-title {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.points-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rpx;
+}
+
+.coin-icon-huge {
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 16rpx;
+}
+
+.points-number {
+  font-size: 88rpx;
+  font-weight: 900;
+  color: #FFFFFF;
+  text-shadow: 0 4rpx 10rpx rgba(0,0,0,0.15);
+}
+
+.assets-tip {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.1);
+  padding: 6rpx 24rpx;
+  border-radius: 30rpx;
+}
+
+/* --- 2. 商城商品列表区 --- */
+.mall-section {
+  padding: 40rpx 30rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 900;
+  color: #333;
+  margin-bottom: 30rpx;
+  border-left: 10rpx solid #4CAF50;
+  padding-left: 20rpx;
+}
+
+/* 双列网格布局 */
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.product-card {
+  width: 48%; /* 占一半宽度，留出空隙 */
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.04);
+  margin-bottom: 30rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-wrapper {
+  width: 100%;
+  height: 240rpx;
+  background-color: #fcfcfc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.product-image {
+  width: 160rpx;
+  height: 160rpx;
+}
+
+.product-info {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.product-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+  /* 限制两行显示 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.product-desc {
+  font-size: 22rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+  flex: 1; /* 把底部按钮顶下去 */
+}
+
+/* 底部价格与按钮同行 */
+.price-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.price-tag {
+  display: flex;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: 900;
+}
+
+/* 买得起时的价格颜色 */
+.price-tag.affordable { color: #388E3C; }
+/* 买不起时的价格颜色（灰色警告） */
+.price-tag.expensive { color: #bdbdbd; }
+
+.coin-icon-small {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 6rpx;
+}
+
+/* 按钮样式 */
+.redeem-btn {
+  font-size: 22rpx;
+  font-weight: bold;
+  padding: 10rpx 20rpx;
+  border-radius: 30rpx;
+  transition: all 0.2s;
+}
+
+/* 买得起：绿色高亮按钮 */
+.active-btn {
+  background-color: #4CAF50;
+  color: #fff;
+  box-shadow: 0 4rpx 10rpx rgba(76, 175, 80, 0.3);
+}
+.active-btn:active {
+  transform: scale(0.95);
+}
+
+/* 买不起：灰色禁用按钮 */
+.disabled-btn {
+  background-color: #eeeeee;
+  color: #999999;
+}
+
+/* 兑换记录入口按钮 */
+.history-btn {
+  position: absolute;
+  top: 40rpx;
+  right: 30rpx;
+  font-size: 24rpx;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 10rpx 24rpx;
+  border-radius: 30rpx;
+  z-index: 10;
+  border: 1rpx solid rgba(255, 255, 255, 0.5);
+}
+
+/* 动态库存标签样式 */
+.stock-tag {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  width: fit-content;
+  margin-bottom: 10rpx;
+  font-weight: bold;
+}
+/* 无限库存：极简灰 */
+.stock-tag.unlimited { background-color: #f5f5f5; color: #888; }
+/* 限量库存：刺眼的红色，激发购买欲 */
+.stock-tag.limited { background-color: #ffebee; color: #e53935; border: 1rpx solid #ffcdd2;}
+/* 抢光了：禁用灰 */
+.stock-tag.empty { background-color: #eeeeee; color: #bdbdbd; }

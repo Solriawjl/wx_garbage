@@ -136,7 +136,16 @@ Page({
     }
     return true;
   },
-
+  // 往积分兑换商城
+  goToMall: function() {
+    if (!this.data.isLoggedIn) {
+      wx.showToast({ title: '请先登录哦', icon: 'none' });
+      return;
+    }
+    wx.navigateTo({
+      url: '/pages/mall/mall'
+    });
+  },
   // 各类跳转逻辑保持不变
   goToHistory: function(e) {
     if (!this.checkLoginStatus()) return;

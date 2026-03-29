@@ -1,0 +1,43 @@
+<view class="history-page">
+  <view class="empty-state" wx:if="{{historyList.length === 0}}">
+    <text class="empty-icon">🎁</text>
+    <text class="empty-text">你还没有兑换过任何奖品哦~</text>
+  </view>
+
+  <view class="record-list" wx:else>
+    <view class="record-card" wx:for="{{historyList}}" wx:key="id">
+      
+      <view class="card-body">
+        <image class="item-img" src="{{item.imageUrl}}" mode="aspectFit"></image>
+        
+        <view class="item-info">
+          <view class="info-top">
+            <text class="item-name">{{item.itemName}}</text>
+            
+            <view class="status-tag {{item.status === 0 ? 'pending' : (item.status === 1 ? 'finished' : 'cancelled')}}">
+              {{item.status === 0 ? '待核销' : (item.status === 1 ? '已核销' : '已退货')}}
+            </view>
+          </view>
+          
+          <view class="info-bottom">
+            <text class="item-time">{{item.date}}</text>
+            <text class="item-cost {{item.status === 2 ? 'cancelled-cost' : ''}}">
+              {{item.status === 2 ? '退回 ' : '-'}}{{item.pointsCost}} 积分
+            </text>
+          </view>
+        </view>
+      </view>
+
+      <view class="card-footer" wx:if="{{item.status === 0}}">
+        <view class="action-btn refund-btn" 
+              bindtap="handleRefund" 
+              data-id="{{item.id}}" 
+              data-name="{{item.itemName}}"
+              data-points="{{item.pointsCost}}">
+          我反悔了，申请退货
+        </view>
+      </view>
+
+    </view>
+  </view>
+</view>
