@@ -218,3 +218,10 @@
   color: white;
   box-shadow: 0 4rpx 12rpx rgba(76, 175, 80, 0.3);
 }
+
+.daily-reward{
+  color: #FFD54F; 
+  font-size: 26rpx; 
+  margin-top: 15rpx; 
+  font-weight: bold;
+}

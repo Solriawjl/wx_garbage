@@ -29,9 +29,16 @@
 
 <view class="data-board">
   <view class="data-item">
-    <text class="data-num">{{isLoggedIn ? totalScore : '-'}}</text>
-    <text class="data-label">总积分</text>
-  </view>
+      <text class="data-num">{{isLoggedIn ? totalScore : '-'}}</text>
+      <text class="data-label">挑战积分</text>
+    </view>
+
+    <view class="data-divider"></view>
+    
+    <view class="data-item">
+      <text class="data-num">{{isLoggedIn ? ecoCoin : '-'}}</text>
+      <text class="data-label">环保币</text>
+    </view>
   
   <view class="data-divider"></view>
   

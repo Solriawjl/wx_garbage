@@ -6,10 +6,9 @@ Page({
   },
 
   onShow: function () {
-    // 每次进入商城，更新当前积分，并拉取最新商品列表
-    const totalScore = wx.getStorageSync('totalScore') || 0;
-    this.setData({ currentPoints: totalScore });
-    
+    // 商城只认环保币
+    const currentScore = wx.getStorageSync('ecoCoin') || 0; 
+    this.setData({ currentPoints: currentScore });
     this.loadMallItems();
   },
 

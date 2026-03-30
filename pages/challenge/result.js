@@ -16,7 +16,8 @@ Page({
     performance: '',         // 表现
     titleColor: '',    // 环保挑战卡片的动态渐变色
     wrongList: [],      // 错题本
-    isFromHistory: false // 是否来自历史记录页的标记
+    isFromHistory: false, // 是否来自历史记录页的标记
+    currentMode: 'classic' // 默认记录当前模式
   },
 
   onLoad: function (options) {
@@ -28,30 +29,30 @@ Page({
     const wrongs = wx.getStorageSync('challengeWrongList') || [];
     const newTotalScore = wx.getStorageSync('totalScore') || 0;
     const currentPerf = wx.getStorageSync('currentPerformance') || '再接再厉';
-
+    const ecoCoin = wx.getStorageSync('rewardEcoCoin') || 0;
+    // 读取刚刚玩过的模式
+    const mode = wx.getStorageSync('challengeMode') || 'classic';
     // 2. 渲染页面
     this.setData({
       isFromHistory: fromHistory,
       currentScore: score,
       totalScore: newTotalScore,
       performance: currentPerf,
+      rewardEcoCoin: ecoCoin,
       titleColor: PERFORMANCE_COLORS[currentPerf] || 'linear-gradient(135deg, #CFD8DC 0%, #90A4AE 100%)',
-      wrongList: wrongs
+      wrongList: wrongs,
+      currentMode: mode
     });
   },
 
   // 处理左侧按钮点击事件 (核心逻辑修正)
   handleLeftBtn: function() {
     if (this.data.isFromHistory) {
-      // 场景 B：如果是从历史记录进来的 -> 退回上一页(即历史列表)
-      wx.navigateBack({
-        delta: 1
-      });
+      wx.navigateBack({ delta: 1 });
     } else {
-      // 场景 A：如果是刚答完题出来的 -> 直接重新开始一局！
-      // 使用 redirectTo 是为了替换当前结果页，防止页面栈越来越深
+      // 跳转时带上当前模式参数，实现无缝重玩同一种模式！
       wx.redirectTo({
-        url: '/pages/challenge/quiz' 
+        url: `/pages/challenge/quiz?mode=${this.data.currentMode}` 
       });
     }
   },

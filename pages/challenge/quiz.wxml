@@ -1,6 +1,8 @@
 <!--pages/challenge/quiz.wxml-->
 <view class="quiz-page">
-
+  <view class="timer-bar {{timeLeft <= 10 ? 'timer-danger' : ''}}" wx:if="{{mode === 'timed'}}">
+  <text>⏱️ 剩余时间：{{timeLeft}} 秒</text>
+</view>
 <view class="progress-section">
   <view class="progress-text">
     <text class="current">{{currentIndex + 1}}</text>

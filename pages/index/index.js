@@ -237,7 +237,7 @@ Page({
 
                 // 弹出让小朋友极度舒适的加分提示！
                 wx.showToast({
-                  title: `每日阅读 +${taskData.reward_points} 积分`,
+                  title: `每日阅读 +${taskData.reward_points} 环保币`,
                   icon: 'success',
                   duration: 2500
                 });

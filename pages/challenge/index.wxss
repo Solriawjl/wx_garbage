@@ -136,23 +136,42 @@
   justify-content: center;
 }
 
-.start-btn {
-  width: 85%;
-  height: 100rpx;
-  background: linear-gradient(135deg, #66BB6A, #43A047); /* 绿色渐变，显得更有质感 */
-  border-radius: 50rpx;
+/* --- 🚀 双模式按钮 --- */
+.action-section {
+  margin-top: auto;
+  margin-bottom: 20rpx;
   display: flex;
+  justify-content: space-between; /* 两个按钮并排 */
+  gap: 20rpx;
+}
+
+.mode-btn {
+  flex: 1;
+  height: 120rpx;
+  border-radius: 30rpx;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #ffffff;
-  font-size: 36rpx;
-  font-weight: bold;
-  box-shadow: 0 10rpx 30rpx rgba(76, 175, 80, 0.4);
   transition: transform 0.1s;
 }
 
-.start-btn:active {
-  transform: scale(0.96); /* 点击时的按压反馈 */
+.mode-btn:active { transform: scale(0.95); }
+
+.btn-title { font-size: 34rpx; font-weight: bold; margin-bottom: 6rpx; }
+.btn-sub { font-size: 20rpx; opacity: 0.8; }
+
+/* 经典模式：绿色稳重 */
+.classic-btn {
+  background: linear-gradient(135deg, #66BB6A, #43A047);
+  box-shadow: 0 10rpx 20rpx rgba(76, 175, 80, 0.3);
+}
+
+/* 限时模式：红橙色紧张感 */
+.timed-btn {
+  background: linear-gradient(135deg, #FF7043, #E64A19);
+  box-shadow: 0 10rpx 20rpx rgba(230, 74, 25, 0.3);
 }
 
 /* --- 排行榜入口卡片 --- */

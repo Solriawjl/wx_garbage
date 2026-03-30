@@ -34,19 +34,27 @@
   <view class="rules-title">📜 挑战规则</view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>系统将从题库中随机抽取 10 道选择题。</text>
+    <text>【经典闯关】共 10 题，无时间限制，稳扎稳打，答对题目越多，积分越多。</text>
   </view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>答对 8 道及以上，即可通关并获得“环保小达人”称号！</text>
+    <text>【极限60秒】限时 60 秒，题量激增至 25 题！挑战手速极限，时间到将强制交卷。</text>
   </view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>每答对 1 题可获得 1 积分，累计积分可升级你的环保段位。</text>
+    <text>【积分与奖励】每答对 1 题可获 1 积分用于提升称号。每日首次参与任一模式，均可额外获得 20 环保币！</text>
   </view>
 </view>
 
 <view class="action-section">
-  <view class="start-btn" bindtap="goToQuiz">开始挑战</view>
+  <view class="mode-btn classic-btn" bindtap="goToQuiz" data-mode="classic">
+    <text class="btn-title">经典闯关</text>
+    <text class="btn-sub">无时间限制，稳扎稳打</text>
+  </view>
+  
+  <view class="mode-btn timed-btn" bindtap="goToQuiz" data-mode="timed">
+    <text class="btn-title">限时挑战</text>
+    <text class="btn-sub">挑战手速，惊险刺激</text>
+  </view>
 </view>
 </view>

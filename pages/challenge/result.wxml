@@ -10,6 +10,9 @@
       <text class="score-value">{{currentScore}}</text>
       <text class="score-unit"> 积分</text>
     </view>
+    <view class="daily-reward" wx:if="{{rewardEcoCoin > 0}}">
+      每日首战：额外获得 {{rewardEcoCoin}} 环保币！
+    </view>
   </view>
 </view>
 

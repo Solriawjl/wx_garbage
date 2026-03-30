@@ -24,9 +24,10 @@ Page({
     });
   },
 
-  goToQuiz: function() {
+  goToQuiz: function(e) {
+    const mode = e.currentTarget.dataset.mode; // 获取点击的是哪个模式
     wx.navigateTo({
-      url: '/pages/challenge/quiz' 
+      url: `/pages/challenge/quiz?mode=${mode}` 
     });
   },
   goToLeaderboard: function() {

@@ -4,7 +4,7 @@
   <view class="assets-bg-circle"></view>
   <view class="history-btn" bindtap="goToHistory">我的兑换</view>
   <view class="assets-content">
-    <text class="assets-title">我的环保积分</text>
+    <text class="assets-title">我的环保币</text>
     <view class="points-display">
       <image class="coin-icon-huge" src="/images/tab_quiz_active.png"></image>
       <text class="points-number">{{currentPoints}}</text>
