@@ -211,11 +211,15 @@ Page({
   // 绑定给 WXML 中“重播语音”按钮的方法
   playVoice: function() {
     if (innerAudioContext.src) {
-      innerAudioContext.stop(); // 先停止当前的  
-      // 在重新播放前，再次强制设置倍速！
+      // 放弃使用 stop()，改用 pause + seek 组合技
+      innerAudioContext.pause(); // 先暂停当前播放
+      innerAudioContext.seek(0); // 将进度条强制拉回 0 秒（起点）
+      
+      innerAudioContext.play();  // 重新开始播放
+      
+      // 在 play() 触发后立刻再上一道保险，彻底锁死倍速
       innerAudioContext.playbackRate = 1.2; 
       
-      innerAudioContext.play(); // 重新开始播放
       wx.showToast({ title: '重新播报', icon: 'none' });
     } else {
       wx.showToast({ title: '语音加载中', icon: 'loading' });
