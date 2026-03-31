@@ -162,29 +162,85 @@ Page({
                 probs = probs.map(p => p / sumExp);
                 let maxProb = -1; let predictedIdx = -1;
                 for(let i=0; i<probs.length; i++){ if(probs[i] > maxProb){ maxProb = probs[i]; predictedIdx = i; } }
+                
+                // 计算出本地置信度 (0 ~ 100)
                 const confidence = parseFloat((maxProb * 100).toFixed(2));
                 
+                // 端云动态路由分流逻辑
                 wx.getNetworkType({
                   success (res) {
                     if (res.networkType !== 'none') {
-                      wx.uploadFile({
-                        url: 'http://192.168.0.126:8000/api/recognize/edge', 
-                        filePath: tempFilePath, name: 'file', 
-                        formData: { 'user_id': userId, 'predicted_idx': predictedIdx, 'confidence': confidence },
-                        success: (uploadRes) => {
-                           wx.hideLoading(); 
-                           const backendData = JSON.parse(uploadRes.data);
-                           if (backendData.code === 200) {
-                             wx.setStorageSync('tempAiResult', backendData.data);
-                             wx.navigateTo({ url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}` });
-                           } else {
-                             wx.showToast({ title: '获取科普数据失败', icon: 'none' });
-                             that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
-                           }
-                        },
-                        fail: () => { wx.hideLoading(); that.fallbackToLocalData(predictedIdx, tempFilePath, confidence); }
-                      });
+                      
+                      // 设定信任阈值
+                      const CONFIDENCE_THRESHOLD = 80.0;
+                      
+                      if (confidence >= CONFIDENCE_THRESHOLD) {
+                        // 【情况 A】：本地模型极度自信 -> 走极速轻量接口
+                        console.log(`本地置信度高达 ${confidence}%，走端侧极速接口`);
+                        wx.uploadFile({
+                          url: 'http://192.168.0.126:8000/api/recognize/edge', 
+                          filePath: tempFilePath, name: 'file', 
+                          formData: { 'user_id': userId, 'predicted_idx': predictedIdx, 'confidence': confidence },
+                          success: (uploadRes) => {
+                             wx.hideLoading(); 
+                             const backendData = JSON.parse(uploadRes.data);
+                             if (backendData.code === 200) {
+                               wx.setStorageSync('tempAiResult', backendData.data);
+                               wx.navigateTo({ url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}` });
+                             } else {
+                               wx.showToast({ title: '获取科普数据失败', icon: 'none' });
+                               that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
+                             }
+                          },
+                          fail: () => { wx.hideLoading(); that.fallbackToLocalData(predictedIdx, tempFilePath, confidence); }
+                        });
+                        
+                      } else {
+                        // 【情况 B】：本地模型犹豫了 -> 走云端高精度复核接口
+                        console.log(`本地置信度仅为 ${confidence}%，触发云端高精度复核`);
+                        
+                        wx.showLoading({ title: '深度分析中...', mask: true });
+                        
+                        wx.uploadFile({
+                          url: 'http://192.168.0.126:8000/api/recognize', // 调用重型识别接口
+                          filePath: tempFilePath, name: 'file', 
+                          formData: { 'user_id': userId }, 
+                          success: (uploadRes) => {
+                             wx.hideLoading(); 
+                             const backendData = JSON.parse(uploadRes.data);
+                             if (backendData.code === 200) {
+                               const cloudData = backendData.data;
+
+                               // ==========================================
+                               // 🛠️ 调试核心：精美打印端云对比结果
+                               // ==========================================
+                               const localName = localCategoryDict[predictedIdx] ? localCategoryDict[predictedIdx].category_name : '未知';
+                               console.log(`
+┏━━━━━━━━━━━━━━━━━━ 端云识别对比 ━━━━━━━━━━━━━━━━━━┓
+  【端侧本地推理】
+   - 预测分类: ${localName} (本地模型索引: ${predictedIdx})
+   - 置信度:   ${confidence}%
+  --------------------------------------------------
+  【云端大模型复核】
+   - 预测分类: ${cloudData.category_name} (数据库ID: ${cloudData.category_id})
+   - 置信度:   ${cloudData.confidence}%
+   - 纠错状态: ${localName !== cloudData.category_name ? '云端推翻了本地结果' : '云端与本地结果一致'}
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                               `);
+
+                               wx.setStorageSync('tempAiResult', cloudData);
+                               wx.navigateTo({ url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}` });
+                             } else {
+                               wx.showToast({ title: '云端深度识别失败', icon: 'none' });
+                               that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
+                             }
+                          },
+                          fail: () => { wx.hideLoading(); that.fallbackToLocalData(predictedIdx, tempFilePath, confidence); }
+                        });
+                      }
+                      
                     } else {
+                      // 纯无网状态：走本地写死的离线字典兜底
                       wx.hideLoading(); that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
                     }
                   }

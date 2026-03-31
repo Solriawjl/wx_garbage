@@ -56,7 +56,12 @@ Page({
       });
     }
   },
-
+  // 处理右侧“返回首页”按钮点击事件
+  handleRightBtn: function() {
+    wx.navigateBack({
+      delta: 1
+    });
+  },
   // 微信原生分享功能 (点击分享按钮触发)
   onShareAppMessage: function () {
     return {

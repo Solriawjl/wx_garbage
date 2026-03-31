@@ -169,7 +169,10 @@ Page({
   closeTipModal: function() {
     this.setData({ showTipModal: false });
   },
-
+  // 页面隐藏时（比如跳转到反馈页、按了手机的 Home 键切出微信），立刻停止语音
+  onHide: function () {
+    innerAudioContext.stop();
+  },
   // 页面卸载时（点左上角返回），立刻停止语音，防止在别的页面继续说话
   onUnload: function () {
     innerAudioContext.stop();
@@ -208,7 +211,10 @@ Page({
   // 绑定给 WXML 中“重播语音”按钮的方法
   playVoice: function() {
     if (innerAudioContext.src) {
-      innerAudioContext.stop(); // 先停止当前的
+      innerAudioContext.stop(); // 先停止当前的  
+      // 在重新播放前，再次强制设置倍速！
+      innerAudioContext.playbackRate = 1.2; 
+      
       innerAudioContext.play(); // 重新开始播放
       wx.showToast({ title: '重新播报', icon: 'none' });
     } else {
