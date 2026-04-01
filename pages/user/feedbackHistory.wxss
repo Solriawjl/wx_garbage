@@ -1,5 +1,4 @@
 /* pages/user/feedbackHistory.wxss */
-
 .feedback-page {
   min-height: 100vh;
   background-color: #f5f7fa; 
@@ -7,8 +6,11 @@
   flex-direction: column;
 }
 
-/* --- 顶部统计栏 --- */
+/* --- 顶部操作与筛选栏 --- */
 .header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 30rpx 40rpx;
   background-color: #ffffff;
   border-bottom: 2rpx solid #eee;
@@ -22,219 +24,9 @@
   font-weight: bold;
 }
 
-/* --- 列表容器 --- */
-.list-container {
-  flex: 1;
-  padding: 30rpx;
-  box-sizing: border-box;
-}
-
-/* --- 反馈卡片 --- */
-.feedback-card {
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 30rpx 40rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
-}
-
-/* 1. 卡片头部 */
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20rpx;
-}
-
-/* --- 分类标签样式 --- */
-.title-left {
-  display: flex;
-  align-items: center;
-}
-
-.type-tag {
-  font-size: 22rpx;
-  padding: 6rpx 16rpx;
-  border-radius: 8rpx;
-  font-weight: bold;
-  margin-right: 15rpx;
-  
-  display: inline-block; 
-  line-height: 1.5; 
-  vertical-align: middle;
-}
-
-/* 🔍 搜索反馈 - 专属蓝色系 */
-.tag-text {
-  background-color: #e3efff;
-  color: #4c84ff;
-}
-
-/* 📸 识别反馈 - 专属绿色系 */
-.tag-image {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-}
-
-/* 动态状态标签 */
-.status-tag {
-  font-size: 24rpx;
-  padding: 6rpx 16rpx;
-  border-radius: 8rpx;
-  font-weight: bold;
-}
-
-/* 0: 待处理 (橙黄) */
-.status-0 { background-color: #fff8e1; color: #ffb300; }
-/* 1: 已采纳 (绿色) */
-.status-1 { background-color: #e8f5e9; color: #4CAF50; }
-/* 2: 已驳回 (红色) */
-.status-2 { background-color: #ffebee; color: #e53935; }
-
-/* 分割线 */
-.card-divider {
-  width: 100%;
-  height: 2rpx;
-  border-bottom: 2rpx dashed #eeeeee;
-  margin-bottom: 25rpx;
-}
-
-/* 2. 动态追溯区 (图片/文本) */
-.source-box {
-  display: flex;
-  align-items: center;
-  background-color: #f9f9f9;
-  border-radius: 12rpx;
-  padding: 20rpx;
-  margin-bottom: 25rpx;
-}
-
-.source-img {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 8rpx;
-  margin-right: 20rpx;
-  background-color: #e0e0e0;
-  flex-shrink: 0;
-  border: 2rpx solid #eee;
-}
-
-.source-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.source-info.no-margin {
-  flex-direction: row;
-  align-items: center;
-}
-
-.error-text {
-  text-decoration: line-through; /* AI 误判的文字加上删除线 */
-  color: #999 !important;
-  margin-top: 8rpx;
-}
-
-/* 3. 卡片内容 (用户建议) */
-.content-row {
-  font-size: 28rpx;
-  margin-bottom: 20rpx;
-  display: flex;
-  align-items: flex-start;
-}
-
-.label {
-  color: #888;
-  white-space: nowrap;
-  margin-right: 10rpx;
-}
-
-.value {
-  color: #333;
-  font-weight: 500;
-  flex: 1;
-}
-
-.value.highlight {
-  color: #4CAF50; /* 突出用户的建议分类 */
-}
-
-/* 4. 管理员回复区 (工单风格) */
-.admin-reply-box {
-  background-color: #f9f9f9;
-  border-radius: 12rpx;
-  padding: 20rpx;
-  margin-bottom: 20rpx;
-  border-left: 6rpx solid #ccc;
-}
-
-/* 采纳时的回复框边框变绿 */
-.status-1 + .card-divider + .source-box + .content-row + .admin-reply-box,
-.status-1 + .card-divider + .content-row + .admin-reply-box {
-  border-left-color: #4CAF50;
-  background-color: #f1f8e9;
-}
-
-/* 驳回时的回复框边框变红 */
-.status-2 + .card-divider + .source-box + .content-row + .admin-reply-box,
-.status-2 + .card-divider + .content-row + .admin-reply-box {
-  border-left-color: #e53935;
-  background-color: #ffebee;
-}
-
-.reply-label {
-  font-size: 26rpx;
-  font-weight: bold;
-  color: #555;
-  display: block;
-  margin-bottom: 10rpx;
-}
-
-.reply-text {
-  font-size: 26rpx;
-  color: #666;
-  line-height: 1.5;
-}
-
-/* 5. 卡片底部 */
-.card-footer {
-  text-align: right;
-  margin-top: 10rpx;
-}
-
-.date-text {
-  font-size: 24rpx;
-  color: #aaa;
-}
-
-/* --- 空状态 --- */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 250rpx;
-}
-
-.empty-text {
-  margin-top: 40rpx;
-  font-size: 30rpx;
-  color: #888;
-}
-
-/* --- 一键清空与左滑删除核心样式 --- */
-
-/* 修复顶栏变成Flex布局，容纳一键清空 */
-.header-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .clear-btn {
   font-size: 26rpx;
-  color: #F44336;
+  color: #F44336; 
   display: flex;
   align-items: center;
   padding: 10rpx 20rpx;
@@ -242,10 +34,48 @@
   border-radius: 30rpx;
   transition: transform 0.1s;
 }
-.clear-btn:active { transform: scale(0.95); }
-.icon-trash { margin-right: 8rpx; font-size: 26rpx; }
 
-/* 1. 外层包裹器 */
+.clear-btn:active {
+  transform: scale(0.95);
+}
+
+.icon-trash {
+  margin-right: 6rpx;
+  font-size: 28rpx;
+}
+
+/* --- 🚀 新增：中间下拉筛选器样式 --- */
+.filter-picker {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10rpx 28rpx;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #333;
+  font-weight: bold;
+  border: 2rpx solid #eeeeee;
+  transition: all 0.2s;
+}
+
+.filter-picker:active {
+  background-color: #e0e0e0;
+}
+
+.picker-arrow {
+  font-size: 18rpx;
+  margin-left: 10rpx;
+  color: #888;
+}
+
+/* --- 列表容器 --- */
+.list-container {
+  flex: 1;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+/* --- 滑动卡片外层包裹 --- */
 .list-item-wrap {
   position: relative;
   width: 100%;
@@ -255,7 +85,7 @@
   box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03); 
 }
 
-/* 2. 可滑动的卡片本体 */
+/* 反馈卡片本体 */
 .feedback-card {
   margin-bottom: 0 !important; 
   width: 100%;
@@ -264,10 +94,149 @@
   z-index: 2; 
   background-color: #ffffff; 
   border-radius: 20rpx;
+  padding: 30rpx 40rpx;
   box-shadow: none !important; 
 }
 
-/* 3. 右上角独立删除 X */
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx dashed #eee;
+}
+
+.type-tag {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 30rpx;
+  font-weight: bold;
+}
+
+.tag-text {
+  background-color: #e3f2fd;
+  color: #1976D2;
+}
+
+.tag-image {
+  background-color: #e8f5e9;
+  color: #388E3C;
+}
+
+.status-tag {
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.status-pending { color: #FF9800; }
+.status-adopted { color: #4CAF50; }
+.status-rejected { color: #F44336; }
+
+/* 卡片主体内容 */
+.card-body {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.feedback-img {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+  background-color: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.source-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.source-info.no-margin {
+  margin-bottom: 0;
+}
+
+.label {
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 8rpx;
+}
+
+.value {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.error-text {
+  color: #F44336;
+}
+
+.highlight {
+  color: #1976D2;
+}
+
+.content-row {
+  background-color: #f9f9f9;
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 管理员回复 */
+.admin-reply-box {
+  background-color: #e8f5e9;
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.reply-label {
+  font-size: 24rpx;
+  color: #388E3C;
+  font-weight: bold;
+  margin-bottom: 6rpx;
+}
+
+.reply-text {
+  font-size: 26rpx;
+  color: #2e7d32;
+  line-height: 1.4;
+}
+
+/* --- 🚀 环保币奖励提示条样式 --- */
+.reward-row {
+  margin-bottom: 20rpx;
+  padding: 12rpx 20rpx;
+  background: rgba(255, 152, 0, 0.1); /* 淡金色的背景 */
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+}
+
+.reward-text {
+  font-size: 26rpx;
+  color: #FF9800; /* 金橙色高亮文字 */
+  font-weight: bold;
+}
+
+/* 底部时间 */
+.card-footer {
+  text-align: right;
+}
+
+.date-text {
+  font-size: 22rpx;
+  color: #aaa;
+}
+
+/* --- 右上角独立删除 X --- */
 .remove-btn {
   position: absolute;
   top: 15rpx;
@@ -283,7 +252,7 @@
   z-index: 10;
 }
 
-/* 4. 底层露出的西瓜红删除按钮 */
+/* --- 底层露出的西瓜红删除按钮 --- */
 .delete-action {
   position: absolute;
   right: 0;
@@ -300,4 +269,19 @@
   z-index: 1;
   border-top-right-radius: 20rpx;
   border-bottom-right-radius: 20rpx;
+}
+
+/* --- 空状态 --- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-text {
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #999;
 }

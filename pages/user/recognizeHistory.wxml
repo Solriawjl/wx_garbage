@@ -1,7 +1,15 @@
 <view class="history-page">
 
-<view class="filter-bar" wx:if="{{historyList.length > 0}}">
-  <text class="filter-text">共 {{historyList.length}} 条记录</text>
+<view class="filter-bar" wx:if="{{hasData}}">
+  <text class="filter-text">共 {{historyList.length}} 条</text>
+  
+  <picker bindchange="onFilterChange" value="{{filterIndex}}" range="{{filterOptions}}">
+    <view class="filter-picker">
+      <text>{{filterOptions[filterIndex]}}</text>
+      <text class="picker-arrow">▼</text>
+    </view>
+  </picker>
+
   <view class="clear-btn" bindtap="clearAll">
     <text class="icon-trash">🗑️</text> 一键清空
   </view>
@@ -23,7 +31,7 @@
         <view class="item-info">
           <view class="info-top">
             <text class="item-name">{{item.itemName}}</text>
-            </view>
+          </view>
           
           <view class="tag {{item.categoryClass}}">{{item.categoryName}}</view>
           
@@ -38,7 +46,7 @@
 
   <view class="empty-state" wx:else>
     <icon type="info" size="64" color="#ccc"></icon>
-    <text class="empty-text">暂无识别记录，快去首页拍一拍吧~</text>
+    <text class="empty-text">暂无对应分类的识别记录~</text>
   </view>
 
 </scroll-view>

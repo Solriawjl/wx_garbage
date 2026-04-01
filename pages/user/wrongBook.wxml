@@ -1,7 +1,15 @@
 <view class="wrong-book-page">
 
-<view class="header-bar" wx:if="{{wrongList.length > 0}}">
-  <text class="count-text">累计错题：{{wrongList.length}} 道</text>
+<view class="header-bar" wx:if="{{hasData}}">
+  <text class="count-text">共 {{wrongList.length}} 题</text>
+  
+  <picker bindchange="onFilterChange" value="{{filterIndex}}" range="{{filterOptions}}">
+    <view class="filter-picker">
+      <text>{{filterOptions[filterIndex]}}</text>
+      <text class="picker-arrow">▼</text>
+    </view>
+  </picker>
+
   <view class="clear-btn" bindtap="clearAll">
     <text class="icon-trash">🗑️</text> 一键清空
   </view>
@@ -37,13 +45,12 @@
       </view>
 
       <view class="delete-action" catchtap="removeItem" data-index="{{index}}">删除</view>
-      
     </view>
   </block>
 
   <view class="empty-state" wx:else>
-    <icon type="success" size="70" color="#4CAF50"></icon>
-    <text class="empty-text">太棒了！错题已经被你全部消灭啦~</text>
+    <icon type="info" size="64" color="#ccc"></icon>
+    <text class="empty-text">暂无对应频次的错题记录~</text>
   </view>
 
 </scroll-view>

@@ -1,7 +1,15 @@
 <view class="history-page">
 
-<view class="filter-bar" wx:if="{{historyList.length > 0}}">
+<view class="filter-bar" wx:if="{{hasData}}">
   <text class="filter-text">共 {{historyList.length}} 条记录</text>
+  
+  <picker mode="multiSelector" bindchange="onFilterChange" bindcolumnchange="onFilterColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
+    <view class="filter-picker">
+      <text>{{multiArray[1][multiIndex[1]] === '全部称号' ? multiArray[0][multiIndex[0]] : multiArray[0][multiIndex[0]] + ' · ' + multiArray[1][multiIndex[1]]}}</text>
+      <text class="picker-arrow">▼</text>
+    </view>
+  </picker>
+
   <view class="clear-btn" bindtap="clearAll">
     <text class="icon-trash">🗑️</text> 一键清空
   </view>
@@ -23,7 +31,13 @@
             <text class="score-label">获得积分</text>
             <text class="score-num">+{{item.score}}</text>
           </view>
-          <view class="title-tag {{item.titleClass}}">{{item.title}}</view>
+          
+          <view class="title-tags">
+            <view class="mode-tag {{item.mode === 'timed' ? 'mode-timed' : 'mode-classic'}}">
+              {{item.mode === 'timed' ? '⏱️ 限时模式' : '📚 经典模式'}}
+            </view>
+            <view class="title-tag {{item.titleClass}}">{{item.title}}</view>
+          </view>
         </view>
         
         <view class="card-divider"></view>
@@ -31,24 +45,25 @@
         <view class="card-footer">
           <view class="stat-box">
             <text class="stat-label">答题正确率：</text>
-            <text class="stat-val {{item.correctCount === 10 ? 'perfect' : ''}}">{{item.correctCount}} / 10</text>
+            <text class="stat-val {{item.correctCount === item.totalCount ? 'perfect' : ''}}">
+              {{item.correctCount}} / {{item.totalCount || 10}}
+            </text>
           </view>
           
           <view class="date-box">
             <text class="date-text">{{item.date}}</text>
-            </view>
+          </view>
         </view>
         
       </view>
 
       <view class="delete-action" catchtap="removeItem" data-index="{{index}}">删除</view>
-
     </view>
   </block>
 
   <view class="empty-state" wx:else>
     <icon type="info" size="64" color="#ccc"></icon>
-    <text class="empty-text">暂无挑战记录，快去证明你的实力吧！</text>
+    <text class="empty-text">暂无对应分类的挑战记录~</text>
   </view>
 
 </scroll-view>

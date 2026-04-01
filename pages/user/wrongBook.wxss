@@ -52,14 +52,6 @@
 }
 
 /* --- 错题卡片 --- */
-.wrong-card {
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 30rpx 40rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
-}
-
 .item-header {
   display: flex;
   justify-content: space-between;
@@ -71,17 +63,6 @@
   font-size: 34rpx;
   font-weight: bold;
   color: #333;
-}
-
-.remove-btn {
-  font-size: 32rpx;
-  color: #ccc;
-  width: 50rpx;
-  height: 50rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: consolas;
 }
 
 .card-divider {
@@ -123,6 +104,7 @@
   font-size: 30rpx;
   font-weight: bold;
   color: #4CAF50; /* 采用正确的绿色，增强记忆 */
+  margin-top: 10rpx;
 }
 
 /* --- 空状态 --- */
@@ -149,7 +131,7 @@
   margin-bottom: 30rpx;
   border-radius: 20rpx;
   background-color: #ffffff; /* 保持白色底 */
-  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03); 
+  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
 }
 
 /* 2. 可滑动的卡片本体：覆盖原有边距和阴影 */
@@ -159,8 +141,9 @@
   box-sizing: border-box;
   position: relative;
   z-index: 2; 
-  background-color: #ffffff; 
+  background-color: #ffffff;
   border-radius: 20rpx;
+  padding: 30rpx 40rpx;
   box-shadow: none !important; /* 原本的阴影交由父级 */
 }
 
@@ -209,13 +192,39 @@
   display: inline-block;
   margin-top: -4rpx;
 }
+
 .level-high {
   background-color: #ffebee;
   color: #f44336;
   border: 1rpx solid #ffcdd2;
 }
+
 .level-mid {
   background-color: #fff8e1;
   color: #ff9800;
   border: 1rpx solid #ffecb3;
+}
+
+/* --- 🚀 新增：中间下拉筛选器样式 --- */
+.filter-picker {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10rpx 28rpx;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #333;
+  font-weight: bold;
+  border: 2rpx solid #eeeeee;
+  transition: all 0.2s;
+}
+
+.filter-picker:active {
+  background-color: #e0e0e0;
+}
+
+.picker-arrow {
+  font-size: 18rpx;
+  margin-left: 10rpx;
+  color: #888;
 }

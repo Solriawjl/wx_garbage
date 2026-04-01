@@ -59,8 +59,8 @@
   <view class="mall-entry-left">
     <image class="mall-icon" src="/images/tab_quiz_active.png" mode="aspectFit"></image>
     <view class="mall-text">
-      <text class="mall-title">积分兑换商城</text>
-      <text class="mall-desc">用积分换取专属奖励！</text>
+      <text class="mall-title">环保币兑换商城</text>
+      <text class="mall-desc">用环保币换取专属奖励！</text>
     </view>
   </view>
   <view class="mall-entry-right">

@@ -5,7 +5,12 @@ Page({
     
     // 左滑控制参数
     startX: 0,
-    isMoving: false
+    isMoving: false,
+
+    // 🚀 新增：筛选功能相关参数
+    hasData: false, 
+    filterOptions: ['全部错题', '高频易错(≥3次)', '重蹈覆辙(2次)', '偶尔失误(1次)'],
+    filterIndex: 0
   },
 
   onLoad: function (options) {
@@ -19,18 +24,43 @@ Page({
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
-          // 初始化时给每个错题增加 offsetX 属性
           let list = res.data.data.map(item => {
             return { ...item, offsetX: 0 };
           });
-          this.setData({ wrongList: list });
+          
+          // 🚀 核心：挂载原始全量数据
+          this.allRecordList = list;
+          this.setData({ hasData: list.length > 0 });
+          this.applyFilter();
         }
       }
     });
   },
 
+  // 🚀 新增：用户切换下拉菜单事件
+  onFilterChange: function(e) {
+    this.setData({ filterIndex: e.detail.value });
+    this.applyFilter();
+  },
+
+  // 🚀 新增：执行本地过滤 (基于 errorCount)
+  applyFilter: function() {
+    const idx = parseInt(this.data.filterIndex);
+    let filtered = this.allRecordList || [];
+    
+    if (idx === 1) {
+      filtered = this.allRecordList.filter(item => item.errorCount >= 3);
+    } else if (idx === 2) {
+      filtered = this.allRecordList.filter(item => item.errorCount === 2);
+    } else if (idx === 3) {
+      filtered = this.allRecordList.filter(item => item.errorCount === 1);
+    }
+    
+    this.setData({ wrongList: filtered });
+  },
+
   // -----------------------------------------
-  // 全局归位逻辑 (点击空白处触发)
+  // 全局归位与左滑逻辑 (保持不变)
   // -----------------------------------------
   recoverSwipe: function() {
     let list = this.data.wrongList;
@@ -42,7 +72,7 @@ Page({
         hasOpen = true;
       }
     });
-    
+
     if (hasOpen) {
       this.setData({ wrongList: list });
       return true; 
@@ -50,26 +80,14 @@ Page({
     return false;
   },
 
-  // -----------------------------------------
-  // 左滑删除核心算法
-  // -----------------------------------------
   touchS: function (e) {
     if (e.touches.length === 1) {
       let list = this.data.wrongList;
       let currentIndex = e.currentTarget.dataset.index;
-      
-      // 滑动某张卡片时，自动合上其他已经被滑开的卡片
       list.forEach((item, index) => {
-        if (index !== currentIndex && item.offsetX < 0) {
-          item.offsetX = 0;
-        }
+        if (index !== currentIndex && item.offsetX < 0) { item.offsetX = 0; }
       });
-
-      this.setData({
-        wrongList: list,
-        startX: e.touches[0].clientX,
-        isMoving: true 
-      });
+      this.setData({ wrongList: list, startX: e.touches[0].clientX, isMoving: true });
     }
   },
 
@@ -79,10 +97,8 @@ Page({
       let disX = this.data.startX - moveX;
       let list = this.data.wrongList;
       let index = e.currentTarget.dataset.index;
-      
       if (disX <= 0) { list[index].offsetX = 0; }
       else { list[index].offsetX = -disX >= -140 ? -disX : -140; }
-      
       this.setData({ wrongList: list });
     }
   },
@@ -93,45 +109,39 @@ Page({
       let disX = this.data.startX - endX;
       let list = this.data.wrongList;
       let index = e.currentTarget.dataset.index;
-      
-      // 超过一半(70)自动滑开，否则弹回
       list[index].offsetX = disX > 70 ? -140 : 0;
       this.setData({ wrongList: list, isMoving: false });
     }
   },
 
   // -----------------------------------------
-  // 单条移除与一键清空
+  // 单条删除与一键清空 (加入底层同步逻辑)
   // -----------------------------------------
   removeItem: function(e) {
-    // 拦截：如果当前有被滑开的卡片（且点击的不是删除按钮本身时），优先让卡片归位
-    // 因为删除按钮用的 catchtap，所以点击删除时不会触发父级的恢复
-    
     const index = e.currentTarget.dataset.index;
     const item = this.data.wrongList[index];
     
     wx.showModal({
-      title: '提示',
-      content: '确定已经记住这道题的分类了吗？',
+      title: '移除错题',
+      content: `确定已掌握【${item.name}】并将其移出错题本吗？`,
       confirmText: '记住了',
       cancelText: '再看看',
       success: (res) => {
         if (res.confirm) {
-          // 调用后端删除接口
           wx.request({
             url: `http://192.168.0.126:8000/api/user/wrong_book/${item.id}`,
             method: 'DELETE',
             success: (delRes) => {
               if (delRes.data.code === 200) {
-                let newList = this.data.wrongList;
-                newList.splice(index, 1);
-                this.setData({ wrongList: newList });
+                // 🚀 同步删除底层数据并重新渲染当前分类
+                this.allRecordList = this.allRecordList.filter(i => i.id !== item.id);
+                this.setData({ hasData: this.allRecordList.length > 0 });
+                this.applyFilter();
                 wx.showToast({ title: '已移除', icon: 'success' });
               }
             }
           });
         } else {
-          // 取消删除时，把可能滑开的卡片弹回去
           let list = this.data.wrongList;
           list[index].offsetX = 0;
           this.setData({ wrongList: list });
@@ -143,7 +153,7 @@ Page({
   clearAll: function() {
     wx.showModal({
       title: '一键清空',
-      content: '确定要清空所有错题记录吗？清空后无法恢复哦。',
+      content: '确定要清空【全部】错题记录吗？清空后无法恢复哦。',
       confirmColor: '#F44336',
       success: (res) => {
         if (res.confirm) {
@@ -153,8 +163,11 @@ Page({
             method: 'DELETE',
             success: (delRes) => {
               if (delRes.data.code === 200) {
-                this.setData({ wrongList: [] });
-                wx.showToast({ title: '错题本已清空', icon: 'success' });
+                // 🚀 清空全量底层数据
+                this.allRecordList = [];
+                this.setData({ hasData: false });
+                this.applyFilter();
+                wx.showToast({ title: '已清空', icon: 'none' });
               }
             }
           });

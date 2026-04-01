@@ -100,7 +100,7 @@ Page({
         wx.hideLoading();
         if (res.data.code === 200) {
           wx.showToast({
-            title: '感谢纠错！',
+            title: '提交成功，采纳后发奖',
             icon: 'success',
             duration: 2000,
             success: () => {

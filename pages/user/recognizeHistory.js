@@ -7,7 +7,12 @@ Page({
     
     // 左滑控制参数
     startX: 0,
-    isMoving: false
+    isMoving: false,
+
+    // 筛选功能相关参数
+    hasData: false, 
+    filterOptions: ['全部分类', '可回收物', '有害垃圾', '厨余垃圾', '其他垃圾'],
+    filterIndex: 0
   },
 
   onLoad: function (options) {
@@ -24,69 +29,85 @@ Page({
       success: (res) => {
         wx.hideLoading();
         if (res.data.code === 200) {
-          // 初始化时给每个 item 增加一个 offsetX 为 0
           let list = res.data.data.map(item => {
             return { ...item, offsetX: 0 };
           });
-          this.setData({ historyList: list });
+          
+          // 将原始全量数据挂载到 this 上，不在 data 里，避免不必要的渲染开销
+          this.allRecordList = list; 
+          this.setData({ hasData: list.length > 0 });
+          this.applyFilter(); // 初始渲染时执行一次筛选（默认展示全部）
         }
       }
     });
   },
 
+  // 用户切换下拉菜单事件
+  onFilterChange: function(e) {
+    this.setData({ filterIndex: e.detail.value });
+    this.applyFilter();
+  },
+
+  // 执行本地过滤
+  applyFilter: function() {
+    const idx = parseInt(this.data.filterIndex);
+    let filtered = this.allRecordList || [];
+    
+    // 如果选的不是 0 (全部分类)，就进行严格匹配过滤
+    if (idx > 0) { 
+      filtered = this.allRecordList.filter(item => item.categoryName === this.data.filterOptions[idx]);
+    }
+    
+    // 渲染过滤后的结果到页面
+    this.setData({ historyList: filtered });
+  },
+
   // -----------------------------------------
-  // 🚀 左滑删除核心算法
+  // 左滑删除核心算法 (保持不变)
   // -----------------------------------------
   touchS: function (e) {
     if (e.touches.length === 1) {
       let list = this.data.historyList;
       let currentIndex = e.currentTarget.dataset.index;
-      
-      // 遍历列表，把“不是当前正在摸的这块”且“已经被滑开”的卡片全部合上
       list.forEach((item, index) => {
-        if (index !== currentIndex && item.offsetX < 0) {
-          item.offsetX = 0;
-        }
+        if (index !== currentIndex && item.offsetX < 0) item.offsetX = 0;
       });
-
-      this.setData({
-        historyList: list, // 更新其他卡片的闭合状态
-        startX: e.touches[0].clientX,
-        isMoving: true 
-      });
+      this.setData({ historyList: list, startX: e.touches[0].clientX, isMoving: true });
     }
   },
-
   touchM: function (e) {
     if (e.touches.length === 1) {
       let moveX = e.touches[0].clientX;
       let disX = this.data.startX - moveX;
       let list = this.data.historyList;
       let index = e.currentTarget.dataset.index;
-      
-      // 如果向右滑（负数）归零，向左滑最大不超过 140rpx
       if (disX <= 0) { list[index].offsetX = 0; }
       else { list[index].offsetX = -disX >= -140 ? -disX : -140; }
-      
       this.setData({ historyList: list });
     }
   },
-
   touchE: function (e) {
     if (e.changedTouches.length === 1) {
       let endX = e.changedTouches[0].clientX;
       let disX = this.data.startX - endX;
       let list = this.data.historyList;
       let index = e.currentTarget.dataset.index;
-      
-      // 如果滑动距离超过 70rpx，就自动弹到底，否则回弹关闭
       list[index].offsetX = disX > 70 ? -140 : 0;
       this.setData({ historyList: list, isMoving: false });
     }
   },
+  recoverSwipe: function() {
+    let list = this.data.historyList;
+    let hasOpen = false;
+    list.forEach(item => {
+      if (item.offsetX < 0) { item.offsetX = 0; hasOpen = true; }
+    });
+    if (hasOpen) { this.setData({ historyList: list }); return true; }
+    return false;
+  },
 
   // -----------------------------------------
-  // 🗑️ 单条删除与一键清空
+  // 单条删除与一键清空 (加入底层同步逻辑)
   // -----------------------------------------
   removeItem: function(e) {
     const index = e.currentTarget.dataset.index;
@@ -102,15 +123,17 @@ Page({
             method: 'DELETE',
             success: (delRes) => {
               if (delRes.data.code === 200) {
-                let newList = this.data.historyList;
-                newList.splice(index, 1);
-                this.setData({ historyList: newList });
+                // 同步删除底层全量数据中的这一条
+                this.allRecordList = this.allRecordList.filter(i => i.id !== item.id);
+                // 检查全量数据是否空了，更新顶栏状态，并重新执行当前分类的筛选
+                this.setData({ hasData: this.allRecordList.length > 0 });
+                this.applyFilter(); 
+                
                 wx.showToast({ title: '已删除' });
               }
             }
           });
         } else {
-          // 取消删除时，把可能滑开的卡片弹回去
           let list = this.data.historyList;
           list[index].offsetX = 0;
           this.setData({ historyList: list });
@@ -119,33 +142,10 @@ Page({
     });
   },
 
-  // -----------------------------------------
-  // 一键归位所有的滑动卡片
-  // -----------------------------------------
-  recoverSwipe: function() {
-    let list = this.data.historyList;
-    let hasOpen = false;
-    
-    // 检查是否有处于滑开状态的卡片
-    list.forEach(item => {
-      if (item.offsetX < 0) {
-        item.offsetX = 0; // 强制归位
-        hasOpen = true;
-      }
-    });
-    
-    // 如果刚才有开着的，就更新视图并返回 true
-    if (hasOpen) {
-      this.setData({ historyList: list });
-      return true; 
-    }
-    return false;
-  },
-
   clearAll: function() {
     wx.showModal({
       title: '一键清空',
-      content: '确定要清空所有识别历史吗？',
+      content: '确定要清空【全部】识别历史吗？\n(包含其他分类中被隐藏的记录)',
       confirmColor: '#F44336',
       success: (res) => {
         if (res.confirm) {
@@ -155,7 +155,11 @@ Page({
             method: 'DELETE',
             success: (delRes) => {
               if (delRes.data.code === 200) {
-                this.setData({ historyList: [] });
+                // 🚀 核心：清空全量数据并更新视图
+                this.allRecordList = [];
+                this.setData({ hasData: false });
+                this.applyFilter();
+                
                 wx.showToast({ title: '已清空' });
               }
             }
@@ -166,19 +170,12 @@ Page({
   },
 
   // -----------------------------------------
-  // 弹窗与跳转反馈（原有逻辑保持不变）
+  // 弹窗与跳转反馈
   // -----------------------------------------
   goToDetail: function(e) {
-    // 拦截器：如果当前有被滑开的卡片，点击卡片只会让它们缩回去，绝不弹窗！
-    if (this.recoverSwipe()) {
-      return; 
-    }
-
+    if (this.recoverSwipe()) return; 
     const item = e.currentTarget.dataset.item;
-    this.setData({
-      currentDetailItem: item,
-      showDetailModal: true
-    });
+    this.setData({ currentDetailItem: item, showDetailModal: true });
   },
   closeDetail: function() { this.setData({ showDetailModal: false }); },
   preventTouch: function() {},

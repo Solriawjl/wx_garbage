@@ -7,7 +7,6 @@ Page({
       { id: 'kitchen', name: '厨余垃圾', icon: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/knowledge/green.png' },
       { id: 'other', name: '其他垃圾', icon: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/knowledge/yellow.png' },
       { id: 'harmful', name: '有害垃圾', icon: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/knowledge/red.png' },
-      
     ],
     // 建立后端数字 ID 到前端字母 ID 的映射关系
     categoryMap: {
@@ -18,23 +17,24 @@ Page({
     },
     
     // 游戏状态
-    questions: [],        // 本次挑战抽取的10道题
+    questions: [],        // 本次挑战抽取的题
     totalQuestions: 10,   // 总题数
-    currentIndex: 0,      // 当前答到了第几题 (0-9)
+    currentIndex: 0,      // 当前答到了第几题
     currentQuestion: {},  // 当前题目的对象
     
-    score: 0,             // 当前得分
-    wrongList: [],        // 错题本 (记录选错的题目以便复盘)
+    score: 0,             // 🚀 注意：这里的 score 现在仅代表“答对的题数”，不再代表最终积分
+    wrongList: [],        // 错题本 
     
     // 界面反馈控制
     isAnswering: false,   // 是否正在展示答案 (锁定屏幕防止连点)
     showAnswer: false,    // 是否显示正确答案
     selectedId: '',       // 用户选中的类别 ID
-    isCorrect: false,      // 用户是否选对
+    isCorrect: false,     // 用户是否选对
 
-    mode: 'classic', // 默认经典模式
-    timeLeft: 60,    // 限时模式默认 60 秒
-    timerId: null    // 定时器句柄
+    mode: 'classic',      // 默认经典模式
+    totalTime: 60,        // 🚀 新增：限时模式的总时长 (秒)
+    timeLeft: 60,         // 剩余时间
+    timerId: null         // 定时器句柄
   },
 
   onLoad: function (options) {
@@ -54,12 +54,11 @@ Page({
       success: (res) => {
         wx.hideLoading();
         if (res.data.code === 200 && res.data.data.length > 0) {
-          // 将后端返回的数据格式化为前端需要的格式
           const mappedQuestions = res.data.data.map(q => ({
             name: q.item_name,
             imageUrl: q.image_url || '/images/null.png',
-            category: this.data.categoryMap[q.correct_category_id], // 转换为 'recycle' 等
-            correctName: q.correct_category_name // 后端直接传回来的中文名
+            category: this.data.categoryMap[q.correct_category_id],
+            correctName: q.correct_category_name
           }));
 
           this.setData({
@@ -67,17 +66,18 @@ Page({
             totalQuestions: mappedQuestions.length,
             currentIndex: 0,
             currentQuestion: mappedQuestions[0],
-            score: 0,
+            score: 0, // 初始化答对题数为 0
             wrongList: [],
             isAnswering: false,
             showAnswer: false,
-            selectedId: ''
+            selectedId: '',
+            timeLeft: this.data.totalTime // 初始化倒计时
           });
-          // 如果获取成功且是限时模式，启动倒计时
+          
           if (this.data.mode === 'timed') {
             this.startTimer();
           }
-          // 中途退出拦截
+          
           wx.enableAlertBeforeUnload({
             message: '挑战尚未结束，现在退出将不保存本次成绩与错题，确认要放弃吗？'
           });
@@ -92,16 +92,13 @@ Page({
     });
   },
 
-  // 用户点击选项
   onSelectOption: function(e) {
-    // 如果已经被锁定了（正在展示上一题的对错），则不允许点击
     if (this.data.isAnswering) return;
 
     const userSelectedId = e.currentTarget.dataset.id;
     const correctId = this.data.currentQuestion.category;
     const isRight = (userSelectedId === correctId);
 
-    // 1. 立即锁定界面，记录用户选择，并判断对错
     this.setData({
       isAnswering: true,
       showAnswer: true,
@@ -109,11 +106,9 @@ Page({
       isCorrect: isRight
     });
 
-    // 2. 积分与错题本逻辑
     if (isRight) {
       this.setData({ score: this.data.score + 1 });
     } else {
-      // 答错了，记录到错题本里，方便结果页展示
       let wrongItem = {
         item_name: this.data.currentQuestion.name,
         user_answer: this.getCategoryName(userSelectedId),
@@ -125,18 +120,15 @@ Page({
       this.data.wrongList.push(wrongItem);
     }
 
-    // 3. 延时 1.2 秒后自动进入下一题，给用户留出看清对错的时间
     setTimeout(() => {
       this.nextQuestion();
     }, 1200);
   },
 
-  // 切换到下一题
   nextQuestion: function() {
     let nextIndex = this.data.currentIndex + 1;
 
     if (nextIndex < this.data.totalQuestions) {
-      // 还没答完，刷新状态进入下一题
       this.setData({
         currentIndex: nextIndex,
         currentQuestion: this.data.questions[nextIndex],
@@ -145,19 +137,17 @@ Page({
         selectedId: ''
       });
     } else {
-      // 10道题答完了，游戏结束！
+      // 题目全部答完，向后端交卷
       this.submitGame();
     }
   },
 
-  // 倒计时引擎
   startTimer: function() {
     this.data.timerId = setInterval(() => {
       let current = this.data.timeLeft - 1;
       this.setData({ timeLeft: current });
       
       if (current <= 0) {
-        // 时间到！强行交卷
         clearInterval(this.data.timerId);
         wx.showToast({ title: '时间到！', icon: 'error' });
         this.submitGame(); 
@@ -165,17 +155,16 @@ Page({
     }, 1000);
   },
 
-  // 离开页面时一定要清理定时器，防止内存泄漏！
   onUnload: function() {
     if (this.data.timerId) {
       clearInterval(this.data.timerId);
     }
   },
+
   // 2：游戏结束，向后端交卷！
   submitGame: function() {
-    //交卷时立刻停止倒计时
     if (this.data.timerId) clearInterval(this.data.timerId);
-    wx.showLoading({ title: '阅卷中...', mask: true });
+    wx.showLoading({ title: 'AI 判卷中...', mask: true });
     
     const userId = wx.getStorageSync('userId');
     if (!userId) {
@@ -184,12 +173,24 @@ Page({
       return;
     }
 
-    // 组装符合后端 pydantic 要求的答题卡包
+    // 🚀 核心修改 1：计算实际耗时
+    let timeUsed = 0;
+    if (this.data.mode === 'timed') {
+      timeUsed = this.data.totalTime - this.data.timeLeft;
+      if (timeUsed < 0) timeUsed = this.data.totalTime;
+    }
+
+    // 🚀 核心修改 2：组装包含时间与模式的新版答题卡
     const payload = {
       user_id: parseInt(userId),
-      score: this.data.score,
-      correct_count: this.data.score,
-      wrong_answers: this.data.wrongList
+      score: 0,                           // 后端已废弃前端传的分数，这里传 0 即可
+      correct_count: this.data.score,     // 前端的 score 实际代表了答对的题数
+      wrong_answers: this.data.wrongList,
+      
+      mode: this.data.mode,
+      total_count: this.data.totalQuestions,
+      time_used: timeUsed,
+      total_time: this.data.totalTime
     };
 
     wx.request({
@@ -199,17 +200,17 @@ Page({
       success: (res) => {
         wx.hideLoading();
         if (res.data.code === 200) {
-          // 将后端的权威判定结果存入缓存，给 result 页使用
-          wx.setStorageSync('challengeScore', this.data.score);
+          const resData = res.data.data;
+          
+          // 🚀 核心修改 3：使用后端返回的真实得分 (earned_score)
+          wx.setStorageSync('challengeScore', resData.earned_score); 
           wx.setStorageSync('challengeWrongList', this.data.wrongList);
-          wx.setStorageSync('totalScore', res.data.data.total_score); // 更新最新总分
-          wx.setStorageSync('currentTitle', res.data.data.current_title); // 更新最新称号
-          wx.setStorageSync('currentPerformance', res.data.data.performance);
-          // 把后端发给的环保币存入缓存，给结果页
-          wx.setStorageSync('rewardEcoCoin', res.data.data.reward_eco_coin || 0);
-          // 把当前玩的模式存入缓存，告诉结果页
+          wx.setStorageSync('totalScore', resData.total_score); 
+          wx.setStorageSync('currentTitle', resData.current_title); 
+          wx.setStorageSync('currentPerformance', resData.performance);
+          wx.setStorageSync('rewardEcoCoin', resData.reward_eco_coin || 0);
           wx.setStorageSync('challengeMode', this.data.mode);
-          // 正常交卷，解除退出拦截
+          
           wx.disableAlertBeforeUnload();
 
           wx.redirectTo({

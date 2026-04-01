@@ -5,7 +5,45 @@
   padding: 30rpx 30rpx 60rpx; /* 增加底部 padding 防遮挡 */
   box-sizing: border-box;
 }
+/* --- 顶部导航栏样式 --- */
+.nav-bar {
+  display: flex;
+  background-color: #f5f7fa; /* 融入背景 */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin: -30rpx -30rpx 30rpx -30rpx; /* 抵消 page 的 padding，让导航条撑满宽度 */
+  padding: 0 40rpx;
+}
 
+.nav-item {
+  flex: 1;
+  text-align: center;
+  font-size: 30rpx;
+  color: #888888;
+  padding: 24rpx 0;
+  position: relative;
+  transition: all 0.3s;
+}
+
+/* 选中状态 */
+.nav-item.active {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+/* 底部绿色小滑块 */
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50rpx;
+  height: 6rpx;
+  background-color: #4CAF50;
+  border-radius: 6rpx;
+}
 /* --- 空状态样式 --- */
 .empty-state {
   display: flex;
@@ -147,3 +185,4 @@
 .action-btn:active {
   transform: scale(0.96); 
 }
+

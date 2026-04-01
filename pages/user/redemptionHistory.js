@@ -1,6 +1,8 @@
 Page({
   data: {
-    historyList: []
+    historyList: [],
+    filteredList: [],     // 过滤后用于页面渲染展示的数据
+    currentTab: 0         // 当前选中的 Tab：0=待核销, 1=已核销, 2=已退回
   },
 
   onShow: function () {
@@ -19,9 +21,27 @@ Page({
         wx.hideLoading();
         if (res.data.code === 200) {
           this.setData({ historyList: res.data.data });
+          this.filterData(); // 拉取完数据后立刻根据当前 Tab 进行过滤
         }
       }
     });
+  },
+  // 切换顶部导航栏
+  switchTab: function(e) {
+    const tabIndex = parseInt(e.currentTarget.dataset.index);
+    this.setData({ currentTab: tabIndex });
+    this.filterData(); // 切换 Tab 后重新过滤数据
+  },
+
+  // 核心过滤函数
+  filterData: function() {
+    const list = this.data.historyList;
+    const tab = this.data.currentTab;
+    
+    // 恰好后端的 status 设计与我们的 Tab 索引一致：0=待处理, 1=已核销, 2=已退款
+    const filtered = list.filter(item => item.status === tab);
+    
+    this.setData({ filteredList: filtered });
   },
   // 处理退货反悔逻辑 (防刷)
   handleRefund: function (e) {

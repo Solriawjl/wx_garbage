@@ -36,7 +36,9 @@
     />
   </view>
 </view>
-
+<view style="text-align: center; font-size: 24rpx; color: #FF9800; margin-bottom: 20rpx;">
+  💡 温馨提示：纠错经管理员采纳后，将奖励 5 环保币！
+</view>
 <view class="submit-btn {{selectedCategory ? 'btn-ready' : 'btn-disabled'}}" bindtap="submitFeedback">
   提交反馈
 </view>

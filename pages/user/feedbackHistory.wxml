@@ -1,9 +1,17 @@
 <view class="feedback-page">
 
-<view class="header-bar" wx:if="{{feedbackList.length > 0}}">
-  <text class="count-text">共提交 {{feedbackList.length}} 条反馈</text>
+<view class="header-bar" wx:if="{{hasData}}">
+  <text class="count-text">共提交 {{feedbackList.length}} 条</text>
+  
+  <picker bindchange="onFilterChange" value="{{filterIndex}}" range="{{filterOptions}}">
+    <view class="filter-picker">
+      <text>{{filterOptions[filterIndex]}}</text>
+      <text class="picker-arrow">▼</text>
+    </view>
+  </picker>
+
   <view class="clear-btn" bindtap="clearAll">
-    <text class="icon-trash">🗑️</text> 一键清空
+    <text class="icon-trash">🗑️</text> 一键清理
   </view>
 </view>
 
@@ -19,19 +27,16 @@
         
         <view class="card-header">
           <view class="title-left">
-            <text class="type-tag {{item.type === 'text' ? 'tag-text' : 'tag-image'}}">{{item.type === 'text' ? '🔍 搜索反馈' : '📸 识别反馈'}}
-            </text>
+            <text class="type-tag {{item.type === 'text' ? 'tag-text' : 'tag-image'}}">{{item.type === 'text' ? '🔍 搜索反馈' : '📸 识别反馈'}}</text>
           </view>
-          <view class="status-tag status-{{item.status}}">
+          <view class="status-tag {{item.status === 0 ? 'status-pending' : (item.status === 1 ? 'status-adopted' : 'status-rejected')}}">
             {{item.status === 0 ? '待处理' : (item.status === 1 ? '已采纳' : '已驳回')}}
           </view>
         </view>
-        
-        <view class="card-divider"></view>
-        
-        <view class="source-box">
+
+        <view class="card-body">
           <block wx:if="{{item.type === 'image'}}">
-            <image class="source-img" src="{{item.imageUrl}}" mode="aspectFill" catchtap="previewImage" data-url="{{item.imageUrl}}"></image>
+            <image class="feedback-img" src="{{item.imageUrl}}" mode="aspectFill" catchtap="previewImage" data-url="{{item.imageUrl}}"></image>
             <view class="source-info">
               <text class="label">AI 识别为：</text>
               <text class="value error-text">{{item.itemName}}</text>
@@ -54,7 +59,11 @@
           <text class="reply-label">管理员回复：</text>
           <text class="reply-text">{{item.adminReply}}</text>
         </view>
-        
+
+        <view class="reward-row" wx:if="{{item.status === 1}}">
+          <text class="reward-text">🎉 纠错奖励已入账：+5 环保币</text>
+        </view>
+
         <view class="card-footer">
           <text class="date-text">提交于 {{item.date}}</text>
         </view>
@@ -62,14 +71,13 @@
       </view>
 
       <view class="delete-action" catchtap="removeItem" data-index="{{index}}">删除</view>
-      
     </view>
   </block>
 
   <view class="empty-state" wx:else>
-    <icon type="info" size="70" color="#ccc"></icon>
-    <text class="empty-text">您还没有提交过纠错反馈哦~</text>
+    <icon type="info" size="64" color="#ccc"></icon>
+    <text class="empty-text">暂无对应状态的反馈记录~</text>
   </view>
-</scroll-view>
 
+</scroll-view>
 </view>

@@ -1,4 +1,3 @@
-<!--pages/challenge/index.wxml-->
 <view class="challenge-index">
 
 <view class="banner-section">
@@ -31,30 +30,30 @@
 </view>
 
 <view class="rules-card">
-  <view class="rules-title">📜 挑战规则</view>
+  <view class="rules-title">📜 挑战与奖励规则</view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>【经典闯关】共 10 题，无时间限制，稳扎稳打，答对题目越多，积分越多。</text>
+    <text>【经典闯关】共 10 题，无时间限制。只要完成即享保底 +10 积分，全对可获「完美通关」评级及最高 +25 积分！</text>
   </view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>【极限60秒】限时 60 秒，题量激增至 25 题！挑战手速极限，时间到将强制交卷。</text>
+    <text>【极限60秒】限时 60 秒，题量增至 25 题！保底 +15 积分，得分由「准确率与耗时」共同决定，最高可斩获 +45 积分与「极限王者」稀有称号！</text>
   </view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>【积分与奖励】每答对 1 题可获 1 积分用于提升称号。每日首次参与任一模式，均可额外获得 20 环保币！</text>
+    <text>【每日打卡】每日首次参与任一模式并交卷，均可额外获得 20 环保币奖励，可前往商城消费！</text>
   </view>
 </view>
 
 <view class="action-section">
   <view class="mode-btn classic-btn" bindtap="goToQuiz" data-mode="classic">
     <text class="btn-title">经典闯关</text>
-    <text class="btn-sub">无时间限制，稳扎稳打</text>
+    <text class="btn-sub">稳扎稳打，巩固知识</text>
   </view>
   
   <view class="mode-btn timed-btn" bindtap="goToQuiz" data-mode="timed">
-    <text class="btn-title">限时挑战</text>
-    <text class="btn-sub">挑战手速，惊险刺激</text>
+    <text class="btn-title">极限60秒</text>
+    <text class="btn-sub">高风险高回报，挑战极限</text>
   </view>
 </view>
 </view>
