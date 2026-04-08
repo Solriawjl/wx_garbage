@@ -1,0 +1,47 @@
+<view class="verify-page">
+  
+  <view class="header-status" wx:if="{{!isLoading}}">
+    <text class="status-text">当前共有 <text class="highlight">{{pendingOrders.length}}</text> 个待发放奖品</text>
+  </view>
+
+  <view class="order-list" wx:if="{{pendingOrders.length > 0}}">
+    <view class="order-card" wx:for="{{pendingOrders}}" wx:key="order_id">
+      
+      <view class="card-header">
+        <text class="time">申请时间：{{item.created_at}}</text>
+        <text class="status-tag">待发放</text>
+      </view>
+
+      <view class="card-body">
+        <view class="student-info">
+          <image class="avatar" src="{{item.student_avatar}}" mode="aspectFill"></image>
+          <text class="name">{{item.student_name}}</text>
+        </view>
+        
+        <view class="link-line">
+          <text class="cost">-{{item.cost}} 🌺</text>
+          <text class="arrow">→</text>
+        </view>
+
+        <view class="item-info">
+          <image class="item-img" src="{{item.item_image}}" mode="aspectFill"></image>
+          <text class="item-name">{{item.item_name}}</text>
+        </view>
+      </view>
+
+      <view class="card-footer">
+        <button class="verify-btn" bindtap="handleVerify" data-id="{{item.order_id}}" data-name="{{item.student_name}}" data-item="{{item.item_name}}">
+          确认发放奖品
+        </button>
+      </view>
+
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{pendingOrders.length === 0 && !isLoading}}">
+    <view class="empty-icon">☕</view>
+    <text class="empty-title">太棒了，全部处理完毕！</text>
+    <text class="empty-desc">老师可以休息一下啦~</text>
+  </view>
+
+</view>

@@ -1,0 +1,101 @@
+page {
+  background-color: #F4F6F9;
+  padding-bottom: 50rpx;
+}
+
+.dashboard-container {
+  display: block !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 顶部 Banner */
+.header-banner {
+  background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+  padding: 40rpx 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+.banner-title { color: #FFF; font-size: 36rpx; font-weight: bold; margin-bottom: 10rpx; }
+.banner-subtitle { color: rgba(255,255,255,0.8); font-size: 24rpx; }
+
+/* 通用卡片 */
+.card {
+  background: #FFF;
+  border-radius: 20rpx;
+  margin: 30rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+  box-sizing: border-box;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+}
+.card-title .icon { margin-right: 12rpx; font-size: 36rpx; }
+.text-danger { color: #D32F2F; }
+.sub-hint { font-size: 22rpx; color: #999; font-weight: normal; margin-left: auto; }
+
+/* 图表容器 */
+.chart-container {
+  width: 100%;
+  height: 480rpx;
+  position: relative;
+  box-sizing: border-box;
+}
+ec-canvas { width: 100%; height: 100%; display: block; }
+
+/* 高频错题区 */
+.mistake-card { border-left: 8rpx solid #D32F2F; }
+.mistake-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx dashed #eee;
+}
+.mistake-item:last-child { border-bottom: none; }
+.mistake-info { display: flex; flex-direction: column; }
+.m-name { font-size: 28rpx; font-weight: bold; color: #333; margin-bottom: 8rpx; }
+.m-correct { font-size: 24rpx; color: #4CAF50; background: #E8F5E9; padding: 4rpx 12rpx; border-radius: 6rpx; display: inline-block; }
+.m-count { font-size: 24rpx; color: #666; }
+.danger-num { color: #D32F2F; font-weight: bold; font-size: 32rpx; margin: 0 6rpx; }
+
+/* 光荣榜区 */
+.rank-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.rank-item:last-child { border-bottom: none; }
+
+.rank-badge {
+  width: 50rpx; height: 50rpx;
+  border-radius: 50%;
+  text-align: center; line-height: 50rpx;
+  font-size: 28rpx; font-weight: bold;
+  margin-right: 20rpx;
+  color: #999; background: #f5f5f5;
+}
+.rank-badge.gold { background: #FFD700; color: #FFF; box-shadow: 0 4rpx 10rpx rgba(255,215,0,0.4); }
+.rank-badge.silver { background: #E0E0E0; color: #757575; box-shadow: 0 4rpx 10rpx rgba(224,224,224,0.4); }
+.rank-badge.bronze { background: #FFB300; color: #FFF; box-shadow: 0 4rpx 10rpx rgba(255,179,0,0.4); }
+
+.rank-avatar { width: 80rpx; height: 80rpx; border-radius: 50%; margin-right: 20rpx; background: #eee; }
+.rank-info { flex: 1; display: flex; flex-direction: column; }
+.rank-name { font-size: 28rpx; font-weight: bold; color: #333; margin-bottom: 6rpx; }
+.rank-title { font-size: 22rpx; color: #00897B; background: #E0F2F1; padding: 4rpx 12rpx; border-radius: 20rpx; align-self: flex-start; }
+
+.rank-score { display: flex; flex-direction: column; align-items: flex-end; margin-right: 16rpx; }
+.score-num { font-size: 32rpx; font-weight: bold; color: #FF9800; }
+.score-label { font-size: 20rpx; color: #999; }
+.arrow { color: #ccc; font-size: 28rpx; }
+
+.loading-state { text-align: center; margin-top: 200rpx; color: #999; }
+.empty-text { text-align: center; color: #999; padding: 30rpx 0; font-size: 26rpx; }

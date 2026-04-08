@@ -1,0 +1,119 @@
+page {
+  background-color: #F4F6F9;
+  padding-bottom: 200rpx; /* 为底部按钮留出空间 */
+}
+
+.add-page {
+  padding: 30rpx;
+}
+
+.form-card {
+  background: #FFF;
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.04);
+}
+
+.form-group {
+  margin-bottom: 40rpx;
+}
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+.required { color: #E64A19; margin-left: 10rpx; }
+.hint-text { font-size: 24rpx; color: #999; margin-top: 16rpx; }
+
+/* 上传框样式 */
+.uploader-box {
+  width: 200rpx;
+  height: 200rpx;
+  border: 2rpx dashed #ccc;
+  border-radius: 16rpx;
+  background: #FAFAFA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.plus-icon { font-size: 50rpx; color: #999; margin-bottom: 10rpx; }
+.upload-text { font-size: 24rpx; color: #999; }
+.preview-img { width: 100%; height: 100%; }
+
+/* 输入框样式 */
+.input-box {
+  background: #F8F9FA;
+  height: 88rpx;
+  border-radius: 12rpx;
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  color: #333;
+  border: 1rpx solid #E0E0E0;
+}
+.textarea-box {
+  background: #F8F9FA;
+  width: 100%;
+  height: 180rpx;
+  border-radius: 12rpx;
+  padding: 20rpx 30rpx;
+  font-size: 28rpx;
+  color: #333;
+  border: 1rpx solid #E0E0E0;
+  box-sizing: border-box;
+}
+
+/* 库存切换按钮 */
+.stock-type-switch {
+  display: flex;
+  background: #F5F5F5;
+  border-radius: 12rpx;
+  padding: 6rpx;
+  margin-bottom: 20rpx;
+}
+.type-btn {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  border-radius: 8rpx;
+}
+.type-btn.active {
+  background: #FFF;
+  font-weight: bold;
+  color: #F57C00;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+.stock-input { margin-top: 20rpx; }
+
+/* 底部提交按钮 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #FFF;
+  padding: 20rpx 40rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.05);
+  z-index: 100;
+}
+.submit-btn {
+  background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
+  color: #FFF;
+  font-size: 32rpx;
+  font-weight: bold;
+  border-radius: 50rpx;
+  width: 100% !important;
+}
+.submit-btn:active { opacity: 0.9; }

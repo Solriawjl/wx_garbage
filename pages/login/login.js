@@ -130,7 +130,7 @@ Page({
     wx.setStorageSync('userId', userData.id);
     wx.setStorageSync('role', userData.role);
     wx.setStorageSync('nickname', userData.nickname || '环保小卫士');
-    wx.setStorageSync('avatarUrl', userData.avatar_url || '/images/user/head.png');
+    wx.setStorageSync('avatarUrl', userData.avatar_url || 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png');
     wx.setStorageSync('isLoggedIn', true);
     
     setTimeout(() => {
@@ -138,15 +138,13 @@ Page({
     }, 800);
   },
 
+  // 根据角色智能分流落地页
   redirectByRole(role) {
     if (role === 'teacher') {
-      wx.showModal({
-        title: '欢迎老师',
-        content: '教师专属移动看板正在开发中！',
-        showCancel: false
-      });
+      // 老师登录后，直接传送到“个人中心”展现教师工作台
+      wx.switchTab({ url: '/pages/user/index' });
     } else {
-      // 家庭端跳回首页
+      // 家庭端(学生)登录后，跳回“首页”准备学习
       wx.switchTab({ url: '/pages/index/index' });
     }
   }

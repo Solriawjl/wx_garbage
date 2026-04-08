@@ -16,7 +16,12 @@
     "pages/user/feedbackHistory",
     "pages/leaderboard/index",
     "pages/mall/mall",
-    "pages/user/redemptionHistory"
+    "pages/user/redemptionHistory",
+    "pages/user/report",
+    "pages/teacher/dashboard",
+    "pages/teacher/verify",
+    "pages/teacher/mall_manage",
+    "pages/teacher/mall_add"
   ],
   "window": {
     "backgroundTextStyle": "light",

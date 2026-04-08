@@ -1,0 +1,56 @@
+<view class="container" wx:if="{{reportData}}">
+  <view class="card header-card">
+    <view class="user-info">
+      <view class="title-box">
+        <text class="level-badge">{{reportData.basic_info.current_title}}</text>
+        <text class="beat-text">击败了全校 {{reportData.basic_info.beat_percentage}}% 的同学！</text>
+      </view>
+    </view>
+    <view class="data-row">
+      <view class="data-item">
+        <text class="num highlight">{{reportData.basic_info.total_stars}}</text>
+        <text class="label">累计环保星 🌟</text>
+      </view>
+      <view class="data-item">
+        <text class="num">{{reportData.learning_habit.recognize_count}}</text>
+        <text class="label">探索次数 📷</text>
+      </view>
+      <view class="data-item">
+        <text class="num">{{reportData.learning_habit.quiz_count}}</text>
+        <text class="label">答题次数 📝</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card chart-card">
+    <view class="card-title">✨ 四维环保能力矩阵</view>
+    <view class="chart-container">
+      <ec-canvas id="mychart-dom-radar" canvas-id="mychart-radar" ec="{{ ecRadar }}"></ec-canvas>
+    </view>
+  </view>
+
+  <view class="card chart-card">
+    <view class="card-title">📈 近7天学习打卡走势</view>
+    <view class="chart-container">
+      <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLine }}"></ec-canvas>
+    </view>
+  </view>
+
+  <view class="card summary-card">
+    <view class="card-title">💡 综合学情诊断</view>
+    
+    <view class="tag-row">
+      <view class="tag style-1">称号：{{reportData.learning_habit.preference_tag}}</view>
+      <view class="tag style-2">错题消化率：{{reportData.mistake_clearance.clear_rate * 100}}%</view>
+    </view>
+
+    <view class="ai-comment">
+      <text class="comment-icon">🤖</text>
+      <text class="comment-text">{{reportData.ai_comment}}</text>
+    </view>
+  </view>
+</view>
+
+<view class="loading-state" wx:else>
+  <text>正在生成你的专属报告...</text>
+</view>

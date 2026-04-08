@@ -1,0 +1,46 @@
+<view class="add-page">
+  <view class="form-card">
+    
+    <view class="form-group">
+      <view class="label">奖品图片 <text class="required">*</text></view>
+      <view class="uploader-box" bindtap="chooseImage">
+        <image wx:if="{{imageUrl}}" class="preview-img" src="{{imageUrl}}" mode="aspectFill"></image>
+        <view wx:else class="upload-placeholder">
+          <text class="plus-icon">➕</text>
+          <text class="upload-text">点击上传图片</text>
+        </view>
+      </view>
+      <view class="hint-text">建议上传正方形图片，展现效果更好</view>
+    </view>
+
+    <view class="form-group">
+      <view class="label">奖品名称 <text class="required">*</text></view>
+      <input class="input-box" placeholder="例如：免写一次作业卡" value="{{name}}" bindinput="onInputName" maxlength="20" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">兑换所需小红花 <text class="required">*</text></view>
+      <input class="input-box" type="number" placeholder="例如：10" value="{{pointsPrice}}" bindinput="onInputPrice" />
+    </view>
+
+    <view class="form-group">
+      <view class="label">奖品描述 (选填)</view>
+      <textarea class="textarea-box" placeholder="向孩子们介绍一下这个神秘大奖吧..." value="{{desc}}" bindinput="onInputDesc" maxlength="100"></textarea>
+    </view>
+
+    <view class="form-group">
+      <view class="label">库存设置</view>
+      <view class="stock-type-switch">
+        <view class="type-btn {{stockType === 'unlimited' ? 'active' : ''}}" bindtap="changeStockType" data-type="unlimited">无限量</view>
+        <view class="type-btn {{stockType === 'limited' ? 'active' : ''}}" bindtap="changeStockType" data-type="limited">限量</view>
+      </view>
+      
+      <input wx:if="{{stockType === 'limited'}}" class="input-box stock-input" type="number" placeholder="请输入库存数量" value="{{stockNum}}" bindinput="onInputStock" />
+    </view>
+
+  </view>
+
+  <view class="bottom-bar">
+    <button class="submit-btn" bindtap="submitForm">立即发布</button>
+  </view>
+</view>

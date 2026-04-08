@@ -32,7 +32,7 @@ Page({
     isCorrect: false,     // 用户是否选对
 
     mode: 'classic',      // 默认经典模式
-    totalTime: 60,        // 🚀 新增：限时模式的总时长 (秒)
+    totalTime: 60,        // 限时模式的总时长 (秒)
     timeLeft: 60,         // 剩余时间
     timerId: null         // 定时器句柄
   },
@@ -58,6 +58,7 @@ Page({
             name: q.item_name,
             imageUrl: q.image_url || '/images/null.png',
             category: this.data.categoryMap[q.correct_category_id],
+            categoryId: q.correct_category_id, // 🌟 核心修改 1：保留原始整数ID用于雷达图统计
             correctName: q.correct_category_name
           }));
 
@@ -66,12 +67,12 @@ Page({
             totalQuestions: mappedQuestions.length,
             currentIndex: 0,
             currentQuestion: mappedQuestions[0],
-            score: 0, // 初始化答对题数为 0
+            score: 0, 
             wrongList: [],
             isAnswering: false,
             showAnswer: false,
             selectedId: '',
-            timeLeft: this.data.totalTime // 初始化倒计时
+            timeLeft: this.data.totalTime 
           });
           
           if (this.data.mode === 'timed') {
@@ -99,7 +100,13 @@ Page({
     const correctId = this.data.currentQuestion.category;
     const isRight = (userSelectedId === correctId);
 
+    // 🌟 核心修改 2：把用户的答题结果记录到这道题的对象里，方便最后交卷时汇总
+    let updatedQuestions = this.data.questions;
+    updatedQuestions[this.data.currentIndex].userSelectedId = userSelectedId;
+    updatedQuestions[this.data.currentIndex].isRight = isRight;
+
     this.setData({
+      questions: updatedQuestions,
       isAnswering: true,
       showAnswer: true,
       selectedId: userSelectedId,
@@ -173,24 +180,49 @@ Page({
       return;
     }
 
-    // 🚀 核心修改 1：计算实际耗时
     let timeUsed = 0;
     if (this.data.mode === 'timed') {
       timeUsed = this.data.totalTime - this.data.timeLeft;
       if (timeUsed < 0) timeUsed = this.data.totalTime;
     }
 
-    // 🚀 核心修改 2：组装包含时间与模式的新版答题卡
+    // ==========================================
+    // 🌟 核心修改 3：交卷前，聚合四大分类的雷达图统计数据
+    // 1:可回收, 2:有害, 3:厨余, 4:其他
+    // ==========================================
+    let categoryStatsMap = {
+      1: { category_type: 1, total: 0, correct: 0 },
+      2: { category_type: 2, total: 0, correct: 0 },
+      3: { category_type: 3, total: 0, correct: 0 },
+      4: { category_type: 4, total: 0, correct: 0 }
+    };
+
+    this.data.questions.forEach(q => {
+      // 只统计用户真正答过（点过选项）的题，防止限时模式下时间到了还有题没做
+      if (q.userSelectedId) {
+        let cType = q.categoryId;
+        if (categoryStatsMap[cType]) {
+          categoryStatsMap[cType].total += 1;
+          if (q.isRight) {
+            categoryStatsMap[cType].correct += 1;
+          }
+        }
+      }
+    });
+
+    // 过滤掉没有遇到过的分类
+    const finalCategoryStats = Object.values(categoryStatsMap).filter(stat => stat.total > 0);
+
     const payload = {
       user_id: parseInt(userId),
-      score: 0,                           // 后端已废弃前端传的分数，这里传 0 即可
-      correct_count: this.data.score,     // 前端的 score 实际代表了答对的题数
+      score: 0,                           
+      correct_count: this.data.score,     
       wrong_answers: this.data.wrongList,
-      
       mode: this.data.mode,
       total_count: this.data.totalQuestions,
       time_used: timeUsed,
-      total_time: this.data.totalTime
+      total_time: this.data.totalTime,
+      category_stats: finalCategoryStats // 👈 把聚合好的分类数据发给后端
     };
 
     wx.request({
@@ -202,7 +234,6 @@ Page({
         if (res.data.code === 200) {
           const resData = res.data.data;
           
-          // 🚀 核心修改 3：使用后端返回的真实得分 (earned_score)
           wx.setStorageSync('challengeScore', resData.earned_score); 
           wx.setStorageSync('challengeWrongList', this.data.wrongList);
           wx.setStorageSync('totalScore', resData.total_score); 

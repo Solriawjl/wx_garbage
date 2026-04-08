@@ -1,0 +1,81 @@
+<view class="dashboard-container" wx:if="{{dashboardData}}">
+  
+  <view class="header-banner">
+    <text class="banner-title">数据驱动教学，让环保更有趣</text>
+    <text class="banner-subtitle">今日全校学情实时监控中...</text>
+  </view>
+
+  <view class="card">
+    <view class="card-title">
+      <text class="icon">🎯</text>
+      <text>全校分类能力矩阵 (平均准确率)</text>
+    </view>
+    <view class="chart-container">
+      <ec-canvas id="mychart-dom-radar" canvas-id="mychart-radar" ec="{{ ecRadar }}"></ec-canvas>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">
+      <text class="icon">📈</text>
+      <text>近7天学习活跃度走势</text>
+    </view>
+    <view class="chart-container">
+      <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLine }}"></ec-canvas>
+    </view>
+  </view>
+
+  <view class="card mistake-card">
+    <view class="card-title text-danger">
+      <text class="icon">⚠️</text>
+      <text>高频易错知识点 Top 5</text>
+    </view>
+    <view class="mistake-list">
+      <block wx:if="{{dashboardData.top_mistakes.length > 0}}">
+        <view class="mistake-item" wx:for="{{dashboardData.top_mistakes}}" wx:key="item_name">
+          <view class="mistake-info">
+            <text class="m-name">{{item.item_name}}</text>
+            <text class="m-correct">应为：{{item.correct_answer}}</text>
+          </view>
+          <view class="m-count">全班答错 <text class="danger-num">{{item.error_count}}</text> 次</view>
+        </view>
+      </block>
+      <view class="empty-text" wx:else>太棒了，目前没有高频错题！</view>
+    </view>
+  </view>
+
+  <view class="card leaderboard-card">
+    <view class="card-title">
+      <text class="icon">👑</text>
+      <text>环保小卫士光荣榜 Top 10</text>
+      <text class="sub-hint">(点击可查看个人报告)</text>
+    </view>
+    <view class="leaderboard-list">
+      <view class="rank-item" wx:for="{{dashboardData.leaderboard}}" wx:key="id" bindtap="viewStudentReport" data-uid="{{item.id}}">
+        
+        <view class="rank-badge {{index == 0 ? 'gold' : (index == 1 ? 'silver' : (index == 2 ? 'bronze' : 'normal'))}}">
+          {{index + 1}}
+        </view>
+        
+        <image class="rank-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+        
+        <view class="rank-info">
+          <text class="rank-name">{{item.nickname}}</text>
+          <text class="rank-title">{{item.title}}</text>
+        </view>
+
+        <view class="rank-score">
+          <text class="score-num">{{item.score}}</text>
+          <text class="score-label">环保星</text>
+        </view>
+        
+        <text class="arrow">></text>
+      </view>
+    </view>
+  </view>
+
+</view>
+
+<view class="loading-state" wx:else>
+  <text>正在生成班级大盘数据...</text>
+</view>

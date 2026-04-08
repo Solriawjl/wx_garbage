@@ -1,0 +1,147 @@
+page {
+  background-color: #F4F6F9;
+  padding-bottom: 40rpx;
+}
+
+/* 🚀 核心修复：破解 app.wxss 中的 flex 陷阱，强制撑满 */
+.container {
+  padding: 30rpx;
+  display: block !important; 
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* 通用卡片样式 */
+.card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  /* 🚀 核心修复：强制卡片宽度为100%，且 padding 不往外扩 */
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+/* 头部卡片 */
+.header-card {
+  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+  color: #FFF;
+}
+
+.title-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.level-badge {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.2);
+}
+
+.beat-text {
+  font-size: 26rpx;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6rpx 20rpx;
+  border-radius: 30rpx;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.2);
+  padding-top: 20rpx;
+}
+
+.data-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.data-item .num {
+  font-size: 44rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.data-item .num.highlight {
+  color: #FFD54F;
+}
+
+.data-item .label {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+/* 图表容器 */
+.chart-container {
+  width: 100%;
+  height: 500rpx;
+  position: relative;
+  box-sizing: border-box;
+  margin-top: 10rpx;
+}
+
+/* 强制让 ECharts 组件 100% 贴合父容器 */
+ec-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 总结区 */
+.tag-row {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.tag {
+  padding: 10rpx 24rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+.style-1 { background: #E3F2FD; color: #1976D2; }
+.style-2 { background: #FCE4EC; color: #C2185B; }
+
+.ai-comment {
+  background: #FFF8E1;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: flex-start;
+}
+
+.comment-icon {
+  font-size: 40rpx;
+  margin-right: 16rpx;
+  margin-top: 4rpx;
+}
+
+.comment-text {
+  font-size: 28rpx;
+  color: #5D4037;
+  line-height: 1.6;
+}
+
+.loading-state {
+  text-align: center;
+  margin-top: 200rpx;
+  color: #999;
+}

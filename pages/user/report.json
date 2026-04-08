@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "我的环保成长报告",
+  "navigationBarBackgroundColor": "#4CAF50",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "ec-canvas": "/components/ec-canvas/ec-canvas"
+  }
+}

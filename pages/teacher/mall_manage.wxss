@@ -1,0 +1,108 @@
+page {
+  background-color: #F4F6F9;
+}
+
+.manage-page {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 顶部概览 */
+.header-overview {
+  display: flex;
+  background: #FFF;
+  padding: 30rpx 0;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.03);
+}
+.overview-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1rpx solid #EEE;
+}
+.overview-item:last-child { border-right: none; }
+.overview-item .num { font-size: 40rpx; font-weight: bold; color: #333; margin-bottom: 10rpx; }
+.overview-item .num.highlight { color: #F57C00; }
+.overview-item .label { font-size: 24rpx; color: #999; }
+
+/* 列表区 */
+.item-list {
+  padding: 20rpx;
+}
+.item-card {
+  display: flex;
+  background: #FFF;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.04);
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+/* 下架状态的卡片变灰 */
+.inactive-card {
+  opacity: 0.6;
+  background: #FAFAFA;
+}
+
+.item-img {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 16rpx;
+  background: #eee;
+  margin-right: 30rpx;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.item-name { font-size: 30rpx; font-weight: bold; color: #333; margin-bottom: 10rpx; }
+.item-price { font-size: 28rpx; color: #E64A19; font-weight: bold; margin-bottom: 8rpx; }
+.item-stock { font-size: 24rpx; color: #999; }
+
+.item-control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+.status-text { font-size: 22rpx; margin-bottom: 12rpx; font-weight: bold; }
+.text-active { color: #4CAF50; }
+.text-inactive { color: #999; }
+
+/* 空状态 */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; padding-top: 150rpx;
+}
+.empty-icon { font-size: 100rpx; margin-bottom: 30rpx; }
+.empty-title { font-size: 32rpx; font-weight: bold; color: #333; margin-bottom: 10rpx; }
+.empty-desc { font-size: 26rpx; color: #999; }
+
+/* 底部操作栏 */
+.bottom-space { height: 160rpx; } /* 防止列表被底部按钮挡住 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #FFF;
+  padding: 20rpx 40rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.05);
+  z-index: 100;
+}
+.add-btn {
+  background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
+  color: #FFF;
+  font-size: 32rpx;
+  font-weight: bold;
+  border-radius: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-icon { margin-right: 10rpx; font-size: 34rpx; }

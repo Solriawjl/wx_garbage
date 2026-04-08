@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "班级学情大盘",
+  "navigationBarBackgroundColor": "#2E7D32",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "ec-canvas": "/components/ec-canvas/ec-canvas"
+  }
+}

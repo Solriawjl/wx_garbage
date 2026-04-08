@@ -1,0 +1,49 @@
+<view class="manage-page">
+
+<view class="header-overview" wx:if="{{!isLoading}}">
+  <view class="overview-item">
+    <text class="num">{{itemList.length}}</text>
+    <text class="label">全部奖品</text>
+  </view>
+  <view class="overview-item">
+    <text class="num highlight">{{activeCount}}</text>
+    <text class="label">上架中</text>
+  </view>
+</view>
+
+<view class="item-list" wx:if="{{itemList.length > 0}}">
+  <view class="item-card {{!item.is_active ? 'inactive-card' : ''}}" wx:for="{{itemList}}" wx:key="id">
+    
+    <image class="item-img" src="{{item.image_url}}" mode="aspectFill"></image>
+    
+    <view class="item-info">
+      <text class="item-name">{{item.name}}</text>
+      <text class="item-price">{{item.points_price}} 小红花</text>
+      <text class="item-stock">库存：{{item.stock === -1 ? '无限量' : item.stock + ' 件'}}</text>
+    </view>
+
+    <view class="item-control">
+      <text class="status-text {{item.is_active ? 'text-active' : 'text-inactive'}}">
+        {{item.is_active ? '已上架' : '已下架'}}
+      </text>
+      <switch checked="{{item.is_active}}" color="#F57C00" bindchange="onToggleChange" data-id="{{item.id}}" />
+    </view>
+
+  </view>
+</view>
+
+<view class="empty-state" wx:if="{{itemList.length === 0 && !isLoading}}">
+  <text class="empty-icon">📦</text>
+  <text class="empty-title">库房空空如也</text>
+  <text class="empty-desc">赶快发布一些有趣的奖品激励孩子们吧！</text>
+</view>
+
+<view class="bottom-space"></view>
+
+<view class="bottom-bar">
+  <button class="add-btn" bindtap="goToAddMallItem">
+    <text class="add-icon">➕</text> 发布新奖品
+  </button>
+</view>
+
+</view>

@@ -2,6 +2,7 @@
 Page({
   data: {
     isLoggedIn: false,
+    role: 'student', // 默认身份为学生
     avatarUrl: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png',
     nickname: '',
     totalScore: 0,
@@ -13,7 +14,9 @@ Page({
 
   onShow: function () {
     const isLoggedIn = wx.getStorageSync('isLoggedIn') || false;
-    this.setData({ isLoggedIn });
+    // 每次页面显示时，从缓存中读取当前用户的真实身份
+    const role = wx.getStorageSync('role') || 'student';
+    this.setData({ isLoggedIn, role});
 
     if (isLoggedIn) {
       const userId = wx.getStorageSync('userId');
@@ -108,7 +111,7 @@ Page({
     }
   },
 
-  // 🚀 核心修复：函数名对齐 onShow 中的调用，并完善 GET 请求参数拼接
+  // 函数名对齐 onShow 中的调用，并完善 GET 请求参数拼接
   getUserDashboardData: function(userId) {
     wx.request({
       url: `http://192.168.0.126:8000/api/user/info?user_id=${userId}`, 
@@ -156,6 +159,14 @@ Page({
     });
   },
   
+  // 前往学情成长报告页面
+  goToReport: function() {
+    if (!this.checkLoginStatus()) return; // 必须登录才能看报告
+    wx.navigateTo({ 
+      url: '/pages/user/report'  // 这里确保路径跟你新建的 report 页面路径一致
+    });
+  },
+
   goToHistory: function(e) {
     if (!this.checkLoginStatus()) return;
     const type = e.currentTarget.dataset.type; 
@@ -242,5 +253,22 @@ Page({
         }
       }
     });
-  }
+  },
+  // ==========================================
+  // 老师端专属跳转路由
+  // ==========================================
+  goToTeacherDashboard: function() {
+    if (!this.checkLoginStatus()) return;
+    wx.navigateTo({ url: '/pages/teacher/dashboard' });
+  },
+
+  goToTeacherVerify: function() {
+    if (!this.checkLoginStatus()) return;
+    wx.navigateTo({ url: '/pages/teacher/verify' });
+  },
+
+  goToTeacherMallManage: function() {
+    if (!this.checkLoginStatus()) return;
+    wx.navigateTo({ url: '/pages/teacher/mall_manage' });
+  },
 })
