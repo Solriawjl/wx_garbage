@@ -28,7 +28,7 @@
 
         <view class="card-header">
           <view class="score-box">
-            <text class="score-label">获得积分</text>
+            <text class="score-label">获得环保星</text>
             <text class="score-num">+{{item.score}}</text>
           </view>
           

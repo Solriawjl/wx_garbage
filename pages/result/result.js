@@ -28,7 +28,7 @@ Page({
     showTipModal: false,
     currentTipTitle: '',
     currentTipContent: '',
-    // 控制积分掉落弹窗的变量
+    // 控制环保星掉落弹窗的变量
     rewardPoints: 0,
     showRewardPopup: false
   },
@@ -135,14 +135,14 @@ Page({
         processMethod: aiResult.process_method || '',
         subGuidance: (aiResult.sub_guidance || '').replace(/\\n/g, '\n'),
         recommendItems: aiResult.recommend_items || [],
-        // 从后端结果中读取本次获得的积分
+        // 从后端结果中读取本次获得的环保星
         rewardPoints: currentReward,
         showRewardPopup: false
       });
       wx.removeStorageSync('tempAiResult');
       // 触发语音：AI 识别成功 (没有具体物品名，只报大类)
       this.generateAndPlayVoice('', this.data.categoryName, this.data.putGuidance, true, false);
-      // 如果本次获得了积分，延迟 0.5 秒触发华丽弹窗
+      // 如果本次获得了环保星，延迟 0.5 秒触发华丽弹窗
       if (currentReward > 0) {
         setTimeout(() => {
           this.setData({ showRewardPopup: true });

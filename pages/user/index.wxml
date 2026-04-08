@@ -30,37 +30,37 @@
 <view class="data-board">
   <view class="data-item">
       <text class="data-num">{{isLoggedIn ? totalScore : '-'}}</text>
-      <text class="data-label">挑战积分</text>
+      <text class="data-label">累计环保星</text>
     </view>
 
     <view class="data-divider"></view>
     
     <view class="data-item">
       <text class="data-num">{{isLoggedIn ? ecoCoin : '-'}}</text>
-      <text class="data-label">环保币</text>
+      <text class="data-label">可用小红花</text>
     </view>
   
   <view class="data-divider"></view>
   
   <view class="data-item">
     <text class="data-num">{{isLoggedIn ? recognizeCount : '-'}}</text>
-    <text class="data-label">识别次数</text>
+    <text class="data-label">探索次数</text>
   </view>
   
   <view class="data-divider"></view>
   
   <view class="data-item">
     <text class="data-num">{{isLoggedIn ? challengeCount : '-'}}</text>
-    <text class="data-label">通关挑战</text>
+    <text class="data-label">挑战次数</text>
   </view>
 </view>
 
 <view class="mall-entry-card" bindtap="goToMall">
   <view class="mall-entry-left">
-    <image class="mall-icon" src="/images/tab_quiz_active.png" mode="aspectFit"></image>
+    <image class="mall-icon" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/red_flower.png" mode="aspectFit"></image>
     <view class="mall-text">
-      <text class="mall-title">环保币兑换商城</text>
-      <text class="mall-desc">用环保币换取专属奖励！</text>
+      <text class="mall-title">小红花兑换商城</text>
+      <text class="mall-desc">用小红花换取专属奖励！</text>
     </view>
   </view>
   <view class="mall-entry-right">
@@ -73,7 +73,7 @@
   <view class="menu-item" bindtap="goToHistory" data-type="recognize">
     <view class="menu-left">
       <text class="menu-icon">🔍</text>
-      <text class="menu-text">识别历史</text>
+      <text class="menu-text">我的探索日记</text>
     </view>
     <text class="menu-arrow">></text>
   </view>
@@ -81,7 +81,7 @@
   <view class="menu-item" bindtap="goToHistory" data-type="challenge">
     <view class="menu-left">
       <text class="menu-icon">🏆</text>
-      <text class="menu-text">挑战历史</text>
+      <text class="menu-text">挑战记录</text>
     </view>
     <text class="menu-arrow">></text>
   </view>
@@ -89,7 +89,7 @@
   <view class="menu-item" bindtap="goToWrongBook">
     <view class="menu-left">
       <text class="menu-icon">📓</text>
-      <text class="menu-text">我的错题本</text>
+      <text class="menu-text">打怪错题本</text>
     </view>
     <text class="menu-arrow">></text>
   </view>

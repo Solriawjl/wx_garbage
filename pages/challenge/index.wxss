@@ -84,7 +84,7 @@
   font-weight: 900; 
   text-shadow: 0 4rpx 12rpx rgba(255, 152, 0, 0.35); /* 王者专属发光特效 */
 }
-/* 积分使用绿色高亮 */
+/* 环保星使用绿色高亮 */
 .score-highlight { color: #4CAF50; font-size: 44rpx;}
 
 .divider {

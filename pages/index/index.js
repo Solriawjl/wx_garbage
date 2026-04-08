@@ -36,22 +36,23 @@ Page({
     }
   },
 
-  // 对齐个人页的数据存储逻辑，使用 userId 专属缓存
+  // 🚀 【核心修改位置】：对齐登录和个人页的数据存储逻辑，使用统一的缓存键名
   checkUserInfo: function() {
     const userId = wx.getStorageSync('userId');
+    const isLoggedIn = wx.getStorageSync('isLoggedIn');
     
-    // 如果存在 userId，说明处于登录状态
-    if (userId) {
-      // 用个人页保存时一模一样的钥匙去取数据
-      const savedAvatar = wx.getStorageSync(`avatar_${userId}`);
-      const savedNickname = wx.getStorageSync(`nickname_${userId}`);
+    // 如果存在 userId 且处于登录状态
+    if (userId && isLoggedIn) {
+      // ⚠️ 修改：用全局统一的键名去取数据（不再加 userId 后缀）
+      const savedAvatar = wx.getStorageSync('avatarUrl');
+      const savedNickname = wx.getStorageSync('nickname');
       
       // 只要存了头像或昵称中的任意一个，我们就把它展示出来
       if (savedAvatar || savedNickname) {
         this.setData({
           userInfo: {
-            avatarUrl: savedAvatar || '', // 取不到就传空，WXML 会自动降级显示小绿芽
-            nickName: savedNickname || '' // 取不到就传空，WXML 会自动显示"环保小卫士"
+            avatarUrl: savedAvatar || '', // 取不到就传空，WXML 会自动降级显示小绿芽或默认头像
+            nickName: savedNickname || '环保小卫士' // 取不到就传空，兜底显示"环保小卫士"
           }
         });
       } else {
@@ -285,15 +286,15 @@ Page({
             if (res.data.code === 200) {
               const taskData = res.data.data;
               
-              // 只有当获得了实际积分（即今天第一次读）时才弹窗表扬
+              // 只有当获得了实际环保星（即今天第一次读）时才弹窗表扬
               if (taskData.reward_points > 0) {
-                // 更新本地缓存，防止个人中心的段位和积分没同步刷新
+                // 更新本地缓存，防止个人中心的段位和环保星没同步刷新
                 wx.setStorageSync('totalScore', taskData.total_score);
                 wx.setStorageSync('currentTitle', taskData.title);
 
                 // 弹出让小朋友极度舒适的加分提示！
                 wx.showToast({
-                  title: `每日阅读 +${taskData.reward_points} 环保币`,
+                  title: `每日阅读 +${taskData.reward_points} 朵小红花`,
                   icon: 'success',
                   duration: 2500
                 });

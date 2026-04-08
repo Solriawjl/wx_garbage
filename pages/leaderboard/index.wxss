@@ -56,7 +56,7 @@ page { background-color: #f5f7fa; }
 /* 卫士/默认：绿底绿字 */
 .title-guard, .title-default { background-color: #e8f5e9; color: #388e3c; border: 1px solid #c8e6c9; }
 
-/* 积分区域 */
+/* 环保星区域 */
 .score-box { display: flex; align-items: baseline; }
 .score-label { font-size: 24rpx; color: #999; font-weight: bold; }
 

@@ -6,7 +6,7 @@ Page({
   },
 
   onShow: function () {
-    // 商城只认环保币
+    // 商城只认小红花
     const currentScore = wx.getStorageSync('ecoCoin') || 0; 
     this.setData({ currentPoints: currentScore });
     this.loadMallItems();
@@ -47,9 +47,9 @@ Page({
       return;
     }
 
-    // 2. 前端基础校验：积分是否足够
+    // 2. 前端基础校验：小红花是否足够
     if (currentPoints < item.points) {
-      wx.showToast({ title: '积分不足，快去赚积分吧！', icon: 'none' });
+      wx.showToast({ title: '小红花不足，快去赚小红花吧！', icon: 'none' });
       return;
     }
 
@@ -62,7 +62,7 @@ Page({
     // 3. 弹出确认框
     wx.showModal({
       title: '🎁 确认兑换',
-      content: `将消耗 ${item.points} 积分兑换【${item.name}】，是否继续？`,
+      content: `将消耗 ${item.points} 小红花兑换【${item.name}】，是否继续？`,
       confirmColor: '#4CAF50',
       success: (res) => {
         if (res.confirm) {
@@ -81,7 +81,7 @@ Page({
               if (redeemRes.data.code === 200) {
                 wx.showToast({ title: '兑换成功！', icon: 'success', duration: 2500 });
                 
-                // 获取后端返回的最新积分和称号，更新本地状态
+                // 获取后端返回的最新小红花和称号，更新本地状态
                 const newData = redeemRes.data.data;
                 this.setData({ currentPoints: newData.new_score });
                 wx.setStorageSync('totalScore', newData.new_score);

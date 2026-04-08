@@ -1,9 +1,55 @@
-<!--pages/login/login.wxml-->
 <view class="login-container">
-  <image class="logo" src="/images/login.png"></image>
-  <view class="title">智分投放</view>
-  <view class="subtitle">让垃圾分类更智能</view>
   
-  <button class="login-btn" bindtap="handleLogin">微信一键登录</button>
-  <view class="tips">登录后即可体验完整智能功能</view>
+  <view class="header-section">
+    <image class="logo" src="/images/login.png" mode="aspectFill"></image>
+    <view class="title">智分小卫士</view>
+    <view class="subtitle">选择你的专属身份，开启环保之旅！</view>
+  </view>
+  
+  <view class="role-section">
+    <view class="role-card student-card" hover-class="card-hover" bindtap="selectStudent">
+      <view class="card-left">
+        <view class="icon-bg">🌱</view>
+      </view>
+      <view class="card-middle">
+        <view class="role-name">环保小卫士</view>
+        <view class="role-desc">我是学生或家长</view>
+      </view>
+      <view class="card-right">
+        <view class="arrow">进入 ❯</view>
+      </view>
+    </view>
+    
+    <view class="role-card teacher-card" hover-class="card-hover" bindtap="selectTeacher">
+      <view class="card-left">
+        <view class="icon-bg teacher-icon-bg">👩‍🏫</view>
+      </view>
+      <view class="card-middle">
+        <view class="role-name">指导老师</view>
+        <view class="role-desc">需专属邀请码验证</view>
+      </view>
+      <view class="card-right">
+        <view class="arrow">验证 ❯</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer-section">
+    <view class="tips">微信将安全授权并与该身份绑定</view>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showInviteModal}}">
+    <view class="modal-content">
+      <view class="modal-title">教师身份验证</view>
+      <view class="modal-subtitle">请输入学校分配的教师邀请码</view>
+      
+      <input class="modal-input" placeholder="例如: TCH-2026" placeholder-class="input-placeholder" bindinput="inputInviteCode" value="{{inviteCode}}"/>
+      
+      <view class="modal-btns">
+        <view class="btn cancel-btn" bindtap="cancelInvite">取消</view>
+        <view class="btn confirm-btn" bindtap="confirmInvite">确定绑定</view>
+      </view>
+    </view>
+  </view>
+
 </view>

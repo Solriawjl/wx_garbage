@@ -153,7 +153,7 @@ Page({
     
     wx.showModal({
       title: '⚠️ 扣分预警',
-      content: `删除该记录将同步扣除您在此局获得的 ${item.score} 积分，可能会导致环保称号降级！确定要删除吗？`,
+      content: `删除该记录将同步扣除您在此局获得的 ${item.score} 环保星，可能会导致环保称号降级！确定要删除吗？`,
       confirmColor: '#F44336',
       success: (res) => {
         if (res.confirm) {
@@ -188,7 +188,7 @@ Page({
   clearAll: function() {
     wx.showModal({
       title: '🚨 危险操作预警',
-      content: '清空历史将扣除【全部】记录产生的积分，包含其他模式中隐藏的记录！确定要继续吗？',
+      content: '清空历史将扣除【全部】记录产生的环保星，包含其他模式中隐藏的记录！确定要继续吗？',
       confirmColor: '#F44336',
       success: (res) => {
         if (res.confirm) {

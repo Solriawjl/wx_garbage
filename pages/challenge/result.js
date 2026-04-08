@@ -12,7 +12,7 @@ const PERFORMANCE_COLORS = {
 Page({
   data: {
     currentScore: 0,   // 本次得分
-    totalScore: 0,     // 累计积分
+    totalScore: 0,     // 累计环保星
     performance: '',         // 表现
     titleColor: '',    // 环保挑战卡片的动态渐变色
     wrongList: [],      // 错题本
@@ -43,6 +43,16 @@ Page({
       wrongList: wrongs,
       currentMode: mode
     });
+    // 👇 新增：如果获得了每日首战奖励，且不是在查看历史记录，则弹窗提示！
+    if (ecoCoin > 0 && !fromHistory) {
+      setTimeout(() => {
+        wx.showToast({
+          title: `每日首战奖励\n +${ecoCoin} 朵小红花🌺`,
+          icon: 'success',
+          duration: 2500
+        });
+      }, 600); // 延迟0.6秒，等页面加载完成和卡片渲染完毕后再弹出
+    }
   },
 
   // 处理左侧按钮点击事件 (核心逻辑修正)

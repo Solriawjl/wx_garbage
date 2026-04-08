@@ -22,7 +22,7 @@
     </view>
     
     <view class="confidence-tag" wx:else>
-      <text class="icon-ai">💡</text> 智能分析确定指数：{{accuracy}}%
+      <text class="icon-ai">💡</text> 机器小助手的确定程度：{{accuracy}}%
     </view>
   </view>
 </view>
@@ -33,7 +33,7 @@
 </view>
 
 <view class="desc-card white-card">
-  <view class="tip-title">💡 投放前置准备</view>
+  <view class="tip-title">💡 投放小贴士</view>
   <view class="desc-text">{{putGuidance}}</view>
   
   <block wx:if="{{subGuidance}}">
@@ -97,7 +97,7 @@
     <image class="coin-icon" src="/images/tab_quiz_active.png"></image> 
     <view class="reward-text-group">
       <text class="reward-title">达成！每日首拍打卡</text>
-      <text class="reward-score">+{{rewardPoints}} 环保币</text>
+      <text class="reward-score">+{{rewardPoints}} 小红花</text>
     </view>
   </view>
 </view>

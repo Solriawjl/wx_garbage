@@ -154,7 +154,7 @@
 .item-time { font-size: 24rpx; color: #999; }
 .item-cost { font-size: 28rpx; font-weight: bold; color: #FF9800; }
 
-/* 已退货的积分变灰 */
+/* 已退货的环保星变灰 */
 .item-cost.cancelled-cost {
   color: #bdbdbd;
 }

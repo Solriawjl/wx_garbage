@@ -5,7 +5,7 @@
   padding-bottom: 60rpx;
 }
 
-/* --- 1. 顶部积分资产看板 --- */
+/* --- 1. 顶部环保星资产看板 --- */
 .assets-header {
   width: 100%;
   height: 380rpx;

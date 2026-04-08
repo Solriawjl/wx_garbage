@@ -5,7 +5,7 @@ Page({
     avatarUrl: 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png',
     nickname: '',
     totalScore: 0,
-    ecoCoin: 0, // 🚀 新增：初始化环保币字段，防止渲染报错
+    ecoCoin: 0, // 🚀 初始化小红花字段
     userTitle: '未登录',
     recognizeCount: 0, 
     challengeCount: 0  
@@ -18,22 +18,21 @@ Page({
     if (isLoggedIn) {
       const userId = wx.getStorageSync('userId');
       if (!userId) {
-        // 如果虽然标记了已登录，但丢了 userId，直接退回登录页兜底
         wx.showToast({ title: '登录状态异常，请重新登录', icon: 'none' });
         setTimeout(() => { wx.reLaunch({ url: '/pages/login/login' }); }, 1000);
       } else {
-        // 1. 读取该账号专属的缓存头像和昵称！
-        const savedAvatar = wx.getStorageSync(`avatar_${userId}`);
-        const savedNickname = wx.getStorageSync(`nickname_${userId}`);
+        // 统一使用 'avatarUrl' 和 'nickname' 读取缓存
+        const savedAvatar = wx.getStorageSync('avatarUrl');
+        const savedNickname = wx.getStorageSync('nickname');
         
         // 只要有专属缓存就显示，没有才显示默认
         this.setData({ 
           avatarUrl: savedAvatar ? savedAvatar : 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/head.png',
-          nickname: savedNickname ? savedNickname : ''
+          nickname: savedNickname ? savedNickname : '环保小卫士'
         });
 
-        // 2. 拉取云端积分数据
-        this.fetchUserData(userId);
+        // 2. 从后端获取最新的环保星和统计数据
+        this.getUserDashboardData(userId);
       }
     }
   },
@@ -47,13 +46,13 @@ Page({
     
     const userId = wx.getStorageSync('userId');
     if (userId) {
-      // 1. 存入专属本地缓存兜底
-      wx.setStorageSync(`avatar_${userId}`, avatarUrl);
+      // 🚀 修复点：使用统一的全局键名存入本地缓存
+      wx.setStorageSync('avatarUrl', avatarUrl);
       
-      // 2. 显示上传中的提示
+      // 显示上传中的提示
       wx.showLoading({ title: '同步云端中...', mask: true });
       
-      // 3. 将真实的图片文件上传给 Python 后端
+      // 将真实的图片文件上传给 Python 后端
       wx.uploadFile({
         url: 'http://192.168.0.126:8000/api/user/update_avatar', 
         filePath: avatarUrl,
@@ -66,7 +65,8 @@ Page({
           const backendData = JSON.parse(res.data);
           if (backendData.code === 200) {
             const realCloudUrl = backendData.data.avatar_url;
-            wx.setStorageSync(`avatar_${userId}`, realCloudUrl);
+            // 🚀 修复点：使用统一键名覆盖为云端真实 URL
+            wx.setStorageSync('avatarUrl', realCloudUrl);
             wx.showToast({ title: '头像已同步', icon: 'success' });
           } else {
             wx.showToast({ title: '头像同步失败', icon: 'error' });
@@ -89,7 +89,8 @@ Page({
     
     const userId = wx.getStorageSync('userId');
     if (userId) {
-      wx.setStorageSync(`nickname_${userId}`, value);
+      // 🚀 修复点：使用统一的全局键名存入本地缓存
+      wx.setStorageSync('nickname', value);
       
       wx.request({
         url: 'http://192.168.0.126:8000/api/user/update_nickname',
@@ -107,8 +108,8 @@ Page({
     }
   },
 
-  // 🚀 核心修复：拉取用户数据
-  fetchUserData: function(userId) {
+  // 🚀 核心修复：函数名对齐 onShow 中的调用，并完善 GET 请求参数拼接
+  getUserDashboardData: function(userId) {
     wx.request({
       url: `http://192.168.0.126:8000/api/user/info?user_id=${userId}`, 
       method: 'GET',
@@ -116,22 +117,24 @@ Page({
         if (res.data.code === 200) {
           const info = res.data.data; // 后端返回的数据体
           
-          // 🚀 修复点：将 userData.eco_coin 全部修正为 info.eco_coin
           this.setData({
             totalScore: info.total_score,
             ecoCoin: info.eco_coin, 
-            userTitle: info.title,
+            userTitle: info.title || '环保新手',
             recognizeCount: info.recognize_count,
             challengeCount: info.challenge_count
           });
           
+          // 同步最新环保星到缓存，以便其他页面（如商城、首页）使用
           wx.setStorageSync('ecoCoin', info.eco_coin);
           wx.setStorageSync('totalScore', info.total_score);
-          wx.setStorageSync('currentTitle', info.title);
+          wx.setStorageSync('currentTitle', info.title || '环保新手');
+        } else {
+          console.error("后端返回异常", res.data.message);
         }
       },
       fail: (err) => {
-        console.error("获取用户数据失败", err);
+        console.error("获取用户大盘数据失败", err);
       }
     });
   },
@@ -145,7 +148,7 @@ Page({
     return true;
   },
   
-  // 前往积分兑换商城
+  // 前往环保星兑换商城
   goToMall: function() {
     if (!this.checkLoginStatus()) return;
     wx.navigateTo({
@@ -181,27 +184,36 @@ Page({
     });
   },
 
-  // 清除缓存：保护云端数据
+  // 清理缓存 (防掉线保护机制)
   clearCache: function() {
     wx.showModal({
-      title: '清除本地缓存',
-      content: '点击确定后，AI识别产生的临时图片等冗余缓存将被清空。\n\n请放心，您的云端账号数据（头像、昵称、总积分、历史记录等）和登录状态将安全保留。',
+      title: '清理缓存',
+      content: '点击确定后，AI识别产生的临时图片等冗余缓存将被清空。\n\n请放心，您的云端账号数据（头像、昵称、总环保星、历史记录等）和登录状态将安全保留。',
       confirmText: '确认清理',
       confirmColor: '#4CAF50',
       success: (res) => {
         if (res.confirm) {
+          // 1. 清理前：先读取核心数据进行保护
           const userId = wx.getStorageSync('userId');
           const isLoggedIn = wx.getStorageSync('isLoggedIn'); 
-          const savedAvatar = wx.getStorageSync(`avatar_${userId}`);
-          const savedNickname = wx.getStorageSync(`nickname_${userId}`);
+          const role = wx.getStorageSync('role'); 
           
+          // 读取新的头像和昵称键名
+          const savedAvatar = wx.getStorageSync('avatarUrl');
+          const savedNickname = wx.getStorageSync('nickname');
+          
+          // 2. 无差别清空所有本地缓存
           wx.clearStorageSync(); 
           
+          // 3. 清理后：将受保护的核心数据重新写回
           if (userId) wx.setStorageSync('userId', userId);
           if (isLoggedIn) wx.setStorageSync('isLoggedIn', isLoggedIn);
-          if (savedAvatar) wx.setStorageSync(`avatar_${userId}`, savedAvatar);
-          if (savedNickname) wx.setStorageSync(`nickname_${userId}`, savedNickname);
+          if (role) wx.setStorageSync('role', role); 
+          
+          if (savedAvatar) wx.setStorageSync('avatarUrl', savedAvatar);
+          if (savedNickname) wx.setStorageSync('nickname', savedNickname);
 
+          // 重新触发页面渲染
           this.onShow(); 
           wx.showToast({ title: '清理完毕', icon: 'success' });
         }

@@ -2,7 +2,7 @@
 
 <view class="banner-section">
   <image class="banner-img" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/knowledge/knowledge1.jpg" mode="widthFix"></image>
-  <view class="banner-title">环保知识大挑战</view>
+  <view class="banner-title">环保知识大闯关</view>
   <view class="banner-subtitle">测一测你的垃圾分类段位</view>
 </view>
 
@@ -13,7 +13,7 @@
   </view>
   <view class="divider"></view>
   <view class="stats-item">
-    <text class="stats-label">累计积分</text>
+    <text class="stats-label">累计环保星</text>
     <text class="stats-value score-highlight">{{userScore}}</text>
   </view>
 </view>
@@ -21,7 +21,7 @@
 <view class="leaderboard-entry-card" bindtap="goToLeaderboard">
   <view class="entry-left">
     <text class="entry-icon">🏆</text>
-    <text class="entry-title">知识挑战积分榜</text>
+    <text class="entry-title">环保闯关光荣榜</text>
   </view>
   <view class="entry-right">
     <text class="entry-sub">查看当前排名</text>
@@ -33,15 +33,15 @@
   <view class="rules-title">📜 挑战与奖励规则</view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>【经典闯关】共 10 题，无时间限制。只要完成即享保底 +10 积分，全对可获「完美通关」评级及最高 +25 积分！</text>
+    <text>【经典闯关】共 10 题，慢慢想不着急。只要完成就能获得 1 颗环保星🌟，全对可获得「完美通关」评级，最高拿到 2 颗环保星！</text>
   </view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>【极限60秒】限时 60 秒，题量增至 25 题！保底 +15 积分，得分由「准确率与耗时」共同决定，最高可斩获 +45 积分与「极限王者」稀有称号！</text>
+    <text>【极限60秒】限时 60 秒大挑战！保底 1 颗环保星，又快又准最高可拿 3 颗环保星，还能获得炫酷的「闪电小超人」称号哦！</text>
   </view>
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>【每日打卡】每日首次参与任一模式并交卷，均可额外获得 20 环保币奖励，可前往商城消费！</text>
+    <text>【每日打卡】每天第一次完成任何挑战，都能额外获得 2 朵小红花🌺，快攒起来去校园小卖部换礼物吧！</text>
   </view>
 </view>
 

@@ -210,7 +210,7 @@
   line-height: 1.4;
 }
 
-/* --- 🚀 环保币奖励提示条样式 --- */
+/* --- 🚀 小红花奖励提示条样式 --- */
 .reward-row {
   margin-bottom: 20rpx;
   padding: 12rpx 20rpx;

@@ -201,15 +201,15 @@ Page({
             if (res.data.code === 200) {
               const taskData = res.data.data;
               
-              // 只有当获得了实际积分（即今天第一次读）时才弹窗表扬
+              // 只有当获得了实际环保星（即今天第一次读）时才弹窗表扬
               if (taskData.reward_points > 0) {
-                // 更新本地缓存，防止个人中心的段位和积分没同步刷新
+                // 更新本地缓存，防止个人中心的段位和环保星没同步刷新
                 wx.setStorageSync('totalScore', taskData.total_score);
                 wx.setStorageSync('currentTitle', taskData.title);
 
                 // 弹出让小朋友极度舒适的加分提示！
                 wx.showToast({
-                  title: `每日阅读 +${taskData.reward_points} 环保币`,
+                  title: `每日阅读 +${taskData.reward_points} 小红花`,
                   icon: 'success',
                   duration: 2500
                 });

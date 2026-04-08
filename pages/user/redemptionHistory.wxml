@@ -28,7 +28,7 @@
         <view class="info-bottom">
           <text class="item-time">{{item.date}}</text>
           <text class="item-cost {{item.status === 2 ? 'cancelled-cost' : ''}}">
-            {{item.status === 2 ? '退回 ' : '-'}}{{item.pointsCost}} 环保币
+            {{item.status === 2 ? '退回 ' : '-'}}{{item.pointsCost}} 小红花
           </text>
         </view>
       </view>

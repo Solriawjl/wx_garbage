@@ -1,67 +1,231 @@
 /* pages/login/login.wxss */
-
 .login-container {
+  min-height: 100vh;
+  background-color: #f7f9fc;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f5f7fa;
+  padding: 60rpx 40rpx;
+  box-sizing: border-box;
 }
 
-/* logo 样式 */
+/* === 顶部区域 === */
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40rpx;
+  margin-bottom: 60rpx;
+}
+
 .logo { 
-  /* 1. 适当放大 (原为 180rpx) */
-  width: 240rpx; 
-  height: 240rpx; 
-  
-  /* 2. 变为圆角格式 (数值越大圆角越明显) */
-  border-radius: 48rpx; 
-  
-  /* 3. 重要：确保图片内容被裁剪到圆角内 */
-  overflow: hidden; 
-  
-  margin-bottom: 30rpx; 
+  width: 180rpx; 
+  height: 180rpx;
+  border-radius: 40rpx; 
+  margin-bottom: 30rpx;
+  box-shadow: 0 12rpx 24rpx rgba(0,0,0,0.06);
 }
 
 .title { 
   font-size: 48rpx; 
-  font-weight: bold; 
-  color: #333; 
-  margin-bottom: 20rpx; 
+  font-weight: 800; 
+  color: #2c3e50; 
+  margin-bottom: 12rpx; 
+  letter-spacing: 2rpx;
 }
 
 .subtitle { 
-  font-size: 28rpx; 
-  color: #666; 
-  margin-bottom: 100rpx; 
+  font-size: 26rpx; 
+  color: #7f8c8d;
 }
 
-.login-btn {
-  width: 70%;
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 50rpx;
+/* === 卡片区域 === */
+.role-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx; /* 卡片之间的间距 */
+  margin-bottom: 60rpx;
+}
+
+.role-card {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 30rpx 40rpx;
+  border-radius: 32rpx;
+  box-sizing: border-box;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.04);
+  transition: all 0.2s ease;
+}
+
+/* 点击反馈效果 */
+.card-hover {
+  transform: scale(0.97);
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.02);
+}
+
+.student-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);
+  border: 2rpx solid #c6f6d5;
+}
+
+.teacher-card {
+  background: linear-gradient(135deg, #ffffff 0%, #ebf8ff 100%);
+  border: 2rpx solid #bee3f8;
+}
+
+/* 卡片内部左中右布局 */
+.card-left {
+  margin-right: 30rpx;
+}
+
+.icon-bg {
+  width: 90rpx;
+  height: 90rpx;
+  background-color: #d1fae5;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50rpx;
+}
+
+.teacher-icon-bg {
+  background-color: #dbeafe;
+}
+
+.card-middle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.role-name {
   font-size: 34rpx;
   font-weight: bold;
-  padding: 15rpx 0;
-  box-shadow: 0 8rpx 16rpx rgba(76, 175, 80, 0.3);
-  /* 清除 button 默认样式 */
-  border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #333;
+  margin-bottom: 8rpx;
 }
 
-/* 微信一键登录按钮的点击效果 */
-.login-btn-hover {
-  background-color: #43A047;
-  transform: translateY(2rpx);
-  box-shadow: 0 4rpx 8rpx rgba(76, 175, 80, 0.3);
+.role-desc {
+  font-size: 24rpx;
+  color: #94a3b8;
+}
+
+.card-right .arrow {
+  font-size: 26rpx;
+  color: #10b981;
+  font-weight: bold;
+  background-color: rgba(16, 185, 129, 0.1);
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+}
+
+.teacher-card .card-right .arrow {
+  color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* === 底部提示区 === */
+.footer-section {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .tips { 
   font-size: 24rpx; 
-  color: #999; 
-  margin-top: 30rpx; 
+  color: #cbd5e1; 
+  margin-bottom: 30rpx;
+}
+
+.fallback-login {
+  padding: 16rpx 40rpx;
+  background-color: #f1f5f9;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+  color: #64748b;
+  font-weight: bold;
+}
+
+.fallback-login:active {
+  background-color: #e2e8f0;
+}
+
+/* === 弹窗样式 (Modal) === */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #fff;
+  width: 80%;
+  border-radius: 32rpx;
+  padding: 50rpx 40rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 10rpx 40rpx rgba(0,0,0,0.2);
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1e293b;
+  margin-bottom: 10rpx;
+}
+
+.modal-subtitle {
+  font-size: 24rpx;
+  color: #94a3b8;
+  margin-bottom: 40rpx;
+}
+
+.modal-input {
+  width: 90%;
+  background-color: #f8fafc;
+  border: 2rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  padding: 24rpx 30rpx;
+  font-size: 28rpx;
+  text-align: center;
+  margin-bottom: 50rpx;
+}
+
+.input-placeholder {
+  color: #cbd5e1;
+}
+
+.modal-btns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btn {
+  width: 45%;
+  text-align: center;
+  padding: 22rpx 0;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.cancel-btn {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.confirm-btn {
+  background-color: #3b82f6;
+  color: #fff;
+  box-shadow: 0 6rpx 16rpx rgba(59, 130, 246, 0.3);
 }

@@ -1,6 +1,6 @@
 <view class="leaderboard-page">
   <view class="header-banner">
-    <text class="banner-title">知识挑战积分榜</text>
+    <text class="banner-title">知识挑战保星榜</text>
     <text class="banner-desc">每天参与分类与挑战，争夺环保之巅！</text>
   </view>
 
@@ -22,7 +22,7 @@
         
         <view class="score-box">
           <text class="score-num score-rank-{{item.rank <= 3 ? item.rank : 'other'}}">{{item.total_score}}</text>
-          <text class="score-label">分</text>
+          <text class="score-label">颗</text>
         </view>
       </view>
     </block>

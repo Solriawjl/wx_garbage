@@ -61,7 +61,7 @@
         </view>
 
         <view class="reward-row" wx:if="{{item.status === 1}}">
-          <text class="reward-text">🎉 纠错奖励已入账：+5 环保币</text>
+          <text class="reward-text">🎉 纠错奖励已入账：+2 小红花</text>
         </view>
 
         <view class="card-footer">

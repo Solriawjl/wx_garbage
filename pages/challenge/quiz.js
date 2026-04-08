@@ -22,7 +22,7 @@ Page({
     currentIndex: 0,      // 当前答到了第几题
     currentQuestion: {},  // 当前题目的对象
     
-    score: 0,             // 🚀 注意：这里的 score 现在仅代表“答对的题数”，不再代表最终积分
+    score: 0,             // 🚀 注意：这里的 score 现在仅代表“答对的题数”，不再代表最终环保星
     wrongList: [],        // 错题本 
     
     // 界面反馈控制

@@ -80,7 +80,7 @@
 .score-num {
   font-size: 50rpx;
   font-weight: bold;
-  color: #ffb300; /* 抢眼的橙黄色积分 */
+  color: #ffb300; /* 抢眼的橙黄色环保星 */
   font-family: 'Courier New', Courier, monospace; /* 让数字看起来更有科技感 */
 }
 

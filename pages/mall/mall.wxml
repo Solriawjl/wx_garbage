@@ -4,17 +4,17 @@
   <view class="assets-bg-circle"></view>
   <view class="history-btn" bindtap="goToHistory">我的兑换</view>
   <view class="assets-content">
-    <text class="assets-title">我的环保币</text>
+    <text class="assets-title">我的小红花余额</text>
     <view class="points-display">
-      <image class="coin-icon-huge" src="/images/tab_quiz_active.png"></image>
+      <image class="coin-icon-huge" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/red_flower.png"></image>
       <text class="points-number">{{currentPoints}}</text>
     </view>
-    <view class="assets-tip">做任务赚积分，兑换惊喜好礼！</view>
+    <view class="assets-tip">做任务赚小红花，兑换惊喜好礼！</view>
   </view>
 </view>
 
 <view class="mall-section">
-  <view class="section-title">兑换专区</view>
+  <view class="section-title">校园奖励小卖部</view>
   
   <view class="product-grid">
     <block wx:for="{{productList}}" wx:key="id">
@@ -32,14 +32,14 @@
           
           <view class="price-action-row">
               <view class="price-tag {{item.stock === 0 ? 'expensive' : (currentPoints >= item.points ? 'affordable' : 'expensive')}}">
-                <image class="coin-icon-small" src="/images/tab_quiz_active.png"></image>
+                <image class="coin-icon-small" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/red_flower.png"></image>
                 <text>{{item.points}}</text>
               </view>
               
               <view class="redeem-btn {{item.stock === 0 ? 'disabled-btn' : (currentPoints >= item.points ? 'active-btn' : 'disabled-btn')}}" 
                     bindtap="handleRedeem" 
                     data-item="{{item}}">
-                {{item.stock === 0 ? '已兑完' : (currentPoints >= item.points ? '兑换' : '积分不足')}}
+                {{item.stock === 0 ? '已兑完' : (currentPoints >= item.points ? '兑换' : '小红花不足')}}
               </view>
             </view>
 

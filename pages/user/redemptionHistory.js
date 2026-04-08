@@ -52,7 +52,7 @@ Page({
     // 1. 弹出让用户确认的“反悔”提示框
     wx.showModal({
       title: '🎁 确认退货？',
-      content: `是否要把用 ${points} 积分兑换的【${name}】退货？积分将原路返回。`,
+      content: `是否要把用 ${points} 环保星兑换的【${name}】退货？环保星将原路返回。`,
       confirmText: '确定反悔',
       confirmColor: '#e53935', // 使用刺眼的红色作为确认，提醒用户
       cancelText: '算了',
@@ -74,12 +74,12 @@ Page({
               if (refundRes.data.code === 200) {
                 // 退货成功，弹个表扬提示
                 wx.showToast({
-                  title: '反悔成功！积分已退回',
+                  title: '反悔成功！环保星已退回',
                   icon: 'none',
                   duration: 2500
                 });
                 
-                // 3. 核心：更新本地缓存，防止个人中心积分不同步
+                // 3. 核心：更新本地缓存，防止个人中心环保星不同步
                 const newData = refundRes.data.data;
                 wx.setStorageSync('totalScore', newData.new_score);
                 wx.setStorageSync('currentTitle', newData.new_title);
