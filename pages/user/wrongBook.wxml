@@ -20,39 +20,45 @@
   <block wx:if="{{wrongList.length > 0}}">
     <view class="list-item-wrap" wx:for="{{wrongList}}" wx:key="id">
       
-      <view class="wrong-card"
+      <view class="wrong-card {{item.status === 1 ? 'resolved-card' : ''}}"
             bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-index="{{index}}"
             style="transform: translateX({{item.offsetX || 0}}rpx); transition: {{isMoving ? 'none' : 'transform 0.3s'}};">
         
-        <view class="remove-btn" catchtap="removeItem" data-index="{{index}}">✕</view>
-        
         <view class="item-header">
           <view class="item-name">
-          {{item.name}}
-          <text class="error-badge level-high" wx:if="{{item.errorCount >= 3}}">高频易错(错{{item.errorCount}}次)</text>
-          <text class="error-badge level-mid" wx:elif="{{item.errorCount == 2}}">重蹈覆辙(错2次)</text>
+            {{item.name || item.item_name}}
+            
+            <text class="error-badge level-high" wx:if="{{item.errorCount >= 3}}">高频易错(错{{item.errorCount}}次)</text>
+            <text class="error-badge level-mid" wx:elif="{{item.errorCount == 2}}">重蹈覆辙(错2次)</text>
+
+            <text class="resolved-badge" wx:if="{{item.status === 1}}">已掌握 🎉</text>
+          </view>
         </view>
-        </view>
-        
-        <view class="card-divider"></view>
         
         <view class="item-answers">
-          <text class="wrong-ans">{{item.errorCount > 1 ? '你最近选了' : '你的选择'}}：{{item.userSelect}}</text>
+          <text class="wrong-ans">你的选择：{{item.userSelect || item.user_answer}}</text>
+          <text class="correct-ans">正确答案：{{item.correctAnswer || item.correct_answer}}</text>
+        </view>
+        
+        <view class="card-footer">
+          <text class="error-time">时间：{{item.displayTime}}</text>
           
-          <text class="correct-ans">正确答案：{{item.correctAnswer}}</text>
+          <view class="resolve-btn" wx:if="{{item.status !== 1}}" catchtap="handleResolve" data-id="{{item.id}}">
+            我记住了
+          </view>
         </view>
         
       </view>
 
       <view class="delete-action" catchtap="removeItem" data-index="{{index}}">删除</view>
+
     </view>
   </block>
-
+  
   <view class="empty-state" wx:else>
-    <icon type="info" size="64" color="#ccc"></icon>
-    <text class="empty-text">暂无对应频次的错题记录~</text>
+    <text class="empty-desc">太棒啦，目前没有符合条件的错题！</text>
   </view>
-
+  
 </scroll-view>
 
 </view>

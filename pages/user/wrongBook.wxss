@@ -6,7 +6,9 @@
   flex-direction: column;
 }
 
-/* --- 顶部操作栏 --- */
+/* ==========================================
+   顶部操作栏与筛选
+========================================== */
 .header-bar {
   display: flex;
   justify-content: space-between;
@@ -26,7 +28,7 @@
 
 .clear-btn {
   font-size: 26rpx;
-  color: #F44336; /* 红色警示文字 */
+  color: #F44336; 
   display: flex;
   align-items: center;
   padding: 10rpx 20rpx;
@@ -39,131 +41,54 @@
   transform: scale(0.95);
 }
 
-.icon-trash {
-  margin-right: 8rpx;
-  font-size: 26rpx;
+.filter-picker {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #333;
+  background-color: #f0f2f5;
+  padding: 10rpx 24rpx;
+  border-radius: 30rpx;
 }
 
-/* --- 列表容器 --- */
+.picker-arrow {
+  font-size: 20rpx;
+  margin-left: 10rpx;
+  color: #888;
+}
+
+/* ==========================================
+   列表容器与卡片包裹
+========================================== */
 .list-container {
   flex: 1;
-  padding: 30rpx;
+  padding: 20rpx 0;
   box-sizing: border-box;
 }
 
-/* --- 错题卡片 --- */
-.item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20rpx;
-}
-
-.item-name {
-  font-size: 34rpx;
-  font-weight: bold;
-  color: #333;
-}
-
-.card-divider {
-  width: 100%;
-  height: 2rpx;
-  border-bottom: 2rpx dashed #eeeeee;
-  margin-bottom: 25rpx;
-}
-
-.item-answers {
-  display: flex;
-  flex-direction: column;
-}
-
-.answer-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15rpx;
-}
-
-.answer-row:last-child {
-  margin-bottom: 0;
-}
-
-.label {
-  font-size: 28rpx;
-  color: #888;
-}
-
-/* 重点：划掉错误答案，高亮正确答案 */
-.wrong-ans {
-  font-size: 28rpx;
-  color: #b2b2b2;
-  text-decoration: line-through; /* 中划线 */
-}
-
-.correct-ans {
-  font-size: 30rpx;
-  font-weight: bold;
-  color: #4CAF50; /* 采用正确的绿色，增强记忆 */
-  margin-top: 10rpx;
-}
-
-/* --- 空状态 --- */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 250rpx;
-}
-
-.empty-text {
-  margin-top: 40rpx;
-  font-size: 30rpx;
-  color: #888;
-}
-
-/* --- 左滑删除与无边框溢出核心样式 --- */
-
-/* 1. 外层包裹器：接管阴影，消除滑动时的裁切感 */
+/* 核心：包裹着卡片和底部删除按钮的容器 */
 .list-item-wrap {
   position: relative;
-  width: 100%;
-  margin-bottom: 30rpx;
+  width: 92%;
+  margin: 0 auto 30rpx auto;
   border-radius: 20rpx;
-  background-color: #ffffff; /* 保持白色底 */
-  box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03);
+  overflow: hidden; 
+  background-color: #FF5252; /* 给底层垫上一层红色，配合滑动 */
 }
 
-/* 2. 可滑动的卡片本体：覆盖原有边距和阴影 */
+/* 错题卡片本身（上层） */
 .wrong-card {
-  margin-bottom: 0 !important; 
-  width: 100%;
-  box-sizing: border-box;
   position: relative;
-  z-index: 2; 
   background-color: #ffffff;
   border-radius: 20rpx;
   padding: 30rpx 40rpx;
-  box-shadow: none !important; /* 原本的阴影交由父级 */
+  box-shadow: 0 6rpx 20rpx rgba(0,0,0,0.04);
+  z-index: 2; 
+  box-sizing: border-box;
+  width: 100%;
 }
 
-/* 3. 右上角独立删除 X */
-.remove-btn {
-  position: absolute;
-  top: 15rpx;
-  right: 15rpx;
-  color: #d8d8d8; 
-  width: 50rpx;
-  height: 50rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: consolas;
-  font-size: 32rpx;
-  z-index: 10;
-}
-
-/* 4. 底层露出的西瓜红删除按钮 */
+/* 底层露出的西瓜红删除按钮（下层） */
 .delete-action {
   position: absolute;
   right: 0;
@@ -178,53 +103,134 @@
   font-size: 30rpx;
   font-weight: bold;
   z-index: 1;
-  border-top-right-radius: 20rpx;
-  border-bottom-right-radius: 20rpx;
+}
+
+/* ==========================================
+   卡片内部细节
+========================================== */
+.item-header {
+  margin-bottom: 20rpx;
+  padding-right: 20rpx; 
+}
+
+.item-name {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
 }
 
 .error-badge {
   font-size: 20rpx;
   padding: 4rpx 12rpx;
   border-radius: 8rpx;
-  margin-left: 16rpx;
+  margin-left: 15rpx;
   font-weight: normal;
   vertical-align: middle;
-  display: inline-block;
-  margin-top: -4rpx;
 }
 
-.level-high {
-  background-color: #ffebee;
-  color: #f44336;
-  border: 1rpx solid #ffcdd2;
-}
+.level-high { background-color: #ffebee; color: #F44336; }
+.level-mid { background-color: #fff3e0; color: #FF9800; }
 
-.level-mid {
-  background-color: #fff8e1;
-  color: #ff9800;
-  border: 1rpx solid #ffecb3;
-}
-
-/* --- 🚀 新增：中间下拉筛选器样式 --- */
-.filter-picker {
+.item-answers {
   display: flex;
-  align-items: center;
-  background-color: #f5f5f5;
-  padding: 10rpx 28rpx;
-  border-radius: 30rpx;
-  font-size: 24rpx;
-  color: #333;
+  flex-direction: column;
+  gap: 12rpx;
+  padding: 20rpx 0;
+  border-top: 2rpx dashed #f0f0f0;
+}
+
+.wrong-ans {
+  font-size: 28rpx;
+  color: #F44336; 
+}
+
+.correct-ans {
+  font-size: 28rpx;
+  color: #4CAF50; 
   font-weight: bold;
-  border: 2rpx solid #eeeeee;
-  transition: all 0.2s;
 }
 
-.filter-picker:active {
-  background-color: #e0e0e0;
+/* 🚀 修复点：完美的底部 Flex 布局，防止时间太长挤爆按钮 */
+.card-footer {
+  margin-top: 10rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
-.picker-arrow {
-  font-size: 18rpx;
-  margin-left: 10rpx;
-  color: #888;
+.error-time {
+  font-size: 24rpx;
+  color: #aaa;
+  flex: 1; /* 占据左侧所有的剩余空间 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 时间超长时显示省略号 */
+  margin-right: 20rpx;
+}
+
+/* =========================================
+   🚀 新增：已掌握 / 消灭错题的变身样式
+========================================= */
+
+/* 1. 已消灭状态的卡片：实色浅灰背景，坚决不能透明漏底！ */
+.resolved-card {
+  background-color: #F8F9FA !important; 
+}
+
+/* 2. 弱化卡片内文字颜色，模拟已失效/已掌握的视觉感 */
+.resolved-card .item-name { color: #999; }
+.resolved-card .wrong-ans { color: #E57373; } 
+.resolved-card .correct-ans { color: #81C784; } 
+
+/* 3. 已消灭的专属庆祝印章 */
+.resolved-badge {
+  font-size: 22rpx;
+  color: #FFF;
+  background: linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 100%); 
+  padding: 4rpx 14rpx;
+  border-radius: 10rpx;
+  margin-left: 15rpx;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+/* 4. 我记住了按钮 */
+.resolve-btn {
+  background: #FF9800;
+  color: #FFF;
+  font-size: 24rpx;
+  padding: 10rpx 26rpx;
+  border-radius: 30rpx;
+  font-weight: bold;
+  box-shadow: 0 4rpx 10rpx rgba(255, 152, 0, 0.3);
+  flex-shrink: 0; /* 🚀 防止按钮被左边挤压变形 */
+}
+
+.resolve-btn:active {
+  transform: scale(0.95);
+  background: #F57C00;
+}
+
+/* ==========================================
+   空状态
+========================================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-img {
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.8;
+}
+
+.empty-desc {
+  font-size: 28rpx;
+  color: #999;
 }

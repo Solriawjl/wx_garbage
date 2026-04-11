@@ -145,3 +145,41 @@ ec-canvas {
   margin-top: 200rpx;
   color: #999;
 }
+
+/* =========================================
+   🚀 新增：错题歼灭战况双色进度条
+========================================= */
+.progress-box {
+  padding: 10rpx 0 30rpx 0;
+  border-bottom: 2rpx dashed #EEE;
+  margin-bottom: 10rpx;
+}
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+  font-size: 26rpx;
+}
+.label-left { color: #4CAF50; font-weight: bold; }
+.label-right { color: #F44336; font-weight: bold; }
+
+.progress-bar-bg {
+  width: 100%;
+  height: 24rpx;
+  background-color: #ffebee; /* 默认底色是代表未消灭的红色 */
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #81C784 0%, #4CAF50 100%); /* 盖上代表已消灭的绿色 */
+  border-radius: 12rpx;
+  transition: width 1s ease-in-out;
+}
+.progress-tip {
+  display: block;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 20rpx;
+}

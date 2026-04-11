@@ -9,7 +9,7 @@
       
       <view class="info-text">
         <input type="nickname" class="nickname-input" placeholder="点击设置昵称" placeholder-style="color: rgba(255,255,255,0.7);" value="{{nickname}}" bindblur="onNicknameBlur" />
-        <view class="title-tag" style="{{role === 'teacher' ? 'background: #00897B;' : ''}}">{{role === 'teacher' ? '👨‍🏫 指导老师' : userTitle}}</view>
+        <view class="title-tag" style="{{role === 'teacher' ? 'background: #00897B;' : ''}}">{{role === 'teacher' ? '指导老师' : userTitle}}</view>
       </view>
     </view>
   </block>
@@ -117,10 +117,11 @@
 
 <block wx:elif="{{role === 'teacher'}}">
   <view class="menu-list" style="margin-top: 30rpx;">
+    
     <view class="menu-item" bindtap="goToTeacherDashboard">
       <view class="menu-left">
         <text class="menu-icon">📈</text>
-        <text class="menu-text" style="font-weight: bold; color: #1976D2;">班级学情大盘</text>
+        <text class="menu-text">班级学情大盘</text>
       </view>
       <text class="menu-arrow">></text>
     </view>
@@ -128,7 +129,7 @@
     <view class="menu-item" bindtap="goToTeacherVerify">
       <view class="menu-left">
         <text class="menu-icon">🎁</text>
-        <text class="menu-text" style="font-weight: bold; color: #E64A19;">奖品核销中心</text>
+        <text class="menu-text">奖品核销中心</text>
       </view>
       <text class="menu-arrow">></text>
     </view>
@@ -136,10 +137,11 @@
     <view class="menu-item" bindtap="goToTeacherMallManage">
       <view class="menu-left">
         <text class="menu-icon">🏪</text>
-        <text class="menu-text" style="font-weight: bold; color: #F57C00;">积分商城库房</text>
+        <text class="menu-text">小红花商城库房</text>
       </view>
       <text class="menu-arrow">></text>
     </view>
+
   </view>
 </block>
 

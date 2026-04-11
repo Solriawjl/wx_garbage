@@ -2,33 +2,63 @@
   
   <view class="header-banner">
     <text class="banner-title">数据驱动教学，让环保更有趣</text>
-    <text class="banner-subtitle">今日全校学情实时监控中...</text>
+    <text class="banner-subtitle">今日班级学情实时监控中...</text>
   </view>
 
   <view class="card">
     <view class="card-title">
       <text class="icon">🎯</text>
-      <text>全校分类能力矩阵 (平均准确率)</text>
+      <text>班级分类能力矩阵 (达标率)</text>
     </view>
     <view class="chart-container">
-      <ec-canvas id="mychart-dom-radar" canvas-id="mychart-radar" ec="{{ ecRadar }}"></ec-canvas>
+      <ec-canvas id="mychart-dom-radar" canvas-id="mychart-radar" ec="{{ ecRadar }}" force-use-old-canvas="{{false}}"></ec-canvas>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">
+      <text class="icon">📊</text>
+      <text>近7天大盘：学习交互构成</text>
+    </view>
+    <view class="chart-container">
+      <ec-canvas id="mychart-dom-interaction" canvas-id="mychart-interaction" ec="{{ ecInteraction }}"></ec-canvas>
     </view>
   </view>
 
   <view class="card">
     <view class="card-title">
       <text class="icon">📈</text>
-      <text>近7天学习活跃度走势</text>
+      <text>近7天大盘：活跃人数走势(DAU)</text>
     </view>
     <view class="chart-container">
-      <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLine }}"></ec-canvas>
+      <ec-canvas id="mychart-dom-dau" canvas-id="mychart-dau" ec="{{ ecDau }}"></ec-canvas>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">
+      <text class="icon">👥</text>
+      <text>班级人群画像 (学习基因分布)</text>
+    </view>
+    <view class="chart-container">
+      <ec-canvas id="mychart-dom-habit" canvas-id="mychart-habit" ec="{{ ecHabit }}"></ec-canvas>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">
+      <text class="icon">🔥</text>
+      <text>班级错题歼灭执行力 (平均 {{dashboardData.clearance_dist.avg_rate_int}}%)</text>
+    </view>
+    <view class="chart-container">
+      <ec-canvas id="mychart-dom-clearance" canvas-id="mychart-clearance" ec="{{ ecClearance }}"></ec-canvas>
     </view>
   </view>
 
   <view class="card mistake-card">
     <view class="card-title text-danger">
       <text class="icon">⚠️</text>
-      <text>高频易错知识点 Top 5</text>
+      <text>班级共性易错盲区 Top 5</text>
     </view>
     <view class="mistake-list">
       <block wx:if="{{dashboardData.top_mistakes.length > 0}}">
@@ -37,7 +67,7 @@
             <text class="m-name">{{item.item_name}}</text>
             <text class="m-correct">应为：{{item.correct_answer}}</text>
           </view>
-          <view class="m-count">全班答错 <text class="danger-num">{{item.error_count}}</text> 次</view>
+          <view class="m-count">班级共有 <text class="danger-num">{{item.error_count}}</text> 人踩坑</view>
         </view>
       </block>
       <view class="empty-text" wx:else>太棒了，目前没有高频错题！</view>
@@ -47,28 +77,23 @@
   <view class="card leaderboard-card">
     <view class="card-title">
       <text class="icon">👑</text>
-      <text>环保小卫士光荣榜 Top 10</text>
+      <text>班级环保卫士光荣榜 Top 10</text>
       <text class="sub-hint">(点击可查看个人报告)</text>
     </view>
     <view class="leaderboard-list">
       <view class="rank-item" wx:for="{{dashboardData.leaderboard}}" wx:key="id" bindtap="viewStudentReport" data-uid="{{item.id}}">
-        
         <view class="rank-badge {{index == 0 ? 'gold' : (index == 1 ? 'silver' : (index == 2 ? 'bronze' : 'normal'))}}">
           {{index + 1}}
         </view>
-        
         <image class="rank-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
-        
         <view class="rank-info">
           <text class="rank-name">{{item.nickname}}</text>
           <text class="rank-title">{{item.title}}</text>
         </view>
-
         <view class="rank-score">
           <text class="score-num">{{item.score}}</text>
           <text class="score-label">环保星</text>
         </view>
-        
         <text class="arrow">></text>
       </view>
     </view>
@@ -77,5 +102,5 @@
 </view>
 
 <view class="loading-state" wx:else>
-  <text>正在生成班级大盘数据...</text>
+  <text>正在生成班级抗偏移大盘数据...</text>
 </view>

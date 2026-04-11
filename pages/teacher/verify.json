@@ -1,6 +1,4 @@
 {
   "navigationBarTitleText": "奖品核销中心",
-  "navigationBarBackgroundColor": "#E64A19",
-  "navigationBarTextStyle": "white",
   "enablePullDownRefresh": true
 }

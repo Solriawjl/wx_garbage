@@ -183,41 +183,39 @@ Page({
   showTipCard: function(e) {
     const clickedTip = e.currentTarget.dataset.tip;
     if (clickedTip) {
-      // 1. 保持原有的弹窗展示逻辑不变
       this.setData({ 
         currentTipData: clickedTip,
         isTipCardVisible: true 
       });
 
-      // 静默触发每日科普阅读打卡任务
       const userId = wx.getStorageSync('userId');
       if (userId) {
+        // 🚀 1. 静默触发：记录阅读行为，用于丰富成长报告的图表数据
         wx.request({
-          // 注意：如果你的后端 IP 有变动，请修改这里
+          url: 'http://192.168.0.126:8000/api/user/reading/record',
+          method: 'POST',
+          data: { user_id: parseInt(userId), tip_id: clickedTip.id },
+          success: () => console.log('阅读记录已埋点')
+        });
+
+        // 🚀 2. 赚取小红花任务 (原有逻辑保持不变)
+        wx.request({
           url: 'http://192.168.0.126:8000/api/task/read_tip', 
           method: 'POST',
           data: { user_id: parseInt(userId) },
           success: (res) => {
             if (res.data.code === 200) {
               const taskData = res.data.data;
-              
-              // 只有当获得了实际环保星（即今天第一次读）时才弹窗表扬
               if (taskData.reward_points > 0) {
-                // 更新本地缓存，防止个人中心的段位和环保星没同步刷新
                 wx.setStorageSync('totalScore', taskData.total_score);
                 wx.setStorageSync('currentTitle', taskData.title);
-
-                // 弹出让小朋友极度舒适的加分提示！
                 wx.showToast({
-                  title: `每日阅读 +${taskData.reward_points} 小红花`,
+                  title: `每日阅读 +${taskData.reward_points} 环保币`,
                   icon: 'success',
                   duration: 2500
                 });
               }
             }
-          },
-          fail: (err) => {
-            console.error('阅读任务打卡请求失败', err);
           }
         });
       }

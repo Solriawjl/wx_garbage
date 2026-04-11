@@ -2,21 +2,18 @@
 Page({
   data: {
     wrongList: [],
-    
-    // 左滑控制参数
     startX: 0,
     isMoving: false,
-
-    // 🚀 新增：筛选功能相关参数
     hasData: false, 
     filterOptions: ['全部错题', '高频易错(≥3次)', '重蹈覆辙(2次)', '偶尔失误(1次)'],
     filterIndex: 0
   },
 
-  onLoad: function (options) {
+  onShow: function () {
     this.fetchWrongBook();
   },
 
+  // 获取错题列表
   fetchWrongBook: function() {
     const userId = wx.getStorageSync('userId');
     wx.request({
@@ -25,154 +22,123 @@ Page({
       success: (res) => {
         if (res.data.code === 200) {
           let list = res.data.data.map(item => {
-            return { ...item, offsetX: 0 };
+            let formattedTime = '最近';
+            if (item.created_at) {
+              formattedTime = item.created_at.replace('T', ' ').substring(0, 16);
+            }
+            return { 
+              ...item, 
+              offsetX: 0,
+              displayTime: formattedTime // 存入一个新的专门用于显示的字段
+            };
           });
           
-          // 🚀 核心：挂载原始全量数据
           this.allRecordList = list;
           this.setData({ hasData: list.length > 0 });
-          this.applyFilter();
+          this.applyFilter(); // 这里会触发排序
         }
       }
     });
   },
 
-  // 🚀 新增：用户切换下拉菜单事件
   onFilterChange: function(e) {
     this.setData({ filterIndex: e.detail.value });
     this.applyFilter();
   },
 
-  // 🚀 新增：执行本地过滤 (基于 errorCount)
+  // 2：核心排序逻辑
   applyFilter: function() {
-    const idx = parseInt(this.data.filterIndex);
-    let filtered = this.allRecordList || [];
+    if (!this.allRecordList) return;
     
-    if (idx === 1) {
-      filtered = this.allRecordList.filter(item => item.errorCount >= 3);
-    } else if (idx === 2) {
-      filtered = this.allRecordList.filter(item => item.errorCount === 2);
-    } else if (idx === 3) {
-      filtered = this.allRecordList.filter(item => item.errorCount === 1);
+    let index = parseInt(this.data.filterIndex);
+    let filtered = [];
+
+    // 先按维度筛选
+    switch(index) {
+      case 0: filtered = this.allRecordList; break;
+      case 1: filtered = this.allRecordList.filter(item => item.errorCount >= 3); break;
+      case 2: filtered = this.allRecordList.filter(item => item.errorCount === 2); break;
+      case 3: filtered = this.allRecordList.filter(item => item.errorCount === 1); break;
     }
-    
+
+    // 执行排序：未掌握(0)在前，已掌握(1)沉底；同状态下按时间倒序
+    filtered.sort((a, b) => {
+      if (a.status !== b.status) {
+        return a.status - b.status; // 0 在 1 前面
+      }
+      // 如果状态相同，按时间戳倒序（新错题在最前）
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+
     this.setData({ wrongList: filtered });
   },
 
-  // -----------------------------------------
-  // 全局归位与左滑逻辑 (保持不变)
-  // -----------------------------------------
-  recoverSwipe: function() {
-    let list = this.data.wrongList;
-    let hasOpen = false;
-    
-    list.forEach(item => {
-      if (item.offsetX < 0) {
-        item.offsetX = 0; 
-        hasOpen = true;
-      }
-    });
+  // 消灭错题
+  handleResolve: function (e) {
+    const wrongId = e.currentTarget.dataset.id;
+    wx.showLoading({ title: '处理中...' });
 
-    if (hasOpen) {
-      this.setData({ wrongList: list });
-      return true; 
-    }
-    return false;
-  },
-
-  touchS: function (e) {
-    if (e.touches.length === 1) {
-      let list = this.data.wrongList;
-      let currentIndex = e.currentTarget.dataset.index;
-      list.forEach((item, index) => {
-        if (index !== currentIndex && item.offsetX < 0) { item.offsetX = 0; }
-      });
-      this.setData({ wrongList: list, startX: e.touches[0].clientX, isMoving: true });
-    }
-  },
-
-  touchM: function (e) {
-    if (e.touches.length === 1) {
-      let moveX = e.touches[0].clientX;
-      let disX = this.data.startX - moveX;
-      let list = this.data.wrongList;
-      let index = e.currentTarget.dataset.index;
-      if (disX <= 0) { list[index].offsetX = 0; }
-      else { list[index].offsetX = -disX >= -140 ? -disX : -140; }
-      this.setData({ wrongList: list });
-    }
-  },
-
-  touchE: function (e) {
-    if (e.changedTouches.length === 1) {
-      let endX = e.changedTouches[0].clientX;
-      let disX = this.data.startX - endX;
-      let list = this.data.wrongList;
-      let index = e.currentTarget.dataset.index;
-      list[index].offsetX = disX > 70 ? -140 : 0;
-      this.setData({ wrongList: list, isMoving: false });
-    }
-  },
-
-  // -----------------------------------------
-  // 单条删除与一键清空 (加入底层同步逻辑)
-  // -----------------------------------------
-  removeItem: function(e) {
-    const index = e.currentTarget.dataset.index;
-    const item = this.data.wrongList[index];
-    
-    wx.showModal({
-      title: '移除错题',
-      content: `确定已掌握【${item.name}】并将其移出错题本吗？`,
-      confirmText: '记住了',
-      cancelText: '再看看',
+    wx.request({
+      url: `http://192.168.0.126:8000/api/user/wrong_book/resolve/${wrongId}`,
+      method: 'POST',
       success: (res) => {
-        if (res.confirm) {
-          wx.request({
-            url: `http://192.168.0.126:8000/api/user/wrong_book/${item.id}`,
-            method: 'DELETE',
-            success: (delRes) => {
-              if (delRes.data.code === 200) {
-                // 🚀 同步删除底层数据并重新渲染当前分类
-                this.allRecordList = this.allRecordList.filter(i => i.id !== item.id);
-                this.setData({ hasData: this.allRecordList.length > 0 });
-                this.applyFilter();
-                wx.showToast({ title: '已移除', icon: 'success' });
-              }
-            }
-          });
-        } else {
-          let list = this.data.wrongList;
-          list[index].offsetX = 0;
-          this.setData({ wrongList: list });
+        wx.hideLoading();
+        if (res.data.code === 200) {
+          wx.showToast({ title: '已掌握', icon: 'success' });
+          
+          // 更新本地全量数据中的状态
+          let targetIndex = this.allRecordList.findIndex(item => item.id === wrongId);
+          if (targetIndex !== -1) {
+            this.allRecordList[targetIndex].status = 1;
+            // 重新执行筛选和排序，卡片会自动“滑”到底部
+            this.applyFilter(); 
+          }
         }
       }
     });
   },
 
-  clearAll: function() {
+  // --- 左滑交互逻辑 (保持不变，但需确保 offsetX 重置) ---
+  touchS: function(e) { if (e.touches.length === 1) this.setData({ startX: e.touches[0].clientX, isMoving: true }); },
+  touchM: function(e) {
+    if (e.touches.length === 1) {
+      let disX = this.data.startX - e.touches[0].clientX;
+      let index = e.currentTarget.dataset.index;
+      let list = this.data.wrongList;
+      list[index].offsetX = disX > 0 ? (disX >= 140 ? -140 : -disX) : 0;
+      this.setData({ wrongList: list });
+    }
+  },
+  touchE: function(e) {
+    let index = e.currentTarget.dataset.index;
+    let list = this.data.wrongList;
+    let disX = this.data.startX - e.changedTouches[0].clientX;
+    list[index].offsetX = disX > 70 ? -140 : 0;
+    this.setData({ wrongList: list, isMoving: false });
+  },
+  recoverSwipe: function() {
+    let list = this.data.wrongList;
+    list.forEach(item => item.offsetX = 0);
+    this.setData({ wrongList: list });
+  },
+  removeItem: function(e) {
+    const index = e.currentTarget.dataset.index;
+    const item = this.data.wrongList[index];
     wx.showModal({
-      title: '一键清空',
-      content: '确定要清空【全部】错题记录吗？清空后无法恢复哦。',
-      confirmColor: '#F44336',
+      title: '移除错题',
+      content: '确定要移除吗？',
       success: (res) => {
         if (res.confirm) {
-          const userId = wx.getStorageSync('userId');
           wx.request({
-            url: `http://192.168.0.126:8000/api/user/wrong_book/clear?user_id=${userId}`,
+            url: `http://192.168.0.126:8000/api/user/wrong_book/${item.id}`,
             method: 'DELETE',
-            success: (delRes) => {
-              if (delRes.data.code === 200) {
-                // 🚀 清空全量底层数据
-                this.allRecordList = [];
-                this.setData({ hasData: false });
-                this.applyFilter();
-                wx.showToast({ title: '已清空', icon: 'none' });
-              }
+            success: () => {
+              this.allRecordList = this.allRecordList.filter(i => i.id !== item.id);
+              this.applyFilter();
             }
           });
         }
       }
     });
   }
-})
+});
