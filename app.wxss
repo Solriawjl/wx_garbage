@@ -11,3 +11,19 @@ app.wxss
   padding: 200rpx 0;
   box-sizing: border-box;
 } 
+
+/* 🚀 全局环保称号渐变背景 */
+.title-badge {
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: bold;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+}
+.badge-zongshi { background: linear-gradient(135deg, #FFD700, #FF8C00); box-shadow: 0 4rpx 10rpx rgba(255,140,0,0.3); }
+.badge-dashi { background: linear-gradient(135deg, #FF6B6B, #C0392B); box-shadow: 0 4rpx 10rpx rgba(192,57,43,0.3); }
+.badge-daren { background: linear-gradient(135deg, #4FACFE, #00F2FE); box-shadow: 0 4rpx 10rpx rgba(0,242,254,0.3); text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+.badge-weishi { background: linear-gradient(135deg, #43E97B, #38F9D7); color: #004D40; box-shadow: 0 4rpx 10rpx rgba(67,233,123,0.3); }
+.badge-mengxin { background: #E0E0E0; color: #666; }

@@ -85,7 +85,7 @@ Page({
 
     // 2. 调用后端发布接口
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/mall/add`,
+      url: `http://192.168.0.126:8000/api/teacher/mall/add?teacher_id=${teacherId}`,
       method: 'POST',
       data: {
         name: name,

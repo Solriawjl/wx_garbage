@@ -20,10 +20,10 @@ Page({
   // 获取待核销列表
   fetchPendingOrders: function (cb) {
     wx.showLoading({ title: '加载订单中...' });
-    
+    const teacherId = wx.getStorageSync('userId');
     // 注意替换为真实后端 IP
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/pending_orders`,
+      url: `http://192.168.0.126:8000/api/teacher/pending_orders?teacher_id=${teacherId}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();

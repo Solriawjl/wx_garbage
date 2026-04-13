@@ -229,3 +229,27 @@
   color: #fff;
   box-shadow: 0 6rpx 16rpx rgba(59, 130, 246, 0.3);
 }
+
+/* 注册弹窗班级选择器样式 */
+.picker-container {
+  display: flex;
+  align-items: center;
+  background: #F5F7FA;
+  padding: 24rpx 30rpx;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+  width: 85%;
+}
+.picker-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-right: 20rpx;
+}
+.class-picker {
+  flex: 1;
+}
+.picker-value {
+  font-size: 30rpx;
+  color: #2E7D32;
+  font-weight: bold;
+}

@@ -38,16 +38,25 @@
     <view class="tips">微信将安全授权并与该身份绑定</view>
   </view>
 
-  <view class="modal-mask" wx:if="{{showInviteModal}}">
+  <view class="modal-mask" wx:if="{{showRegisterModal}}">
     <view class="modal-content">
-      <view class="modal-title">教师身份验证</view>
-      <view class="modal-subtitle">请输入学校分配的教师邀请码</view>
+      <view class="modal-title">{{registerRole === 'teacher' ? '教师身份注册' : '新生入学登记'}}</view>
+      <view class="modal-subtitle">请选择您所属的年级与班级，开启数据大盘！</view>
       
-      <input class="modal-input" placeholder="例如: TCH-2026" placeholder-class="input-placeholder" bindinput="inputInviteCode" value="{{inviteCode}}"/>
+      <view class="picker-container">
+        <text class="picker-label">所属班级：</text>
+        <picker mode="multiSelector" class="class-picker" bindchange="onPickerChange" bindcolumnchange="onPickerColumnChange" value="{{pickerIndex}}" range="{{pickerArray}}">
+          <view class="picker-value">
+            {{pickerArray[0][pickerIndex[0]]}} {{pickerArray[1][pickerIndex[1]]}} ▾
+          </view>
+        </picker>
+      </view>
+
+      <input wx:if="{{registerRole === 'teacher'}}" class="modal-input" placeholder="请输入学校分配的教师邀请码" placeholder-class="input-placeholder" bindinput="inputInviteCode" value="{{inviteCode}}"/>
       
       <view class="modal-btns">
-        <view class="btn cancel-btn" bindtap="cancelInvite">取消</view>
-        <view class="btn confirm-btn" bindtap="confirmInvite">确定绑定</view>
+        <view class="btn cancel-btn" bindtap="cancelRegister">取消</view>
+        <view class="btn confirm-btn" bindtap="confirmRegister">确定入驻</view>
       </view>
     </view>
   </view>

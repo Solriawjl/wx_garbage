@@ -9,14 +9,20 @@ Page({
     ecoCoin: 0, // 🚀 初始化小红花字段
     userTitle: '未登录',
     recognizeCount: 0, 
-    challengeCount: 0  
+    challengeCount: 0,
+    fullClassName: '未分配班级', // 🚀 新增展示字段
+    classOptions: [],
+    pickerArray: [[], []],
+    pickerIndex: [0, 0]
   },
 
   onShow: function () {
     const isLoggedIn = wx.getStorageSync('isLoggedIn') || false;
     // 每次页面显示时，从缓存中读取当前用户的真实身份
     const role = wx.getStorageSync('role') || 'student';
-    this.setData({ isLoggedIn, role});
+    // 从缓存读取最新班级名字
+    const savedClassName = wx.getStorageSync('fullClassName') || '未分配班级';
+    this.setData({ isLoggedIn, role, fullClassName: savedClassName });
 
     if (isLoggedIn) {
       const userId = wx.getStorageSync('userId');
@@ -36,8 +42,63 @@ Page({
 
         // 2. 从后端获取最新的环保星和统计数据
         this.getUserDashboardData(userId);
+        this.fetchClassOptions(); // 获取班级字典供修改使用
       }
     }
+  },
+
+  // 获取全校班级字典 (逻辑与 login.js 一致)
+  fetchClassOptions() {
+    wx.request({
+      url: `http://192.168.0.126:8000/api/common/class_options`,
+      method: 'GET',
+      success: (res) => {
+        if (res.data.code === 200 && res.data.data.length > 0) {
+          const options = res.data.data;
+          const grades = options.map(opt => opt.grade_name);
+          const classes = options[0].classes.map(c => c.name);
+          this.setData({ classOptions: options, pickerArray: [grades, classes] });
+        }
+      }
+    });
+  },
+
+  onClassPickerColumnChange(e) {
+    const { column, value } = e.detail;
+    let { pickerArray, pickerIndex, classOptions } = this.data;
+    pickerIndex[column] = value;
+    if (column === 0) {
+      pickerArray[1] = classOptions[value].classes.map(c => c.name);
+      pickerIndex[1] = 0; 
+    }
+    this.setData({ pickerArray, pickerIndex });
+  },
+
+  // 用户在个人中心提交班级修改
+  onClassPickerChange(e) {
+    const { value } = e.detail;
+    const { classOptions } = this.data;
+    const selectedClass = classOptions[value[0]].classes[value[1]];
+    const userId = wx.getStorageSync('userId');
+
+    wx.showLoading({ title: '切换学情域...', mask: true });
+    wx.request({
+      url: `http://192.168.0.126:8000/api/user/update_class`,
+      method: 'POST',
+      data: { user_id: userId, class_id: selectedClass.id },
+      success: (res) => {
+        wx.hideLoading();
+        if (res.data.code === 200) {
+          const newName = res.data.data.full_class_name;
+          wx.setStorageSync('fullClassName', newName); // 更新缓存
+          this.setData({ fullClassName: newName, pickerIndex: value });
+          
+          wx.showToast({ title: '班级切换成功', icon: 'success' });
+          // 班级改变了，强行刷新一次本页的数据
+          this.getUserDashboardData(userId);
+        }
+      }
+    });
   },
 
   // 获取微信头像 (深度绑定账号 + 同步云端)

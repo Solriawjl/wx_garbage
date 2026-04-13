@@ -16,9 +16,10 @@ Page({
   // 获取真实的商品列表
   // ==========================================
   loadMallItems: function() {
+    const userId = wx.getStorageSync('userId');
     wx.request({
       // 注意：确保这里的 IP 和你本地的 FastAPI 运行地址一致
-      url: 'http://192.168.0.126:8000/api/mall/items',
+      url: `http://192.168.0.126:8000/api/mall/items?user_id=${userId}`,
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {

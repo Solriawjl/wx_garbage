@@ -18,10 +18,10 @@ Page({
 
   fetchMallItems: function (cb) {
     wx.showLoading({ title: '加载库房中...' });
-    
+    const teacherId = wx.getStorageSync('userId');
     // 注意替换为真实后端 IP
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/mall/list`,
+      url: `http://192.168.0.126:8000/api/teacher/mall/list?teacher_id=${teacherId}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();

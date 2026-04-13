@@ -9,7 +9,14 @@
       
       <view class="info-text">
         <input type="nickname" class="nickname-input" placeholder="点击设置昵称" placeholder-style="color: rgba(255,255,255,0.7);" value="{{nickname}}" bindblur="onNicknameBlur" />
-        <view class="title-tag" style="{{role === 'teacher' ? 'background: #00897B;' : ''}}">{{role === 'teacher' ? '指导老师' : userTitle}}</view>
+        
+        <view class="tag-group">
+          <view class="title-tag" style="{{role === 'teacher' ? 'background: #00897B;' : ''}}">{{role === 'teacher' ? '指导老师' : userTitle}}</view>
+          
+          <picker mode="multiSelector" bindchange="onClassPickerChange" bindcolumnchange="onClassPickerColumnChange" value="{{pickerIndex}}" range="{{pickerArray}}">
+            <view class="class-tag">📍 {{fullClassName}} ✎</view>
+          </picker>
+        </view>
       </view>
     </view>
   </block>
