@@ -13,7 +13,19 @@ Page({
     fullClassName: '未分配班级', // 🚀 新增展示字段
     classOptions: [],
     pickerArray: [[], []],
-    pickerIndex: [0, 0]
+    pickerIndex: [0, 0],
+    // 🚀 新增：通知中心模块专属状态
+    showNoticeModal: false,  // 控制弹窗显隐
+    targetList: [],          // 接收对象列表
+    targetIndex: 0,          // 当前选中的对象索引
+    
+    typeList: ['日常提醒', '任务布置', '奖励通报'],
+    typeIndex: 0,
+    
+    durationList: ['12小时', '24小时', '3天', '7天', '永久'],
+    durationIndex: 1,        // 默认选中 24小时
+    
+    noticeContent: ''        // 老师填写的通知内容
   },
 
   onShow: function () {
@@ -332,4 +344,90 @@ Page({
     if (!this.checkLoginStatus()) return;
     wx.navigateTo({ url: '/pages/teacher/mall_manage' });
   },
+  // ==========================================
+  // 📢 核心：发布班级通知模块 (老师专属)
+  // ==========================================
+
+  // 1. 点击入口，打开弹窗并拉取班级人员名单
+  openNoticeModal: function() {
+    const teacherId = wx.getStorageSync('userId');
+    wx.showLoading({ title: '加载名单中...' });
+    
+    // 调取后端字典接口
+    wx.request({
+      url: `http://192.168.0.126:8000/api/teacher/students?teacher_id=${teacherId}`,
+      method: 'GET',
+      success: (res) => {
+        wx.hideLoading();
+        if (res.data.code === 200) {
+          this.setData({
+            targetList: res.data.data,
+            targetIndex: 0,     // 默认选全体
+            typeIndex: 0,       // 默认选日常提醒
+            durationIndex: 1,   // 默认选 24小时
+            noticeContent: '',  // 清空文本框
+            showNoticeModal: true
+          });
+        }
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({ title: '获取名单失败', icon: 'none' });
+      }
+    });
+  },
+
+  // 2. 关闭弹窗
+  closeNoticeModal: function() {
+    this.setData({ showNoticeModal: false });
+  },
+
+  // 3. 表单联动数据绑定
+  onTargetChange: function(e) { this.setData({ targetIndex: e.detail.value }); },
+  onTypeChange: function(e) { this.setData({ typeIndex: e.detail.value }); },
+  onDurationChange: function(e) { this.setData({ durationIndex: e.detail.value }); },
+  onNoticeInput: function(e) { this.setData({ noticeContent: e.detail.value }); },
+
+  // 4. 提交发布通知
+  submitNotice: function() {
+    const content = this.data.noticeContent.trim();
+    if (!content) {
+      wx.showToast({ title: '通知内容不能为空', icon: 'none' });
+      return;
+    }
+
+    // 提取纯净类型和时长（数字）
+    const noticeType = this.data.typeList[this.data.typeIndex];
+    const durationMap = { '12小时': 12, '24小时': 24, '3天': 72, '7天': 168, '永久': 0 };
+    const durationHours = durationMap[this.data.durationList[this.data.durationIndex]];
+
+    const teacherId = wx.getStorageSync('userId');
+    const selectedUserId = this.data.targetList[this.data.targetIndex].id;
+
+    wx.showLoading({ title: '正在发布...' });
+
+    wx.request({
+      url: `http://192.168.0.126:8000/api/teacher/send_notice?teacher_id=${teacherId}`,
+      method: 'POST',
+      data: {
+        user_id: selectedUserId,
+        type: noticeType,
+        duration: durationHours,
+        content: content
+      },
+      success: (res) => {
+        wx.hideLoading();
+        if (res.data.code === 200) {
+          this.closeNoticeModal();
+          wx.showToast({ title: '发布成功', icon: 'success', duration: 2000 });
+        } else {
+          wx.showToast({ title: '发布失败，请重试', icon: 'none' });
+        }
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({ title: '网络异常，请检查服务', icon: 'none' });
+      }
+    });
+  }
 })

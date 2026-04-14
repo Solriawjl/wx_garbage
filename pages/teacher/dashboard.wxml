@@ -21,7 +21,7 @@
       <text>近7天大盘：学习交互构成</text>
     </view>
     <view class="chart-container">
-      <ec-canvas id="mychart-dom-interaction" canvas-id="mychart-interaction" ec="{{ ecInteraction }}"></ec-canvas>
+      <ec-canvas id="mychart-dom-interaction" canvas-id="mychart-interaction" ec="{{ ecInteraction }}" force-use-old-canvas="{{false}}"></ec-canvas>
     </view>
   </view>
 
@@ -31,7 +31,7 @@
       <text>近7天大盘：活跃人数走势(DAU)</text>
     </view>
     <view class="chart-container">
-      <ec-canvas id="mychart-dom-dau" canvas-id="mychart-dau" ec="{{ ecDau }}"></ec-canvas>
+      <ec-canvas id="mychart-dom-dau" canvas-id="mychart-dau" ec="{{ ecDau }}" force-use-old-canvas="{{false}}"></ec-canvas>
     </view>
   </view>
 
@@ -41,7 +41,7 @@
       <text>班级人群画像 (学习基因分布)</text>
     </view>
     <view class="chart-container">
-      <ec-canvas id="mychart-dom-habit" canvas-id="mychart-habit" ec="{{ ecHabit }}"></ec-canvas>
+      <ec-canvas id="mychart-dom-habit" canvas-id="mychart-habit" ec="{{ ecHabit }}" force-use-old-canvas="{{false}}"></ec-canvas>
     </view>
   </view>
 
@@ -51,7 +51,7 @@
       <text>班级错题歼灭执行力 (平均 {{dashboardData.clearance_dist.avg_rate_int}}%)</text>
     </view>
     <view class="chart-container">
-      <ec-canvas id="mychart-dom-clearance" canvas-id="mychart-clearance" ec="{{ ecClearance }}"></ec-canvas>
+      <ec-canvas id="mychart-dom-clearance" canvas-id="mychart-clearance" ec="{{ ecClearance }}" force-use-old-canvas="{{false}}"></ec-canvas>
     </view>
   </view>
 
@@ -98,7 +98,6 @@
       </view>
     </view>
   </view>
-
 </view>
 
 <view class="loading-state" wx:else>

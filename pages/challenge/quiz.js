@@ -95,7 +95,7 @@ Page({
 
   onSelectOption: function(e) {
     if (this.data.isAnswering) return;
-
+    this.data.isAnswering = true;
     const userSelectedId = e.currentTarget.dataset.id;
     const correctId = this.data.currentQuestion.category;
     const isRight = (userSelectedId === correctId);
@@ -129,7 +129,7 @@ Page({
 
     setTimeout(() => {
       this.nextQuestion();
-    }, 1200);
+    }, 800);
   },
 
   nextQuestion: function() {

@@ -210,7 +210,7 @@ Page({
                 wx.setStorageSync('totalScore', taskData.total_score);
                 wx.setStorageSync('currentTitle', taskData.title);
                 wx.showToast({
-                  title: `每日阅读 +${taskData.reward_points} 环保币`,
+                  title: `每日阅读 +${taskData.reward_points} 小红花`,
                   icon: 'success',
                   duration: 2500
                 });

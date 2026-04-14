@@ -1,13 +1,17 @@
 // pages/challenge/result.js
 const PERFORMANCE_COLORS = {
-  // 0-3题：再接再厉 (灰色/气馁的颜色)
+  // --- 经典模式 ---
   '再接再厉': 'linear-gradient(135deg, #CFD8DC 0%, #90A4AE 100%)',
-  // 5-7题：渐入佳境 (蓝色/鼓励的颜色)
   '渐入佳境': 'linear-gradient(135deg, #81D4FA 0%, #03A9F4 100%)',
-  // 8-9题：火眼金睛 (橙色/优秀的颜色)
   '火眼金睛': 'linear-gradient(135deg, #FFD54F 0%, #FF9800 100%)',
-  // 10题满分：完美通关 (紫红色/极致荣誉的颜色)
-  '完美通关': 'linear-gradient(135deg, #CE93D8 0%, #9C27B0 100%)'
+  '完美通关': 'linear-gradient(135deg, #CE93D8 0%, #9C27B0 100%)',
+  
+  // --- 限时模式统一称号渲染 ---
+  '手速王者': 'linear-gradient(135deg, #CE93D8 0%, #9C27B0 100%)', // 紫色 (最高级)
+  '极速达人': 'linear-gradient(135deg, #FFD54F 0%, #FF9800 100%)', // 橙色
+  '沉稳小将': 'linear-gradient(135deg, #42A5F5 0%, #1976D2 100%)', // 蓝色
+  '游刃有余': 'linear-gradient(135deg, #81D4FA 0%, #03A9F4 100%)', // 浅蓝
+  '眼疾手快': 'linear-gradient(135deg, #CFD8DC 0%, #90A4AE 100%)'  // 灰色
 };
 Page({
   data: {

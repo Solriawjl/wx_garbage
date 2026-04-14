@@ -41,7 +41,6 @@ page {
 .text-danger { color: #D32F2F; }
 .sub-hint { font-size: 22rpx; color: #999; font-weight: normal; margin-left: auto; }
 
-/* 图表容器 */
 .chart-container {
   width: 100%;
   height: 500rpx;
@@ -49,7 +48,7 @@ page {
   box-sizing: border-box;
 }
 ec-canvas { 
-  width: 100%; 
+  width: 100%;
   height: 100%; 
   display: block; 
 }

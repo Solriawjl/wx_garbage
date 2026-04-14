@@ -10,7 +10,7 @@
     <view class="data-row">
       <view class="data-item">
         <text class="num highlight">{{reportData.basic_info.total_stars}}</text>
-        <text class="label">总积分</text>
+        <text class="label">总环保星</text>
       </view>
       <view class="data-item">
         <text class="num">{{reportData.learning_habit.recognize_count}}</text>

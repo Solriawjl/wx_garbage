@@ -27,6 +27,8 @@
         {{item.is_active ? '已上架' : '已下架'}}
       </text>
       <switch checked="{{item.is_active}}" color="#F57C00" bindchange="onToggleChange" data-id="{{item.id}}" />
+      
+      <view class="btn-delete" wx:if="{{!item.is_active}}" bindtap="onDeleteItem" data-id="{{item.id}}" data-name="{{item.name}}">删除</view>
     </view>
 
   </view>

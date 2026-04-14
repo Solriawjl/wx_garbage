@@ -71,7 +71,7 @@ Page({
     // 1. 基础表单校验
     if (!imageUrl) return wx.showToast({ title: '请上传奖品图片', icon: 'none' });
     if (!name.trim()) return wx.showToast({ title: '请填写奖品名称', icon: 'none' });
-    if (!pointsPrice || pointsPrice <= 0) return wx.showToast({ title: '请填写正确的积分', icon: 'none' });
+    if (!pointsPrice || pointsPrice <= 0) return wx.showToast({ title: '请填写正确的小红花', icon: 'none' });
     
     let finalStock = -1; // 默认 -1 表示无限量
     if (stockType === 'limited') {

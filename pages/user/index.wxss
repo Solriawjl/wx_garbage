@@ -268,3 +268,83 @@
     font-family: consolas;
     font-weight: bold;
   }
+
+  /* ==========================================
+   🚀 发布通知弹窗样式
+   ========================================== */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  width: 85%;
+  background: #fff;
+  border-radius: 30rpx;
+  overflow: hidden;
+  animation: popIn 0.3s ease-out forwards;
+}
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.modal-header {
+  padding: 30rpx 40rpx;
+  background: #f8f9fa;
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.close-btn { color: #999; font-size: 36rpx; padding: 10rpx; }
+
+.modal-body { padding: 40rpx; }
+.form-group { margin-bottom: 30rpx; }
+.form-label { display: block; font-size: 28rpx; color: #666; margin-bottom: 15rpx; }
+
+.picker-box {
+  background: #f5f7fa;
+  padding: 20rpx 30rpx;
+  border-radius: 15rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.text-all { color: #E6A23C; font-weight: bold; }
+.text-single { color: #409EFF; font-weight: bold; }
+.picker-arrow { color: #ccc; font-size: 24rpx; }
+
+.form-row-2 { display: flex; justify-content: space-between; }
+.half { width: 48%; }
+.mini-picker { padding: 15rpx 20rpx; font-size: 26rpx; }
+
+.notice-input {
+  width: 100%;
+  height: 200rpx;
+  background: #f5f7fa;
+  border-radius: 15rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.modal-footer {
+  display: flex;
+  border-top: 1rpx solid #eee;
+}
+.btn-cancel, .btn-confirm {
+  flex: 1;
+  padding: 30rpx 0;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.btn-cancel { color: #999; background: #fff; }
+.btn-confirm { color: #fff; background: #4CAF50; }
+.btn-disabled { background: #a5d6a7; pointer-events: none; }

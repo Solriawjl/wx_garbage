@@ -21,57 +21,45 @@ page {
   padding: 0 10rpx;
 }
 
-/* 左侧：渐变色头像框 */
 .avatar-circle {
   width: 90rpx;
   height: 90rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #dcedc8, #8bc34a); /* 清新的抹茶绿渐变 */
+  background: linear-gradient(135deg, #dcedc8, #8bc34a);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 44rpx; /* 控制里面小芽 🌱 的大小 */
+  font-size: 44rpx; 
   margin-right: 24rpx;
-  box-shadow: 0 6rpx 16rpx rgba(139, 195, 74, 0.3); /* 柔和的发光阴影 */
+  box-shadow: 0 6rpx 16rpx rgba(139, 195, 74, 0.3);
 }
 
-/* 真实图片的头像样式，尺寸和默认的小芽框保持绝对一致 */
 .avatar-image {
   width: 90rpx;
   height: 90rpx;
   border-radius: 50%;
   margin-right: 24rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1); /* 图片用稍微深一点的阴影 */
-  border: 4rpx solid #ffffff; /* 给真实头像加个白边，会非常有高级感 */
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+  border: 4rpx solid #ffffff;
   box-sizing: border-box;
 }
 
-/* 并且给文字加一个最大宽度，防止用户名字太长把屏幕挤爆了 */
 .greeting-title {
   font-size: 36rpx;
   font-weight: 800;
   color: #2c3e50;
   margin-bottom: 6rpx;
   letter-spacing: 1rpx;
-  max-width: 450rpx; /* 限制最大宽度 */
+  max-width: 450rpx;
   overflow: hidden;
-  text-overflow: ellipsis; /* 太长自动变省略号 */
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 右侧：紧凑的文字组 */
 .greeting-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.greeting-title {
-  font-size: 36rpx; /* 字号稍微缩小，显得更精致 */
-  font-weight: 800;
-  color: #2c3e50;
-  margin-bottom: 6rpx;
-  letter-spacing: 1rpx;
 }
 
 .greeting-desc {
@@ -98,7 +86,7 @@ page {
   margin-left: 20rpx;
 }
 
-/* 3. ✨绝对核心：AI 大卡片 (高度增加，阴影加深) */
+/* 3. 绝对核心：AI 大卡片 */
 .ai-action-card {
   width: 100%;
   background: linear-gradient(135deg, #a8e063, #56ab2f);
@@ -110,7 +98,7 @@ page {
   align-items: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 16rpx 40rpx rgba(86, 171, 47, 0.35); /* 更强的发光阴影 */
+  box-shadow: 0 16rpx 40rpx rgba(86, 171, 47, 0.35); 
   margin-bottom: 40rpx;
   transition: transform 0.2s;
 }
@@ -162,7 +150,7 @@ page {
   box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.15);
 }
 
-/* 4. ✨恢复轮播的每日小知识 (独立胶囊外观) */
+/* 4. 每日小知识 (独立胶囊外观) */
 .daily-tip-box {
   width: 100%;
   background-color: #ffffff;
@@ -239,3 +227,63 @@ page {
   border-radius: 40rpx;
   box-shadow: 0 6rpx 12rpx rgba(255, 152, 0, 0.3);
 }
+
+/* ==========================================
+   🚀 升级版：首页动态通知栏样式
+   ========================================== */
+.notice-bar {
+  display: flex;
+  align-items: center;
+  background-color: #fdf6ec; 
+  border-radius: 20rpx;
+  padding: 0 25rpx;
+  height: 80rpx;
+  width: 100%;
+  margin-bottom: 30rpx; 
+  box-shadow: 0 4rpx 10rpx rgba(255, 152, 0, 0.1);
+  box-sizing: border-box;
+}
+.notice-icon-wrap { font-size: 34rpx; margin-right: 15rpx; }
+.notice-swiper { flex: 1; height: 100%; }
+.notice-text { display: flex; align-items: center; height: 100%; font-size: 26rpx; color: #e6a23c; overflow: hidden; width: 100%; }
+.notice-tag { 
+  display: inline-block; /* 强制作为整块渲染 */
+  vertical-align: middle;
+  font-size: 20rpx; 
+  padding: 4rpx 12rpx; 
+  border-radius: 10rpx; 
+  margin-right: 12rpx; 
+  color: #fff; 
+  font-weight: bold; 
+  flex-shrink: 0; 
+  white-space: nowrap; /* 绝对核心：禁止内部文本换行 */
+  line-height: 1.4;
+}
+.tag-reward { background-color: #f56c6c; } 
+.tag-teacher { background-color: #409EFF; } 
+.notice-content { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.empty-notice { color: #c0c4cc; font-style: italic; font-size: 24rpx; margin-left: 10rpx; }
+
+.notice-badge { background: #F44336; color: white; font-size: 20rpx; padding: 2rpx 10rpx; border-radius: 20rpx; margin-right: 15rpx; font-weight: bold;}
+.notice-arrow { color: #e6a23c; font-weight: bold; font-family: consolas;}
+
+/* --- 🚀 消息列表弹窗 --- */
+.notice-modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; justify-content: center; align-items: flex-end; }
+.notice-list-box { width: 100%; height: 75vh; background: #f5f7fa; border-radius: 40rpx 40rpx 0 0; display: flex; flex-direction: column; animation: slideUp 0.3s ease-out; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.nl-header { display: flex; justify-content: space-between; padding: 35rpx 40rpx; background: #fff; border-radius: 40rpx 40rpx 0 0; font-size: 34rpx; font-weight: bold; }
+.nl-close { color: #999; font-size: 36rpx; padding: 0 10rpx; }
+.nl-scroll { flex: 1; padding: 30rpx; box-sizing: border-box; }
+
+.nl-item { background: #fff; border-radius: 20rpx; padding: 30rpx; margin-bottom: 25rpx; box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.03); }
+.nl-item-header { margin-bottom: 15rpx; }
+.nl-item-content { font-size: 28rpx; color: #444; line-height: 1.6; margin-bottom: 20rpx; }
+.nl-item-time { font-size: 22rpx; color: #aaa; text-align: right; }
+
+.nl-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #999; font-size: 28rpx; }
+.nl-empty icon { margin-bottom: 20rpx; }
+
+.nl-footer { padding: 30rpx; background: #fff; border-top: 1rpx solid #eee; }
+.nl-clear-btn { background: #ffebee; color: #F44336; text-align: center; padding: 25rpx 0; border-radius: 40rpx; font-size: 30rpx; font-weight: bold; }
+.nl-clear-btn:active { background: #ffcdd2; }

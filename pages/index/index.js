@@ -2,6 +2,7 @@
 
 let inferenceSession = null;
 
+// 本地离线分类字典兜底
 const localCategoryDict = [
   { category_name: "厨余垃圾", category_class: "kitchen", eco_value: "处理后可作为天然肥料或沼气发电", put_guidance: "请沥干水分后投放，注意不要混入塑料袋等硬物。" },
   { category_name: "可回收物", category_class: "recyclable", eco_value: "可进入再生资源回收体系，变废为宝", put_guidance: "请尽量保持清洁干燥，立体包装请压扁后投放。" },
@@ -13,10 +14,14 @@ Page({
   data: {
     greetingText: '你好',     // 动态问候语
     userInfo: null,         // 用于存储用户真实的头像和昵称
-    carouselTips: [],       
-    currentTipData: {},      
-    isTipCardVisible: false,  
-    isModelReady: false 
+    carouselTips: [],       // 首页滚动科普提示词
+    currentTipData: {},     // 当前弹出的科普卡片数据 
+    isTipCardVisible: false,  // 控制科普卡片显隐
+    isModelReady: false,    // AI 模型是否加载完毕
+    
+    // 🚀 通知模块全新状态
+    noticeList: [],            // 存储未读通知列表
+    showNoticeListModal: false // 控制消息中心列表弹窗显隐
   },
 
   onLoad: function () {
@@ -24,11 +29,12 @@ Page({
     this.initEdgeAI(); 
   },
 
-  // 把获取时间问候和获取用户信息都放在 onShow 里，保证每次回到首页都是最新状态
   onShow: function () {
     this.setGreeting(); 
     this.checkUserInfo(); 
+    this.fetchNotices(); // 🚀 每次回到首页都静默刷新通知列表
 
+    // 检查是否需要自动触发拍照（例如从其他页面刚授权返回）
     const autoTrigger = wx.getStorageSync('autoTriggerCamera');
     if (autoTrigger) {
       wx.removeStorageSync('autoTriggerCamera');
@@ -36,36 +42,29 @@ Page({
     }
   },
 
-  // 🚀 【核心修改位置】：对齐登录和个人页的数据存储逻辑，使用统一的缓存键名
   checkUserInfo: function() {
     const userId = wx.getStorageSync('userId');
     const isLoggedIn = wx.getStorageSync('isLoggedIn');
     
-    // 如果存在 userId 且处于登录状态
     if (userId && isLoggedIn) {
-      // ⚠️ 修改：用全局统一的键名去取数据（不再加 userId 后缀）
       const savedAvatar = wx.getStorageSync('avatarUrl');
       const savedNickname = wx.getStorageSync('nickname');
       
-      // 只要存了头像或昵称中的任意一个，我们就把它展示出来
       if (savedAvatar || savedNickname) {
         this.setData({
           userInfo: {
-            avatarUrl: savedAvatar || '', // 取不到就传空，WXML 会自动降级显示小绿芽或默认头像
-            nickName: savedNickname || '环保小卫士' // 取不到就传空，兜底显示"环保小卫士"
+            avatarUrl: savedAvatar || '', 
+            nickName: savedNickname || '环保小卫士' 
           }
         });
       } else {
-        // 登录了但什么都没设置，依然显示默认
         this.setData({ userInfo: null });
       }
     } else {
-      // 未登录状态
       this.setData({ userInfo: null }); 
     }
   },
 
-  // 动态时间问候逻辑 (保持不变，只是挪了调用位置)
   setGreeting: function() {
     const hour = new Date().getHours();
     let text = '你好';
@@ -77,18 +76,29 @@ Page({
     this.setData({ greetingText: text });
   },
 
-  // --- 端侧 AI 初始化 ---
+  // ==========================================
+  // 🧠 端侧 AI 核心逻辑
+  // ==========================================
+  
   initEdgeAI: function() {
     const modelUrl = 'https://images-1408449839.cos.ap-chengdu.myqcloud.com/weights/mobilenetv3_edge_v1_5_1.onnx';
     const localPath = `${wx.env.USER_DATA_PATH}/mobilenetv3_edge_v1_5_1.onnx`; 
     const fs = wx.getFileSystemManager();
+    
     fs.access({
       path: localPath,
-      success: () => { this.createInferenceSession(localPath); },
+      success: () => { 
+        console.log("✅ 加载本地缓存的 ONNX 模型");
+        this.createInferenceSession(localPath); 
+      },
       fail: () => {
+        console.log("☁️ 本地无模型，开始下载...");
         wx.downloadFile({
           url: modelUrl, filePath: localPath,
-          success: (res) => { this.createInferenceSession(localPath); }
+          success: (res) => { 
+            console.log("✅ 模型下载成功");
+            this.createInferenceSession(localPath); 
+          }
         });
       }
     });
@@ -97,7 +107,10 @@ Page({
   createInferenceSession: function(modelPath) {
     try {
       inferenceSession = wx.createInferenceSession({ model: modelPath, precisionLevel: 4, allowNPU: true, allowQuantize: false });
-      inferenceSession.onLoad(() => { this.setData({ isModelReady: true }); });
+      inferenceSession.onLoad(() => { 
+        console.log("⚡ AI 引擎初始化完成");
+        this.setData({ isModelReady: true }); 
+      });
     } catch (e) { console.error("Session 异常", e); }
   },
 
@@ -140,7 +153,15 @@ Page({
     const that = this;
     const userId = wx.getStorageSync('userId');
     if (!userId) { wx.showToast({ title: '请先登录', icon: 'none' }); return; }
-    if (!this.data.isModelReady) { wx.showToast({ title: 'AI引擎初始化中，请稍后...', icon: 'none' }); return; }
+    
+    // 环境嗅探
+    const platform = wx.getSystemInfoSync().platform;
+    const isSimulator = platform === 'devtools';
+
+    if (!isSimulator && !this.data.isModelReady) { 
+      wx.showToast({ title: 'AI引擎初始化中，请稍后...', icon: 'none' }); 
+      return; 
+    }
     
     wx.showActionSheet({
       itemList: ['立即拍照', '从手机相册选择'],
@@ -150,6 +171,15 @@ Page({
           count: 1, mediaType: ['image'], sourceType: sourceType, sizeType: ['compressed'],
           success: async (resImg) => {
             const tempFilePath = resImg.tempFiles[0].tempFilePath;
+
+            // 💻 模拟器纯云端分支
+            if (isSimulator) {
+              console.log("💻 检测到模拟器环境，强制走云端 API...");
+              that.forceCloudRecognizeForSimulator(tempFilePath, userId);
+              return; 
+            }
+
+            // 📱 真机端云协同分支
             wx.showLoading({ title: 'AI 识别中...', mask: true }); 
             try {
               const tensorBuffer = await that.processImageToTensor(tempFilePath);
@@ -164,20 +194,14 @@ Page({
                 let maxProb = -1; let predictedIdx = -1;
                 for(let i=0; i<probs.length; i++){ if(probs[i] > maxProb){ maxProb = probs[i]; predictedIdx = i; } }
                 
-                // 计算出本地置信度 (0 ~ 100)
                 const confidence = parseFloat((maxProb * 100).toFixed(2));
                 
-                // 端云动态路由分流逻辑
                 wx.getNetworkType({
                   success (res) {
                     if (res.networkType !== 'none') {
-                      
-                      // 设定信任阈值
                       const CONFIDENCE_THRESHOLD = 80.0;
-                      
                       if (confidence >= CONFIDENCE_THRESHOLD) {
-                        // 【情况 A】：本地模型极度自信 -> 走极速轻量接口
-                        console.log(`本地置信度高达 ${confidence}%，走端侧极速接口`);
+                        console.log(`📱 本地极度自信(${confidence}%)，走极速接口`);
                         wx.uploadFile({
                           url: 'http://192.168.0.126:8000/api/recognize/edge', 
                           filePath: tempFilePath, name: 'file', 
@@ -188,22 +212,15 @@ Page({
                              if (backendData.code === 200) {
                                wx.setStorageSync('tempAiResult', backendData.data);
                                wx.navigateTo({ url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}` });
-                             } else {
-                               wx.showToast({ title: '获取科普数据失败', icon: 'none' });
-                               that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
-                             }
+                             } else { that.fallbackToLocalData(predictedIdx, tempFilePath, confidence); }
                           },
                           fail: () => { wx.hideLoading(); that.fallbackToLocalData(predictedIdx, tempFilePath, confidence); }
                         });
-                        
                       } else {
-                        // 【情况 B】：本地模型犹豫了 -> 走云端高精度复核接口
-                        console.log(`本地置信度仅为 ${confidence}%，触发云端高精度复核`);
-                        
+                        console.log(`☁️ 本地犹豫(${confidence}%)，触发云端高精度复核`);
                         wx.showLoading({ title: '深度分析中...', mask: true });
-                        
                         wx.uploadFile({
-                          url: 'http://192.168.0.126:8000/api/recognize', // 调用重型识别接口
+                          url: 'http://192.168.0.126:8000/api/recognize', 
                           filePath: tempFilePath, name: 'file', 
                           formData: { 'user_id': userId }, 
                           success: (uploadRes) => {
@@ -211,37 +228,25 @@ Page({
                              const backendData = JSON.parse(uploadRes.data);
                              if (backendData.code === 200) {
                                const cloudData = backendData.data;
-
-                               // ==========================================
-                               // 🛠️ 调试核心：精美打印端云对比结果
-                               // ==========================================
                                const localName = localCategoryDict[predictedIdx] ? localCategoryDict[predictedIdx].category_name : '未知';
                                console.log(`
 ┏━━━━━━━━━━━━━━━━━━ 端云识别对比 ━━━━━━━━━━━━━━━━━━┓
   【端侧本地推理】
-   - 预测分类: ${localName} (本地模型索引: ${predictedIdx})
+   - 预测分类: ${localName}
    - 置信度:   ${confidence}%
   --------------------------------------------------
   【云端大模型复核】
-   - 预测分类: ${cloudData.category_name} (数据库ID: ${cloudData.category_id})
+   - 预测分类: ${cloudData.category_name}
    - 置信度:   ${cloudData.confidence}%
-   - 纠错状态: ${localName !== cloudData.category_name ? '云端推翻了本地结果' : '云端与本地结果一致'}
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-                               `);
-
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`);
                                wx.setStorageSync('tempAiResult', cloudData);
                                wx.navigateTo({ url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}` });
-                             } else {
-                               wx.showToast({ title: '云端深度识别失败', icon: 'none' });
-                               that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
-                             }
+                             } else { that.fallbackToLocalData(predictedIdx, tempFilePath, confidence); }
                           },
                           fail: () => { wx.hideLoading(); that.fallbackToLocalData(predictedIdx, tempFilePath, confidence); }
                         });
                       }
-                      
                     } else {
-                      // 纯无网状态：走本地写死的离线字典兜底
                       wx.hideLoading(); that.fallbackToLocalData(predictedIdx, tempFilePath, confidence);
                     }
                   }
@@ -254,66 +259,25 @@ Page({
     });
   },
 
-  fetchCarouselTips: function() {
-    wx.request({
-      url: 'http://192.168.0.126:8000/api/tips/carousel', 
-      method: 'GET',
-      success: (res) => {
-        if (res.data.code === 200) { this.setData({ carouselTips: res.data.data }); }
-      }
+  forceCloudRecognizeForSimulator: function(tempFilePath, userId) {
+    const that = this;
+    wx.showLoading({ title: '💻 云端识别中...', mask: true });
+    wx.uploadFile({
+      url: 'http://192.168.0.126:8000/api/recognize', 
+      filePath: tempFilePath, name: 'file', formData: { 'user_id': userId }, 
+      success: (uploadRes) => {
+         wx.hideLoading(); 
+         try {
+           const backendData = JSON.parse(uploadRes.data);
+           if (backendData.code === 200) {
+             wx.setStorageSync('tempAiResult', backendData.data);
+             wx.navigateTo({ url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}` });
+           } else { wx.showToast({ title: backendData.message || '识别失败', icon: 'none' }); }
+         } catch(e) { wx.showToast({ title: '异常', icon: 'none' }); }
+      },
+      fail: () => { wx.hideLoading(); wx.showToast({ title: '网络异常', icon: 'none' }); }
     });
   },
-
-  // 点击科普文章触发
-  showTipCard: function(e) {
-    const clickedTip = e.currentTarget.dataset.tip;
-    if (clickedTip) {
-      // 1. 保持原有的弹窗展示逻辑不变
-      this.setData({ 
-        currentTipData: clickedTip,
-        isTipCardVisible: true 
-      });
-
-      // 静默触发每日科普阅读打卡任务
-      const userId = wx.getStorageSync('userId');
-      if (userId) {
-        wx.request({
-          // 注意：如果你的后端 IP 有变动，请修改这里
-          url: 'http://192.168.0.126:8000/api/task/read_tip', 
-          method: 'POST',
-          data: { user_id: parseInt(userId) },
-          success: (res) => {
-            if (res.data.code === 200) {
-              const taskData = res.data.data;
-              
-              // 只有当获得了实际环保星（即今天第一次读）时才弹窗表扬
-              if (taskData.reward_points > 0) {
-                // 更新本地缓存，防止个人中心的段位和环保星没同步刷新
-                wx.setStorageSync('totalScore', taskData.total_score);
-                wx.setStorageSync('currentTitle', taskData.title);
-
-                // 弹出让小朋友极度舒适的加分提示！
-                wx.showToast({
-                  title: `每日阅读 +${taskData.reward_points} 朵小红花`,
-                  icon: 'success',
-                  duration: 2500
-                });
-              }
-            }
-          },
-          fail: (err) => {
-            console.error('阅读任务打卡请求失败', err);
-          }
-        });
-      }
-    }
-  },
-
-  hideTipCard: function() {
-    this.setData({ isTipCardVisible: false });
-  },
-  goToSearch: function() { wx.navigateTo({ url: '/pages/search/index' }); },
-  goToChallenge: function() { wx.switchTab({ url: '/pages/challenge/index' }); },
 
   fallbackToLocalData: function(predictedIdx, tempFilePath, confidence) {
     const localResult = localCategoryDict[predictedIdx] || localCategoryDict[3]; 
@@ -323,5 +287,99 @@ Page({
     };
     wx.setStorageSync('tempAiResult', aiResultData);
     wx.navigateTo({ url: `/pages/result/result?imagePath=${encodeURIComponent(tempFilePath)}` });
+  },
+
+  // ==========================================
+  // 💡 日常科普任务模块
+  // ==========================================
+  
+  fetchCarouselTips: function() {
+    wx.request({
+      url: 'http://192.168.0.126:8000/api/tips/carousel', 
+      method: 'GET',
+      success: (res) => { if (res.data.code === 200) this.setData({ carouselTips: res.data.data }); }
+    });
+  },
+
+  showTipCard: function(e) {
+    const clickedTip = e.currentTarget.dataset.tip;
+    if (clickedTip) {
+      this.setData({ currentTipData: clickedTip, isTipCardVisible: true });
+      const userId = wx.getStorageSync('userId');
+      if (userId) {
+        wx.request({
+          url: 'http://192.168.0.126:8000/api/task/read_tip', 
+          method: 'POST', data: { user_id: parseInt(userId) },
+          success: (res) => {
+            if (res.data.code === 200 && res.data.data.reward_points > 0) {
+              wx.setStorageSync('totalScore', res.data.data.total_score);
+              wx.setStorageSync('currentTitle', res.data.data.title);
+              wx.showToast({ title: `每日阅读 +${res.data.data.reward_points} 小红花`, icon: 'success' });
+            }
+          }
+        });
+      }
+    }
+  },
+
+  hideTipCard: function() { this.setData({ isTipCardVisible: false }); },
+  goToSearch: function() { wx.navigateTo({ url: '/pages/search/index' }); },
+  goToChallenge: function() { wx.switchTab({ url: '/pages/challenge/index' }); },
+
+  // ==========================================
+  // 📢 升级版：通知中心模块
+  // ==========================================
+  
+  fetchNotices: function() {
+    const userId = wx.getStorageSync('userId');
+    if (!userId) return;
+
+    wx.request({
+      url: `http://192.168.0.126:8000/api/user/notifications?user_id=${userId}`,
+      method: 'GET',
+      success: (res) => {
+        if (res.data.code === 200) {
+          this.setData({ noticeList: res.data.data });
+        }
+      }
+    });
+  },
+
+  openNoticeList: function() {
+    // 只有在有通知时，点击才打开弹窗
+    if (this.data.noticeList.length > 0) {
+      this.setData({ showNoticeListModal: true });
+    }
+  },
+
+  closeNoticeList: function() {
+    this.setData({ showNoticeListModal: false });
+  },
+
+  clearAllNotices: function() {
+    wx.showModal({
+      title: '标为已读',
+      content: '确定要把所有消息标为已读吗？',
+      confirmColor: '#4CAF50',
+      success: (res) => {
+        if (res.confirm) {
+          const ids = this.data.noticeList.map(n => n.id);
+          
+          // 乐观更新：立刻关掉弹窗清空列表，享受无延迟交互
+          this.setData({ 
+            noticeList: [],
+            showNoticeListModal: false 
+          });
+
+          // 后台默默发请求更新数据库状态
+          ids.forEach(id => {
+            wx.request({ 
+              url: `http://192.168.0.126:8000/api/user/notifications/${id}/read`, 
+              method: 'POST' 
+            });
+          });
+        }
+      }
+    });
   }
 })

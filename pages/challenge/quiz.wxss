@@ -84,13 +84,19 @@
   align-items: center;
   position: relative;
   box-shadow: 0 4rpx 15rpx rgba(0,0,0,0.04);
-  border: 4rpx solid transparent; /* 预留边框位置，防止闪烁 */
-  transition: all 0.2s;
+  border: 4rpx solid transparent;
+  
+  /* 🚀 修改 1：控制“松手弹回”的时间。0.15s 比原来的 0.2s 更快，并且加上 ease-out 让回弹更自然 */
+  transition: all 0.15s ease-out; 
 }
 
 /* 点击时的按压效果 */
 .option-card:active {
-  transform: scale(0.96);
+  /* 我稍微把缩放比例从 0.96 调到了 0.94，配合更快的时间，物理按压感会更强 */
+  transform: scale(0.94); 
+  
+  /* 🚀 修改 2：控制“按下去”的时间。0.03s 几乎是瞬间按下去，做到指尖零延迟！ */
+  transition: all 0.03s ease-in; 
 }
 
 .option-icon {

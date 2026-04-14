@@ -124,7 +124,14 @@
 
 <block wx:elif="{{role === 'teacher'}}">
   <view class="menu-list" style="margin-top: 30rpx;">
-    
+    <view class="menu-item" bindtap="openNoticeModal">
+      <view class="menu-left">
+        <text class="menu-icon">📢</text>
+        <text class="menu-text" style="font-weight: bold; color: #E6A23C;">发布班级通知</text>
+      </view>
+      <text class="menu-arrow">></text>
+    </view>
+
     <view class="menu-item" bindtap="goToTeacherDashboard">
       <view class="menu-left">
         <text class="menu-icon">📈</text>
@@ -171,5 +178,49 @@
 </view>
 
 <view class="logout-btn" bindtap="logout" wx:if="{{isLoggedIn}}">退出登录</view>
+<view class="modal-mask" wx:if="{{showNoticeModal}}" catchtouchmove="true">
+  <view class="modal-content">
+    <view class="modal-header">
+      <text>发布班级通知</text>
+      <view class="close-btn" bindtap="closeNoticeModal">✕</view>
+    </view>
+    
+    <view class="modal-body">
+      <view class="form-group">
+        <text class="form-label">接收对象：</text>
+        <picker bindchange="onTargetChange" value="{{targetIndex}}" range="{{targetList}}" range-key="name">
+          <view class="picker-box">
+            <text class="{{targetIndex == 0 ? 'text-all' : 'text-single'}}">{{targetList[targetIndex].name}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
 
+      <view class="form-row-2">
+        <view class="form-group half">
+          <text class="form-label">通知类型：</text>
+          <picker bindchange="onTypeChange" value="{{typeIndex}}" range="{{typeList}}">
+            <view class="picker-box mini-picker">{{typeList[typeIndex]}} <text class="picker-arrow">▼</text></view>
+          </picker>
+        </view>
+        <view class="form-group half">
+          <text class="form-label">生效时长：</text>
+          <picker bindchange="onDurationChange" value="{{durationIndex}}" range="{{durationList}}">
+            <view class="picker-box mini-picker">{{durationList[durationIndex]}} <text class="picker-arrow">▼</text></view>
+          </picker>
+        </view>
+      </view>
+      
+      <view class="form-group">
+        <text class="form-label">通知内容：</text>
+        <textarea class="notice-input" placeholder="请输入你要下发的通知内容..." bindinput="onNoticeInput" value="{{noticeContent}}" fixed="true" cursor-spacing="100"></textarea>
+      </view>
+    </view>
+    
+    <view class="modal-footer">
+      <view class="btn-cancel" bindtap="closeNoticeModal">取消</view>
+      <view class="btn-confirm {{noticeContent.length == 0 ? 'btn-disabled' : ''}}" bindtap="submitNotice">立即发布</view>
+    </view>
+  </view>
+</view>
 </view>

@@ -85,7 +85,7 @@ page {
 .empty-desc { font-size: 26rpx; color: #999; }
 
 /* 底部操作栏 */
-.bottom-space { height: 160rpx; } /* 防止列表被底部按钮挡住 */
+.bottom-space { height: 160rpx; } 
 .bottom-bar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -106,3 +106,19 @@ page {
   justify-content: center;
 }
 .add-icon { margin-right: 10rpx; font-size: 34rpx; }
+
+/* ==========================================
+   🚀 新增：删除按钮样式
+   ========================================== */
+.btn-delete {
+  margin-top: 20rpx;
+  color: #F44336;
+  border: 1rpx solid #F44336;
+  padding: 6rpx 26rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  text-align: center;
+}
+.btn-delete:active {
+  background-color: #ffebee;
+}

@@ -1,7 +1,6 @@
 <view class="index-container">
   
   <view class="user-header">
-    
     <image class="avatar-image" wx:if="{{userInfo && userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
     <view class="avatar-circle" wx:else>🌱</view>
 
@@ -9,7 +8,60 @@
       <text class="greeting-title">{{greetingText}}，{{userInfo.nickName ? userInfo.nickName : '环保小卫士'}}</text>
       <text class="greeting-desc">开启今天的绿色生活</text>
     </view>
+  </view>
 
+  <view class="notice-bar" bindtap="openNoticeList">
+    <view class="notice-icon-wrap">📢</view>
+    
+    <block wx:if="{{noticeList.length > 0}}">
+      <swiper class="notice-swiper" vertical="true" autoplay="true" circular="true" interval="3500">
+        <swiper-item wx:for="{{noticeList}}" wx:key="id">
+          <view class="notice-text">
+            <text class="notice-tag {{item.type === 'reward' ? 'tag-reward' : 'tag-teacher'}}">{{item.type === 'reward' ? '🏆 奖励通报' : (item.type === 'teacher' ? '老师提醒' : item.type)}}</text>
+            <text class="notice-content">{{item.content}}</text>
+          </view>
+        </swiper-item>
+      </swiper>
+      <view class="notice-badge">{{noticeList.length}}</view>
+    </block>
+    
+    <block wx:else>
+      <view class="notice-text">
+        <text class="notice-content empty-notice">暂无新通知，开启美好一天吧~</text>
+      </view>
+    </block>
+    <view class="notice-arrow">></view>
+  </view>
+
+  <view class="notice-modal-mask" wx:if="{{showNoticeListModal}}" catchtouchmove="true">
+    <view class="notice-list-box">
+      <view class="nl-header">
+        <text class="nl-title">消息中心</text>
+        <view class="nl-close" bindtap="closeNoticeList">✕</view>
+      </view>
+      
+      <scroll-view class="nl-scroll" scroll-y="true">
+        <block wx:if="{{noticeList.length > 0}}">
+          <view class="nl-item" wx:for="{{noticeList}}" wx:key="id">
+            <view class="nl-item-header">
+              <text class="notice-tag {{item.type === 'reward' ? 'tag-reward' : 'tag-teacher'}}">{{item.type === 'reward' ? '🏆 系统发奖' :(item.type === 'teacher' ? '老师提醒' : item.type)}}</text>
+            </view>
+            <view class="nl-item-content">{{item.content}}</view>
+            <view class="nl-item-time">{{item.created_at || '最新发布'}}</view> 
+          </view>
+        </block>
+        <block wx:else>
+          <view class="nl-empty">
+            <icon type="info" size="50" color="#e0e0e0"></icon>
+            <text>消息列表空空如也</text>
+          </view>
+        </block>
+      </scroll-view>
+
+      <view class="nl-footer" wx:if="{{noticeList.length > 0}}">
+        <view class="nl-clear-btn" bindtap="clearAllNotices">一键标为已读</view>
+      </view>
+    </view>
   </view>
 
   <view class="search-bar" bindtap="goToSearch">
