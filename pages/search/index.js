@@ -21,7 +21,7 @@ Page({
   // 获取热搜的函数
   fetchHotList: function() {
     wx.request({
-      url: 'http://192.168.0.126:8000/api/search/hot', 
+      url: 'http://8.137.191.153:8000/api/search/hot', 
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -56,7 +56,7 @@ Page({
   // 去后端拉取联想词
   fetchSuggestions: function(keyword) {
     wx.request({
-      url: `http://192.168.0.126:8000/api/search/suggest?keyword=${encodeURIComponent(keyword)}`, // ⚠️ 记得换 IP
+      url: `http://8.137.191.153:8000/api/search/suggest?keyword=${encodeURIComponent(keyword)}`, // ⚠️ 记得换 IP
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {

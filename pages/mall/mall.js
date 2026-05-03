@@ -19,7 +19,7 @@ Page({
     const userId = wx.getStorageSync('userId');
     wx.request({
       // 注意：确保这里的 IP 和你本地的 FastAPI 运行地址一致
-      url: `http://192.168.0.126:8000/api/mall/items?user_id=${userId}`,
+      url: `http://8.137.191.153:8000/api/mall/items?user_id=${userId}`,
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -71,7 +71,7 @@ Page({
           
           // 4. 发起真实扣分和生成订单请求
           wx.request({
-            url: 'http://192.168.0.126:8000/api/mall/redeem',
+            url: 'http://8.137.191.153:8000/api/mall/redeem',
             method: 'POST',
             data: {
               user_id: parseInt(userId),

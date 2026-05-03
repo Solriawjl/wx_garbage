@@ -26,24 +26,37 @@ Page({
 
     wx.showLoading({ title: '生成多维报告中...' });
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/growth_report/${userId}`,
+      url: `http://8.137.191.153:8000/api/user/growth_report/${userId}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();
         if (res.data.code === 200) {
-          this.setData({ reportData: res.data.data }, () => {
-            // 延迟渲染，确保节点已挂载
-            setTimeout(() => {
-              this.initRadarChart(res.data.data.radar_data);
-              this.initBarChart(res.data.data.activity_trend);
-              this.initHabitChart(res.data.data.learning_habit);
+          
+          let reportData = res.data.data;
+          // 用 Math.round 抹平浮点数误差，计算出干净的整数百分比
+          reportData.mistake_analysis.clear_rate_pct = Math.round(reportData.mistake_analysis.clear_rate * 100);
+
+          // 使用处理后的数据进行绑定
+          this.setData({ reportData: reportData }, () => {
+            wx.nextTick(() => {
+              setTimeout(() => { this.initRadarChart(reportData.radar_data); }, 500);
+              setTimeout(() => { this.initBarChart(reportData.activity_trend); }, 1200);
+              setTimeout(() => { this.initHabitChart(reportData.learning_habit); }, 1900);
               
-              if (res.data.data.mistake_analysis.total_wrong > 0) {
-                this.initMistakeChart(res.data.data.mistake_analysis.distribution);
+              if (reportData.mistake_analysis.total_wrong > 0) {
+                setTimeout(() => {
+                  this.initMistakeChart(reportData.mistake_analysis.distribution);
+                }, 2600);
               }
-            }, 300);
+            });
           });
+        } else {
+          wx.showToast({ title: res.data.message || '获取报告失败', icon: 'none' });
         }
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({ title: '网络异常，请重试', icon: 'none' });
       }
     });
   },

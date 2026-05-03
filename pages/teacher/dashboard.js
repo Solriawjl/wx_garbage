@@ -47,7 +47,7 @@ Page({
     wx.showLoading({ title: '加载大盘数据...' });
     const teacherId = wx.getStorageSync('userId');
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/dashboard?teacher_id=${teacherId}`,
+      url: `http://8.137.191.153:8000/api/teacher/dashboard?teacher_id=${teacherId}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();

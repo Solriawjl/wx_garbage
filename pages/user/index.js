@@ -62,7 +62,7 @@ Page({
   // 获取全校班级字典 (逻辑与 login.js 一致)
   fetchClassOptions() {
     wx.request({
-      url: `http://192.168.0.126:8000/api/common/class_options`,
+      url: `http://8.137.191.153:8000/api/common/class_options`,
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200 && res.data.data.length > 0) {
@@ -95,7 +95,7 @@ Page({
 
     wx.showLoading({ title: '切换学情域...', mask: true });
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/update_class`,
+      url: `http://8.137.191.153:8000/api/user/update_class`,
       method: 'POST',
       data: { user_id: userId, class_id: selectedClass.id },
       success: (res) => {
@@ -130,7 +130,7 @@ Page({
       
       // 将真实的图片文件上传给 Python 后端
       wx.uploadFile({
-        url: 'http://192.168.0.126:8000/api/user/update_avatar', 
+        url: 'http://8.137.191.153:8000/api/user/update_avatar', 
         filePath: avatarUrl,
         name: 'file', 
         formData: {
@@ -169,7 +169,7 @@ Page({
       wx.setStorageSync('nickname', value);
       
       wx.request({
-        url: 'http://192.168.0.126:8000/api/user/update_nickname',
+        url: 'http://8.137.191.153:8000/api/user/update_nickname',
         method: 'POST',
         data: {
           user_id: userId,
@@ -187,7 +187,7 @@ Page({
   // 函数名对齐 onShow 中的调用，并完善 GET 请求参数拼接
   getUserDashboardData: function(userId) {
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/info?user_id=${userId}`, 
+      url: `http://8.137.191.153:8000/api/user/info?user_id=${userId}`, 
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -355,7 +355,7 @@ Page({
     
     // 调取后端字典接口
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/students?teacher_id=${teacherId}`,
+      url: `http://8.137.191.153:8000/api/teacher/students?teacher_id=${teacherId}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();
@@ -407,7 +407,7 @@ Page({
     wx.showLoading({ title: '正在发布...' });
 
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/send_notice?teacher_id=${teacherId}`,
+      url: `http://8.137.191.153:8000/api/teacher/send_notice?teacher_id=${teacherId}`,
       method: 'POST',
       data: {
         user_id: selectedUserId,

@@ -93,7 +93,7 @@ Page({
     wx.showLoading({ title: '提交中...', mask: true });
 
     wx.request({
-      url: 'http://192.168.0.126:8000/api/feedback/submit',
+      url: 'http://8.137.191.153:8000/api/feedback/submit',
       method: 'POST',
       data: payload,
       success: (res) => {

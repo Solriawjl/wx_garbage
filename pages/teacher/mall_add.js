@@ -37,7 +37,7 @@ Page({
 
     wx.uploadFile({
       // 这里换成你后端的真实文件上传接口（复用你之前的即可）
-      url: 'http://192.168.0.126:8000/api/upload', 
+      url: 'http://8.137.191.153:8000/api/upload', 
       filePath: filePath,
       name: 'file', // 后端接收文件的字段名
       success: (res) => {
@@ -85,7 +85,7 @@ Page({
 
     // 2. 调用后端发布接口
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/mall/add?teacher_id=${teacherId}`,
+      url: `http://8.137.191.153:8000/api/teacher/mall/add?teacher_id=${teacherId}`,
       method: 'POST',
       data: {
         name: name,

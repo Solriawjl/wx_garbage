@@ -49,7 +49,7 @@ Page({
     // 经典模式 10 题，限时模式 25 题
     const limit = this.data.mode === 'timed' ? 25 : 10;
     wx.request({
-      url: `http://192.168.0.126:8000/api/challenge/questions?limit=${limit}`,
+      url: `http://8.137.191.153:8000/api/challenge/questions?limit=${limit}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();
@@ -226,7 +226,7 @@ Page({
     };
 
     wx.request({
-      url: 'http://192.168.0.126:8000/api/challenge/submit',
+      url: 'http://8.137.191.153:8000/api/challenge/submit',
       method: 'POST',
       data: payload,
       success: (res) => {

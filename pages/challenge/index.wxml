@@ -31,17 +31,25 @@
 
 <view class="rules-card">
   <view class="rules-title">📜 挑战与奖励规则</view>
+  
   <view class="rule-line">
     <text class="rule-dot"></text>
     <text>【经典闯关】共 10 题，慢慢想不着急。只要完成就能获得 1 颗环保星🌟，全对可获得「完美通关」评级，最高拿到 2 颗环保星！</text>
   </view>
+  
   <view class="rule-line">
     <text class="rule-dot"></text>
     <text>【极限60秒】限时 60 秒大挑战！保底 1 颗环保星，又快又准最高可拿 3 颗环保星，还能获得炫酷的「闪电小超人」称号哦！</text>
   </view>
+  
   <view class="rule-line">
     <text class="rule-dot"></text>
-    <text>【每日打卡】每天第一次完成任何挑战，都能额外获得 2 朵小红花🌺，快攒起来去校园小卖部换礼物吧！</text>
+    <text>【每日打卡】每天第一次完成任何挑战，都能额外获得 2 个小红花，快攒起来换取心仪的奖品吧！</text>
+  </view>
+
+  <view class="rule-line highlight-rule">
+    <text class="rule-dot hot-dot"></text>
+    <text>【每周冲榜】每周系统会自动结算班级排行榜！跻身全班前三名的环保小卫士，将分别获得 30、25、20 个小红花的奖励！</text>
   </view>
 </view>
 

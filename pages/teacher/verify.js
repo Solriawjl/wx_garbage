@@ -23,7 +23,7 @@ Page({
     const teacherId = wx.getStorageSync('userId');
     // 注意替换为真实后端 IP
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/pending_orders?teacher_id=${teacherId}`,
+      url: `http://8.137.191.153:8000/api/teacher/pending_orders?teacher_id=${teacherId}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();
@@ -71,7 +71,7 @@ Page({
     wx.showLoading({ title: '处理中...', mask: true });
 
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/verify`,
+      url: `http://8.137.191.153:8000/api/teacher/verify`,
       method: 'POST',
       data: {
         order_id: orderId,

@@ -96,7 +96,7 @@ Page({
   fetchKnowledgeItems: function(categoryId) {
     wx.showLoading({ title: '加载中...', mask: true });
     wx.request({
-      url: `http://192.168.0.126:8000/api/knowledge/items?category_type=${categoryId}`, // ⚠️ 记得换 IP
+      url: `http://8.137.191.153:8000/api/knowledge/items?category_type=${categoryId}`, // ⚠️ 记得换 IP
       method: 'GET',
       success: (res) => {
         wx.hideLoading();
@@ -139,7 +139,7 @@ Page({
     let targetPage = isRefresh ? 1 : this.data.page;
 
     wx.request({
-      url: `http://192.168.0.126:8000/api/tips/list?page=${targetPage}&size=${this.data.size}`,
+      url: `http://8.137.191.153:8000/api/tips/list?page=${targetPage}&size=${this.data.size}`,
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -192,7 +192,7 @@ Page({
       if (userId) {
         // 🚀 1. 静默触发：记录阅读行为，用于丰富成长报告的图表数据
         wx.request({
-          url: 'http://192.168.0.126:8000/api/user/reading/record',
+          url: 'http://8.137.191.153:8000/api/user/reading/record',
           method: 'POST',
           data: { user_id: parseInt(userId), tip_id: clickedTip.id },
           success: () => console.log('阅读记录已埋点')
@@ -200,7 +200,7 @@ Page({
 
         // 🚀 2. 赚取小红花任务 (原有逻辑保持不变)
         wx.request({
-          url: 'http://192.168.0.126:8000/api/task/read_tip', 
+          url: 'http://8.137.191.153:8000/api/task/read_tip', 
           method: 'POST',
           data: { user_id: parseInt(userId) },
           success: (res) => {

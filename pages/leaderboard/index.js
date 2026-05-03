@@ -11,7 +11,7 @@ Page({
     wx.showLoading({ title: '加载中...' });
     const userId = wx.getStorageSync('userId');
     wx.request({
-      url: `http://192.168.0.126:8000/api/leaderboard?user_id=${userId}`, // 你的后端地址
+      url: `http://8.137.191.153:8000/api/leaderboard?user_id=${userId}`, // 你的后端地址
       method: 'GET',
       success: (res) => {
         wx.hideLoading();

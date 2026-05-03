@@ -56,7 +56,7 @@ Page({
 
       // 2. 发起真实的 GET 请求调用后端搜索接口
       wx.request({
-        url: 'http://192.168.0.126:8000/api/search', // 你的 FastAPI 后端地址
+        url: 'http://8.137.191.153:8000/api/search', // 你的 FastAPI 后端地址
         method: 'GET',
         data: {
           keyword: realKeyword

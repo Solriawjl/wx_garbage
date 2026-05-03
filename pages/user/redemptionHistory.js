@@ -15,7 +15,7 @@ Page({
 
     wx.showLoading({ title: '加载中...' });
     wx.request({
-      url: 'http://192.168.0.126:8000/api/user/redemption_history',
+      url: 'http://8.137.191.153:8000/api/user/redemption_history',
       data: { user_id: userId },
       success: (res) => {
         wx.hideLoading();
@@ -63,7 +63,7 @@ Page({
           // 2. 发起真实扣分和生成订单请求
           wx.request({
             // 注意：如果你后端运行地址不同，请修改这里
-            url: 'http://192.168.0.126:8000/api/mall/refund', 
+            url: 'http://8.137.191.153:8000/api/mall/refund', 
             method: 'POST',
             data: {
               user_id: parseInt(userId),

@@ -17,7 +17,7 @@ Page({
   fetchWrongBook: function() {
     const userId = wx.getStorageSync('userId');
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/wrong_book?user_id=${userId}`,
+      url: `http://8.137.191.153:8000/api/user/wrong_book?user_id=${userId}`,
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -79,7 +79,7 @@ Page({
     wx.showLoading({ title: '处理中...' });
 
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/wrong_book/resolve/${wrongId}`,
+      url: `http://8.137.191.153:8000/api/user/wrong_book/resolve/${wrongId}`,
       method: 'POST',
       success: (res) => {
         wx.hideLoading();
@@ -130,7 +130,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.request({
-            url: `http://192.168.0.126:8000/api/user/wrong_book/${item.id}`,
+            url: `http://8.137.191.153:8000/api/user/wrong_book/${item.id}`,
             method: 'DELETE',
             success: () => {
               this.allRecordList = this.allRecordList.filter(i => i.id !== item.id);

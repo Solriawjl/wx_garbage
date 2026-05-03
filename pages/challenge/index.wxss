@@ -216,3 +216,14 @@
   color: #fbc02d;
   font-weight: bold;
 }
+
+/* 规则高亮专属样式 */
+.highlight-rule text {
+  color: #E65100;
+  font-weight: bold;
+}
+
+.hot-dot {
+  background-color: #FF9800 !important;
+  box-shadow: 0 0 8rpx rgba(255, 152, 0, 0.6);
+}

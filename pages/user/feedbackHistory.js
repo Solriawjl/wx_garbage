@@ -22,7 +22,7 @@ Page({
     wx.showLoading({ title: '加载中...' });
 
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/feedback_history?user_id=${userId}`,
+      url: `http://8.137.191.153:8000/api/user/feedback_history?user_id=${userId}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();
@@ -140,7 +140,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.request({
-            url: `http://192.168.0.126:8000/api/user/feedback_history/${item.id}`,
+            url: `http://8.137.191.153:8000/api/user/feedback_history/${item.id}`,
             method: 'DELETE',
             success: (delRes) => {
               if (delRes.data.code === 200) {
@@ -171,7 +171,7 @@ Page({
           const userId = wx.getStorageSync('userId');
           wx.showLoading({ title: '清理中...' });
           wx.request({
-            url: `http://192.168.0.126:8000/api/user/feedback_history/clear?user_id=${userId}`,
+            url: `http://8.137.191.153:8000/api/user/feedback_history/clear?user_id=${userId}`,
             method: 'DELETE',
             success: (delRes) => {
               if (delRes.data.code === 200) {

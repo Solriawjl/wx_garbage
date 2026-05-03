@@ -203,7 +203,7 @@ Page({
                       if (confidence >= CONFIDENCE_THRESHOLD) {
                         console.log(`📱 本地极度自信(${confidence}%)，走极速接口`);
                         wx.uploadFile({
-                          url: 'http://192.168.0.126:8000/api/recognize/edge', 
+                          url: 'http://8.137.191.153:8000/api/recognize/edge', 
                           filePath: tempFilePath, name: 'file', 
                           formData: { 'user_id': userId, 'predicted_idx': predictedIdx, 'confidence': confidence },
                           success: (uploadRes) => {
@@ -220,7 +220,7 @@ Page({
                         console.log(`☁️ 本地犹豫(${confidence}%)，触发云端高精度复核`);
                         wx.showLoading({ title: '深度分析中...', mask: true });
                         wx.uploadFile({
-                          url: 'http://192.168.0.126:8000/api/recognize', 
+                          url: 'http://8.137.191.153:8000/api/recognize', 
                           filePath: tempFilePath, name: 'file', 
                           formData: { 'user_id': userId }, 
                           success: (uploadRes) => {
@@ -263,7 +263,7 @@ Page({
     const that = this;
     wx.showLoading({ title: '💻 云端识别中...', mask: true });
     wx.uploadFile({
-      url: 'http://192.168.0.126:8000/api/recognize', 
+      url: 'http://8.137.191.153:8000/api/recognize', 
       filePath: tempFilePath, name: 'file', formData: { 'user_id': userId }, 
       success: (uploadRes) => {
          wx.hideLoading(); 
@@ -295,7 +295,7 @@ Page({
   
   fetchCarouselTips: function() {
     wx.request({
-      url: 'http://192.168.0.126:8000/api/tips/carousel', 
+      url: 'http://8.137.191.153:8000/api/tips/carousel', 
       method: 'GET',
       success: (res) => { if (res.data.code === 200) this.setData({ carouselTips: res.data.data }); }
     });
@@ -308,7 +308,7 @@ Page({
       const userId = wx.getStorageSync('userId');
       if (userId) {
         wx.request({
-          url: 'http://192.168.0.126:8000/api/task/read_tip', 
+          url: 'http://8.137.191.153:8000/api/task/read_tip', 
           method: 'POST', data: { user_id: parseInt(userId) },
           success: (res) => {
             if (res.data.code === 200 && res.data.data.reward_points > 0) {
@@ -335,7 +335,7 @@ Page({
     if (!userId) return;
 
     wx.request({
-      url: `http://192.168.0.126:8000/api/user/notifications?user_id=${userId}`,
+      url: `http://8.137.191.153:8000/api/user/notifications?user_id=${userId}`,
       method: 'GET',
       success: (res) => {
         if (res.data.code === 200) {
@@ -374,7 +374,7 @@ Page({
           // 后台默默发请求更新数据库状态
           ids.forEach(id => {
             wx.request({ 
-              url: `http://192.168.0.126:8000/api/user/notifications/${id}/read`, 
+              url: `http://8.137.191.153:8000/api/user/notifications/${id}/read`, 
               method: 'POST' 
             });
           });

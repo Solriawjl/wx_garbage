@@ -1,7 +1,7 @@
 <view class="login-container">
   
   <view class="header-section">
-    <image class="logo" src="/images/login.png" mode="aspectFill"></image>
+    <image class="logo" src="https://images-1408449839.cos.ap-chengdu.myqcloud.com/images/user/login.png" mode="aspectFill"></image>
     <view class="title">智分小卫士</view>
     <view class="subtitle">选择你的专属身份，开启环保之旅！</view>
   </view>

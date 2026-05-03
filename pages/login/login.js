@@ -1,5 +1,5 @@
 // pages/login/login.js
-const API_BASE_URL = 'http://192.168.0.126:8000'; 
+const API_BASE_URL = 'http://8.137.191.153:8000'; 
 
 Page({
   data: {

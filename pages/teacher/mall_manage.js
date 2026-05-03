@@ -19,7 +19,7 @@ Page({
     wx.showLoading({ title: '加载库房中...' });
     const teacherId = wx.getStorageSync('userId');
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/mall/list?teacher_id=${teacherId}`,
+      url: `http://8.137.191.153:8000/api/teacher/mall/list?teacher_id=${teacherId}`,
       method: 'GET',
       success: (res) => {
         wx.hideLoading();
@@ -51,7 +51,7 @@ Page({
     const isChecked = e.detail.value; 
 
     wx.request({
-      url: `http://192.168.0.126:8000/api/teacher/mall/toggle/${itemId}`,
+      url: `http://8.137.191.153:8000/api/teacher/mall/toggle/${itemId}`,
       method: 'POST',
       success: (res) => {
         if (res.data.code === 200) {
@@ -105,7 +105,7 @@ Page({
           wx.showLoading({ title: '正在清理库房...' });
           
           wx.request({
-            url: `http://192.168.0.126:8000/api/teacher/mall/items/${id}?teacher_id=${teacherId}`,
+            url: `http://8.137.191.153:8000/api/teacher/mall/items/${id}?teacher_id=${teacherId}`,
             method: 'DELETE',
             success: (res) => {
               wx.hideLoading();
