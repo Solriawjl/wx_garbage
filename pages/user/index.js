@@ -186,35 +186,36 @@ Page({
 
   // 函数名对齐 onShow 中的调用，并完善 GET 请求参数拼接
   getUserDashboardData: function(userId) {
-    wx.request({
-      url: `http://8.137.191.153:8000/api/user/info?user_id=${userId}`, 
-      method: 'GET',
-      success: (res) => {
-        if (res.data.code === 200) {
-          const info = res.data.data; // 后端返回的数据体
-          
-          this.setData({
-            totalScore: info.total_score,
-            ecoCoin: info.eco_coin, 
-            userTitle: info.title || '环保新手',
-            recognizeCount: info.recognize_count,
-            challengeCount: info.challenge_count
-          });
-          
-          // 同步最新环保星到缓存，以便其他页面（如商城、首页）使用
-          wx.setStorageSync('ecoCoin', info.eco_coin);
-          wx.setStorageSync('totalScore', info.total_score);
-          wx.setStorageSync('currentTitle', info.title || '环保新手');
-        } else {
-          console.error("后端返回异常", res.data.message);
-        }
-      },
-      fail: (err) => {
-        console.error("获取用户大盘数据失败", err);
+  wx.request({
+    url: `http://8.137.191.153:8000/api/user/info?user_id=${userId}`, 
+    method: 'GET',
+    success: (res) => {
+      if (res.data.code === 200) {
+        const info = res.data.data;
+        const latestClassName = info.full_class_name || this.data.fullClassName || '未分配班级';
+        
+        this.setData({
+          totalScore: info.total_score,
+          ecoCoin: info.eco_coin,
+          userTitle: info.title || '环保新手',
+          recognizeCount: info.recognize_count,
+          challengeCount: info.challenge_count,
+          fullClassName: latestClassName
+        });
+        
+        wx.setStorageSync('ecoCoin', info.eco_coin);
+        wx.setStorageSync('totalScore', info.total_score);
+        wx.setStorageSync('fullClassName', latestClassName);
+        wx.setStorageSync('currentTitle', info.title || '环保新手');
+      } else {
+        console.error("后端返回异常", res.data.message);
       }
-    });
-  },
-
+    },
+    fail: (err) => {
+      console.error("获取用户大盘数据失败", err);
+    }
+  });
+},
   // 操作前检查是否登录
   checkLoginStatus: function() {
     if (!this.data.isLoggedIn) {
@@ -270,40 +271,38 @@ Page({
 
   // 清理缓存 (防掉线保护机制)
   clearCache: function() {
-    wx.showModal({
-      title: '清理缓存',
-      content: '点击确定后，AI识别产生的临时图片等冗余缓存将被清空。\n\n请放心，您的云端账号数据（头像、昵称、总环保星、历史记录等）和登录状态将安全保留。',
-      confirmText: '确认清理',
-      confirmColor: '#4CAF50',
-      success: (res) => {
-        if (res.confirm) {
-          // 1. 清理前：先读取核心数据进行保护
-          const userId = wx.getStorageSync('userId');
-          const isLoggedIn = wx.getStorageSync('isLoggedIn'); 
-          const role = wx.getStorageSync('role'); 
-          
-          // 读取新的头像和昵称键名
-          const savedAvatar = wx.getStorageSync('avatarUrl');
-          const savedNickname = wx.getStorageSync('nickname');
-          
-          // 2. 无差别清空所有本地缓存
-          wx.clearStorageSync(); 
-          
-          // 3. 清理后：将受保护的核心数据重新写回
-          if (userId) wx.setStorageSync('userId', userId);
-          if (isLoggedIn) wx.setStorageSync('isLoggedIn', isLoggedIn);
-          if (role) wx.setStorageSync('role', role); 
-          
-          if (savedAvatar) wx.setStorageSync('avatarUrl', savedAvatar);
-          if (savedNickname) wx.setStorageSync('nickname', savedNickname);
+  wx.showModal({
+    title: '清理缓存',
+    content: '点击确定后，AI识别产生的临时图片等冗余缓存将被清空。\n\n请放心，您的云端账号数据（头像、昵称、总环保星、历史记录等）和登录状态将安全保留。',
+    confirmText: '确认清理',
+    confirmColor: '#4CAF50',
+    success: (res) => {
+      if (res.confirm) {
+        const userId = wx.getStorageSync('userId');
+        const isLoggedIn = wx.getStorageSync('isLoggedIn');
+        const role = wx.getStorageSync('role');
 
-          // 重新触发页面渲染
-          this.onShow(); 
-          wx.showToast({ title: '清理完毕', icon: 'success' });
-        }
+        const savedClassName = wx.getStorageSync('fullClassName');
+        const savedAvatar = wx.getStorageSync('avatarUrl');
+        const savedNickname = wx.getStorageSync('nickname');
+
+        wx.clearStorageSync();
+
+        if (userId) wx.setStorageSync('userId', userId);
+        if (isLoggedIn) wx.setStorageSync('isLoggedIn', isLoggedIn);
+        if (role) wx.setStorageSync('role', role);
+
+        if (savedClassName) wx.setStorageSync('fullClassName', savedClassName);
+        if (savedAvatar) wx.setStorageSync('avatarUrl', savedAvatar);
+        if (savedNickname) wx.setStorageSync('nickname', savedNickname);
+
+        this.onShow();
+        wx.showToast({ title: '清理完毕', icon: 'success' });
       }
-    });
-  },
+    }
+  });
+},
+
 
   // 退出登录
   logout: function() {
